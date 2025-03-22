@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gnu_web_dashboard/common/component/top_navigator.dart';
-import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
-import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class DefaultLayout extends StatelessWidget {
@@ -13,7 +11,7 @@ class DefaultLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const double globalPadding = 60.0;
-    double topNaviHeight = 80;
+    double topNaviHeight = 100;
 
     if (!ResponsiveBreakpoints.of(context).isDesktop) {
       topNaviHeight = 60;

@@ -24,11 +24,12 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
     }
 
     return AppBar(
-      backgroundColor: colors.primary,
+      backgroundColor: colors.surface,
       centerTitle: true,
       automaticallyImplyLeading: false,
-      elevation: 0,
+      elevation: 8,
       toolbarHeight: height,
+      titleSpacing: 0,
       title: currentDevice == Device.DESKTOP
           ? _buildDesktopLayout(colors)
           : currentDevice == Device.TABLET
@@ -38,53 +39,136 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget _buildDesktopLayout(AppColors colors) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Text(
-            '{강의과목} {교수명}님 수업 중입니다.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: colors.onPrimary,
-              fontSize: fontSize,
+    const double upperPadding = 12;
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.surface,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.grey,
+            offset: Offset(2, 2),
+            blurRadius: 8,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          SizedBox(
+            height: upperPadding,
+          ),
+          SizedBox(
+            height: (height - upperPadding) / 2,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildRoomButtons(colors, buttonCount: 3),
+                SizedBox(width: 600, child: _buildTabButtons()),
+              ],
             ),
           ),
-        ),
-        _buildRoomButtons(colors, buttonCount: 3),
-      ],
+          Container(
+            width: double.infinity,
+            height: (height - upperPadding) / 2,
+            decoration: BoxDecoration(
+              color: colors.primaryContainer,
+            ),
+            child: Center(
+              child: Text(
+                '(아이콘?) (강의실명) | {강의명} {교수명}님 수업 중입니다.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: colors.onSurface,
+                  fontSize: fontSize,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildRoomButtons(AppColors colors, {required int buttonCount}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: List.generate(
+    return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+      SizedBox(width: 40.0),
+      ...List.generate(
         buttonCount,
         (index) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Container(
             decoration: BoxDecoration(
-              color: colors.primaryContainer,
-              borderRadius: BorderRadius.circular(16.0),
-            ),
+                color: colors.primaryContainer,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(16.0),
+                  topLeft: Radius.circular(16.0),
+                ),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.grey,
+                    offset: Offset(2, 2),
+                    blurRadius: 8,
+                    spreadRadius: 2,
+                  ),
+                  BoxShadow(
+                    color: Colors.white,
+                    offset: Offset(-2, -2),
+                    blurRadius: 8,
+                    spreadRadius: 2,
+                  ),
+                ]),
             height: height - 20,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Center(
-                child: Text(
-                  '강의실 ${index + 1}',
-                  style: TextStyle(
-                    color: colors.onPrimaryContainer,
-                    fontSize: fontSize,
-                  ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 16,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.lightGreen,
+                        border: Border.all(color: Colors.grey),
+                      ),
+                    ),
+                    SizedBox(width: 4),
+                    Text(
+                      '${currentDevice.name} ${index + 1}',
+                      style: TextStyle(
+                        color: colors.onSurface,
+                        fontSize: fontSize,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
         ),
       ),
-    );
+    ]);
+  }
+
+  Widget _buildTabButtons() {
+    const double width = 600;
+
+    return LayoutBuilder(builder: (context, constraints) {
+      final maxWidth = constraints.maxWidth;
+      bool isExpanded = maxWidth > width;
+
+      /// 주어진 너비가 충분하지 않으면 햄버거 버튼으로 바꾸기
+      return SizedBox(
+        width: width,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text('강의실 현황'),
+            Text('메세지/미디어 관리'),
+            Text('시간표 관리'),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildMobileLayout(AppColors colors) {
