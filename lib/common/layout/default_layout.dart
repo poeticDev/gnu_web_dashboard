@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:gnu_web_dashboard/common/component/top_navigator.dart';
+import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
+import 'package:gnu_web_dashboard/state/state_view.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class DefaultLayout extends StatelessWidget {
   final Color? backgroundColor;
 
   DefaultLayout({super.key, this.backgroundColor});
+
+  // final TabController _tabController = TabController(length: length, vsync: vsync);
+
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +28,14 @@ class DefaultLayout extends StatelessWidget {
       currentDevice = Device.DESKTOP;
     }
 
-    return Scaffold(
-      // backgroundColor: backgroundColor ?? BG_COLOR,
-      appBar: TopNavigator(
-        height: topNaviHeight,
-      ),
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Center(
-          child: Text('아직 아무것도 없는 홈페이지'),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: backgroundColor ?? BG_COLOR,
+        appBar: TopNavigator(
+          height: topNaviHeight,
         ),
+        resizeToAvoidBottomInset: false,
+        body: StateView(),
       ),
     );
   }

@@ -23,9 +23,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: SEED_COLOR,
-          surface: BG_COLOR,
-          primaryContainer: PRIMARY_CONTAINER_COLOR,
-          brightness: Brightness.light,
+          // surface: BG_COLOR,
+          // primaryContainer: PRIMARY_CONTAINER_COLOR,
+          brightness: Brightness.dark,
         ),
         useMaterial3: true,
         fontFamily: DEFAULT_FONT_FAMILY,

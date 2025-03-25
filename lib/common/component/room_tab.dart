@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
-import 'package:gnu_web_dashboard/common/util/router.dart';
 import 'package:go_router/go_router.dart';
 
 class RoomTab extends StatelessWidget {
@@ -29,23 +28,23 @@ class RoomTab extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Container(
           decoration: BoxDecoration(
-              color: colors.primaryContainer,
+              color: PRIMARY_CONTAINER_COLOR,
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(borderRadius),
                 topLeft: Radius.circular(borderRadius),
               ),
-              boxShadow: const [
+              boxShadow: [
                 BoxShadow(
-                  color: Colors.grey,
+                  color: colors.onInverseSurface,
                   offset: Offset(2, 2),
                   blurRadius: 8,
-                  spreadRadius: 2,
+                  spreadRadius: 1,
                 ),
                 BoxShadow(
-                  color: Colors.white,
+                  color: colors.shadow,
                   offset: Offset(-2, -2),
                   blurRadius: 8,
-                  spreadRadius: 2,
+                  spreadRadius: 1,
                 ),
               ]),
           height: height,
@@ -66,7 +65,7 @@ class RoomTab extends StatelessWidget {
                   Text(
                     '000동 0000호',
                     style: TextStyle(
-                      color: colors.onSurface,
+                      color: colors.onSurfaceVariant,
                       fontSize: fontSize,
                     ),
                   ),

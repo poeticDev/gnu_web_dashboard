@@ -15,7 +15,7 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     // 나중에 initilizer나 어디로 넣자.
-    final colors = AppColors.of(context);
+    // final colors = AppColors.of(context);
 
     if (currentDevice != Device.DESKTOP) {
       fontSize = 16;
@@ -25,25 +25,25 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
     }
 
     return AppBar(
-      backgroundColor: colors.surface,
+      backgroundColor: BG_COLOR,
       centerTitle: true,
       automaticallyImplyLeading: false,
       elevation: 8,
       toolbarHeight: height,
       titleSpacing: 0,
       title: currentDevice == Device.DESKTOP
-          ? _buildDesktopLayout(colors)
+          ? _buildDesktopLayout()
           : currentDevice == Device.TABLET
-              ? _buildTabletLayout(colors)
-              : _buildMobileLayout(colors),
+              ? _buildTabletLayout()
+              : _buildMobileLayout(),
     );
   }
 
-  Widget _buildDesktopLayout(AppColors colors) {
+  Widget _buildDesktopLayout() {
     const double upperPadding = 12;
     return Container(
       decoration: BoxDecoration(
-        color: colors.surface,
+        color: BG_COLOR,
         boxShadow: const [
           BoxShadow(
             color: Colors.grey,
@@ -63,7 +63,7 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildRoomButtons(colors, buttonCount: 3),
+                _buildRoomButtons(buttonCount: 3),
                 // SizedBox(width: 600, child: _buildTabButtons()),
               ],
             ),
@@ -72,14 +72,14 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
             width: double.infinity,
             height: (height - upperPadding) / 2,
             decoration: BoxDecoration(
-              color: colors.primaryContainer,
+              color: PRIMARY_CONTAINER_COLOR,
             ),
             child: Center(
               child: Text(
-                '(아이콘?) (강의실명) | {강의명} {교수명}님 수업 중입니다.',
+                '(아이콘?) (강의실명) | {시작 시간} ~ {종료시간} {강의명} {교수명}님 수업 중입니다.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: colors.onSurface,
+                  color: WHITE_TEXT_COLOR,
                   fontSize: fontSize,
                 ),
               ),
@@ -90,7 +90,7 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget _buildRoomButtons(AppColors colors, {required int buttonCount}) {
+  Widget _buildRoomButtons({required int buttonCount}) {
     /// 주어진 너비가 충분하지 않으면 햄버거 버튼으로 바꾸기
     return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
       // 왼쪽 여백
@@ -124,19 +124,19 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
     });
   }
 
-  Widget _buildMobileLayout(AppColors colors) {
+  Widget _buildMobileLayout() {
     return Center(
       child: Text(
         '강의 중',
         style: TextStyle(
-          color: colors.onPrimary,
+          color: WHITE_TEXT_COLOR,
           fontSize: fontSize,
         ),
       ),
     );
   }
 
-  Widget _buildTabletLayout(AppColors colors) {
+  Widget _buildTabletLayout() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -144,11 +144,11 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
           '강의과목 교수명\n수업 중입니다.',
           textAlign: TextAlign.start,
           style: TextStyle(
-            color: colors.onPrimary,
+            color: WHITE_TEXT_COLOR,
             fontSize: fontSize,
           ),
         ),
-        _buildRoomButtons(colors, buttonCount: 2),
+        // _buildRoomButtons(colors, buttonCount: 2),
       ],
     );
   }
