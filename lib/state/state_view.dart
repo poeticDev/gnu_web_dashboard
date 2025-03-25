@@ -6,6 +6,7 @@ import 'package:gnu_web_dashboard/common/component/custom_toggle.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
+import 'package:gnu_web_dashboard/state/component/custom_line_chart.dart';
 import 'package:gnu_web_dashboard/state/component/state_row.dart';
 
 class StateView extends StatefulWidget {
@@ -43,7 +44,7 @@ class _StateViewState extends State<StateView> {
           width: mWidth,
           height: mHeight,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _RenderLeftBox(width: leftBoxWidth, height: mHeight),
               _RenderRightBox(width: rightBoxWidth, height: mHeight),
@@ -65,25 +66,30 @@ class _StateViewState extends State<StateView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Container(
-
-                decoration: BoxDecoration(color: PRIMARY_CONTAINER_COLOR),
-                child: Center(
-                  child: Text(
-                    '클릭하여 강의실 카메라 보기\n(30초)',
-                    textAlign: TextAlign.center,
-                    style: TERTIARY_TITLE_TEXT_STYLE.copyWith(
-                      fontSize: fontSize * 1,
-                      color: WHITE_TEXT_COLOR,
+            Container(
+              constraints: BoxConstraints(
+                maxHeight: 600
+              ),
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Container(
+                  decoration: BoxDecoration(color: PRIMARY_CONTAINER_COLOR),
+                  child: Center(
+                    child: Text(
+                      '클릭하여 강의실 카메라 보기\n(30초)',
+                      textAlign: TextAlign.center,
+                      style: TERTIARY_TITLE_TEXT_STYLE.copyWith(
+                        fontSize: fontSize * 1,
+                        color: WHITE_TEXT_COLOR,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
+            SizedBox(height: 20),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
                   decoration: BoxDecoration(
@@ -119,6 +125,8 @@ class _StateViewState extends State<StateView> {
     required double width,
     required double height,
   }) {
+    const double verticalPadding = 20;
+
     return SizedBox(
       width: width,
       height: height,
@@ -135,7 +143,6 @@ class _StateViewState extends State<StateView> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
                       child: Text(
@@ -148,6 +155,7 @@ class _StateViewState extends State<StateView> {
                     ),
                     Divider(
                       color: DIVIDER_COLOR,
+                      height: 10,
                     ),
                     Column(
                       children: [
@@ -187,19 +195,97 @@ class _StateViewState extends State<StateView> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: verticalPadding),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   decoration: BoxDecoration(
                     color: PRIMARY_CONTAINER_COLOR,
                     borderRadius: BorderRadius.circular(12.0),
                   ),
-                  child: Text(
-                    '온도 21.2도\n습도 50%',
-                    style:
-                        TextStyle(color: WHITE_TEXT_COLOR, fontSize: fontSize),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0, vertical: 12.0),
+                    child: Column(
+                      children: [
+                        Center(
+                          child: Text(
+                            '온도',
+                            style: TERTIARY_TITLE_TEXT_STYLE.copyWith(
+                              color: WHITE_TEXT_COLOR,
+                              fontSize: fontSize * 0.85,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 100,
+                          child: Divider(
+                            color: DIVIDER_COLOR,
+                            height: 10,
+                          ),
+                        ),
+                        Text(
+                          '21°C',
+                          style: TextStyle(
+                              color: WHITE_TEXT_COLOR, fontSize: fontSize),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(width: 12.0),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: PRIMARY_CONTAINER_COLOR,
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    child: CustomLineChart(),
+                  ),
+                ),
+              ],
+            ),
+            ///
+            SizedBox(height: verticalPadding),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: PRIMARY_CONTAINER_COLOR,
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0, vertical: 12.0),
+                    child: Column(
+                      children: [
+                        Center(
+                          child: Text(
+                            '습도',
+                            style: TERTIARY_TITLE_TEXT_STYLE.copyWith(
+                              color: WHITE_TEXT_COLOR,
+                              fontSize: fontSize * 0.85,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 100,
+                          child: Divider(
+                            color: DIVIDER_COLOR,
+                            height: 10,
+                          ),
+                        ),
+                        Text(
+                          '48%',
+                          style: TextStyle(
+                              color: WHITE_TEXT_COLOR, fontSize: fontSize),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(width: 12.0),
@@ -210,14 +296,15 @@ class _StateViewState extends State<StateView> {
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     child: Text(
-                      '온도습도\n그래프',
+                      '습도\n그래프',
                       style: TextStyle(
                           color: WHITE_TEXT_COLOR, fontSize: fontSize),
                     ),
                   ),
                 ),
               ],
-            )
+            ),
+
           ],
         ),
       ),

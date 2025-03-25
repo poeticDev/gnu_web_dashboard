@@ -48,6 +48,8 @@ dependencies:
   google_fonts: ^6.2.1
   #### 토글
   animated_toggle_switch: ^0.8.3
+  #### 그래프
+  fl_chart: ^0.69.2
   #### Responsive
   responsive_framework: ^1.5.1
 

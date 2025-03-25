@@ -74,7 +74,7 @@ class AppColors {
   // ───── 상태/배경 색상 그룹 ─────
 
   /// 전체 배경색 (앱의 메인 배경으로 쓰임)
-  Color get BG_COLORsurface => _scheme.surface;
+  Color get surface => _scheme.surface;
 
   /// surface 위에 얹히는 텍스트/아이콘 색
   Color get onSurface => _scheme.onSurface;
