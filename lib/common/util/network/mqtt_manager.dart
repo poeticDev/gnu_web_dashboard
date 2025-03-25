@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mqtt_client/mqtt_browser_client.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:uuid/uuid.dart';
@@ -15,21 +15,19 @@ const List<String> SUBSCRIBING_TOPICS = [
 
 final mqttManagerProvider = Provider<MqttManager>((ref) {
   return MqttManager(
-    broker: '192.168.219.137',
-    // port: 1883,
+    broker: 'wss://192.168.219.137/api/v1/ws/example',
+    port: 80,
     // userName: 'mdk',
     // password: '12344321',
     clientId: Uuid().v4(),
   );
 });
 
-
-
 class MqttManager {
   final String broker;
   final String clientId;
   int port;
-  late MqttServerClient _client;
+  late MqttBrowserClient _client;
 
   /// isSecure=true이고 port가 '1883 또는 미입력' 시 자동으로 port가 8883으로 설정됨
   final bool isSecure;
@@ -44,7 +42,7 @@ class MqttManager {
     this.userName = 'mdk',
     this.password = '12344321',
   }) {
-    _client = MqttServerClient.withPort(broker, clientId, port);
+    _client = MqttBrowserClient.withPort(broker, clientId, port);
     _configureClient();
   }
 
@@ -52,9 +50,10 @@ class MqttManager {
   void _configureClient() {
     if (isSecure && port == 1883) {
       port = 8883;
-      _client.securityContext = SecurityContext.defaultContext;
+      // _client.securityContext = SecurityContext.defaultContext;
     }
-    _client.port = port;
+    // _client.useWebSocket;
+    // _client.port = port;
     _client.keepAlivePeriod = 20;
     _client.connectTimeoutPeriod = 2000;
     _client.logging(on: false);
@@ -66,6 +65,8 @@ class MqttManager {
     _client.onSubscribeFail = _onSubscribeFail;
     _client.pongCallback = _pongCallback;
     _client.pingCallback = _pingCallback;
+
+    _client.websocketProtocols = MqttClientConstants.protocolsSingleDefault;
 
     // MQTT 프로토콜 설정 (Mosquitto 등과 호환)
     _client.setProtocolV311();
@@ -85,10 +86,6 @@ class MqttManager {
       await _client.connect();
     } on NoConnectionException catch (e) {
       print('❌ 연결 실패: $e');
-      _client.disconnect();
-      return false;
-    } on SocketException catch (e) {
-      print('❌ 소켓 예외 발생: $e');
       _client.disconnect();
       return false;
     }

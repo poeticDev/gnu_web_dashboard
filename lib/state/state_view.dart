@@ -1,4 +1,7 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
@@ -121,7 +124,8 @@ class _StateViewState extends State<StateView> {
                   Center(
                     child: Text(
                       '강의실 상태',
-                      style: TextStyle(color: WHITE_TEXT_COLOR, fontSize: fontSize * 0.85),
+                      style: TextStyle(
+                          color: WHITE_TEXT_COLOR, fontSize: fontSize * 0.85),
                     ),
                   ),
                 ],
