@@ -13,6 +13,10 @@ const PRIMARY_CONTAINER_COLOR = Color(0xFF23223A);
 
 const DIVIDER_COLOR = Color(0xFFEB5353);
 
+/// 전원 스크린
+const Color TOGGLE_TRUE_COLOR = Colors.green;
+const Color TOGGLE_FALSE_COLOR = Color(0xFFE53935);
+
 /// 글자 색상
 const TEXT_COLOR = Color(0xFF2C3740);
 const BODY_TEXT_COLOR = Color(0xFF485157);
