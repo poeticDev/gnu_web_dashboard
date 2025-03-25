@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gnu_web_dashboard/common/component/room_tab.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
@@ -63,7 +64,7 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildRoomButtons(colors, buttonCount: 3),
-                SizedBox(width: 600, child: _buildTabButtons()),
+                // SizedBox(width: 600, child: _buildTabButtons()),
               ],
             ),
           ),
@@ -90,61 +91,13 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget _buildRoomButtons(AppColors colors, {required int buttonCount}) {
+    /// 주어진 너비가 충분하지 않으면 햄버거 버튼으로 바꾸기
     return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+      // 왼쪽 여백
       SizedBox(width: 40.0),
       ...List.generate(
         buttonCount,
-        (index) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Container(
-            decoration: BoxDecoration(
-                color: colors.primaryContainer,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(16.0),
-                  topLeft: Radius.circular(16.0),
-                ),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.grey,
-                    offset: Offset(2, 2),
-                    blurRadius: 8,
-                    spreadRadius: 2,
-                  ),
-                  BoxShadow(
-                    color: Colors.white,
-                    offset: Offset(-2, -2),
-                    blurRadius: 8,
-                    spreadRadius: 2,
-                  ),
-                ]),
-            height: height - 20,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Center(
-                child: Row(
-                  children: [
-                    Container(
-                      width: 16,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.lightGreen,
-                        border: Border.all(color: Colors.grey),
-                      ),
-                    ),
-                    SizedBox(width: 4),
-                    Text(
-                      '${currentDevice.name} ${index + 1}',
-                      style: TextStyle(
-                        color: colors.onSurface,
-                        fontSize: fontSize,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+        (index) => RoomTab(height: height - 20)
       ),
     ]);
   }
