@@ -26,7 +26,7 @@ class StateRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            width: width,
+            width: width - 6,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -39,7 +39,7 @@ class StateRow extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 80,
+                  width: 60,
                   height: height,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4.0),

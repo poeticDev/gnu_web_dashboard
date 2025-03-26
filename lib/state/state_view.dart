@@ -70,6 +70,12 @@ class _StateViewState extends State<StateView> {
                   width: mediaBoxWidth,
                   minWidth: mediaBoxMinWidth,
                 ),
+                ElevatedButton(
+                  onPressed: () {
+                    connectWS();
+                  },
+                  child: Text('웹소켓 연결'),
+                ),
               ],
             ),
           ),
@@ -113,56 +119,7 @@ class _StateViewState extends State<StateView> {
       ),
     );
   }
-
-  Widget _RenderMediaBox({
-    required double width,
-    required double minWidth,
-  }) {
-    return Container(
-      constraints: BoxConstraints(
-        minWidth: minWidth,
-      ),
-      decoration: BoxDecoration(
-        color: PRIMARY_CONTAINER_COLOR,
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      width: width,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              connectWS();
-            },
-            child: Text('웹소켓 연결'),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: PRIMARY_CONTAINER_COLOR,
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            child: Text(
-              '강의실 스케쥴',
-              style:
-              TextStyle(color: WHITE_TEXT_COLOR, fontSize: fontSize),
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: PRIMARY_CONTAINER_COLOR,
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            child: Text(
-              '키오스크/태블릿 관리',
-              style:
-              TextStyle(color: WHITE_TEXT_COLOR, fontSize: fontSize),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
+  
   Widget _RenderStateBox({
     required double width,
     required double height,
@@ -308,32 +265,33 @@ class _StateViewState extends State<StateView> {
                 ),
               ),
               SizedBox(width: 12.0),
-              Container(
-                width: width - 140,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: PRIMARY_CONTAINER_COLOR,
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                child: CustomLineChart(
-                  yName: '°C',
-                  minX: 8,
-                  maxX: 20,
-                  minY: 0,
-                  maxY: 38,
-                  spots: [
-                    FlSpot(8, 16.44),
-                    FlSpot(9, 12),
-                    FlSpot(10, 15),
-                    FlSpot(11, 4),
-                    FlSpot(12, 20),
-                    FlSpot(13, 25.44),
-                    FlSpot(14, 22.44),
-                    FlSpot(16, 18.44),
-                    FlSpot(18, 37),
-                    FlSpot(19, 24),
-                    FlSpot(20, 10.44),
-                  ],
+              Expanded(
+                child: Container(
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: PRIMARY_CONTAINER_COLOR,
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: CustomLineChart(
+                    yName: '°C',
+                    minX: 8,
+                    maxX: 20,
+                    minY: 0,
+                    maxY: 38,
+                    spots: [
+                      FlSpot(8, 16.44),
+                      FlSpot(9, 12),
+                      FlSpot(10, 15),
+                      FlSpot(11, 4),
+                      FlSpot(12, 20),
+                      FlSpot(13, 25.44),
+                      FlSpot(14, 22.44),
+                      FlSpot(16, 18.44),
+                      FlSpot(18, 37),
+                      FlSpot(19, 24),
+                      FlSpot(20, 10.44),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -383,39 +341,40 @@ class _StateViewState extends State<StateView> {
                 ),
               ),
               SizedBox(width: 12.0),
-              Container(
-                width: width - 140,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: PRIMARY_CONTAINER_COLOR,
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                child: CustomLineChart(
-                  yName: '%',
-                  minX: 8,
-                  maxX: 20,
-                  minY: 0,
-                  maxY: 100,
-                  horizontalInterval: 25,
-                  gradientColors: [
-                    Colors.yellow,
-                    Colors.lightBlue,
-                    Colors.lightBlue,
-                    Colors.indigo
-                  ],
-                  spots: [
-                    FlSpot(8, 10),
-                    FlSpot(9, 30),
-                    FlSpot(10, 40),
-                    FlSpot(11, 50),
-                    FlSpot(12, 35),
-                    FlSpot(13, 40),
-                    FlSpot(14, 70),
-                    FlSpot(16, 100),
-                    FlSpot(18, 100),
-                    FlSpot(19, 80),
-                    FlSpot(20, 60),
-                  ],
+              Expanded(
+                child: Container(
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: PRIMARY_CONTAINER_COLOR,
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: CustomLineChart(
+                    yName: '%',
+                    minX: 8,
+                    maxX: 20,
+                    minY: 0,
+                    maxY: 100,
+                    horizontalInterval: 25,
+                    gradientColors: [
+                      Colors.yellow,
+                      Colors.lightBlue,
+                      Colors.lightBlue,
+                      Colors.indigo
+                    ],
+                    spots: [
+                      FlSpot(8, 10),
+                      FlSpot(9, 30),
+                      FlSpot(10, 40),
+                      FlSpot(11, 50),
+                      FlSpot(12, 35),
+                      FlSpot(13, 40),
+                      FlSpot(14, 70),
+                      FlSpot(16, 100),
+                      FlSpot(18, 100),
+                      FlSpot(19, 80),
+                      FlSpot(20, 60),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -424,4 +383,60 @@ class _StateViewState extends State<StateView> {
       ),
     );
   }
+
+  Widget _RenderMediaBox({
+    required double width,
+    required double minWidth,
+  }) {
+    return Container(
+      constraints: BoxConstraints(
+        minWidth: minWidth,
+      ),
+      decoration: BoxDecoration(
+        color: PRIMARY_CONTAINER_COLOR,
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      width: width,
+      child: Container(
+        decoration: BoxDecoration(
+          color: PRIMARY_CONTAINER_COLOR,
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: 12.0, vertical: 12.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '키오스크/태블릿 관리',
+                style: TextStyle(
+                    color: WHITE_TEXT_COLOR,
+                    fontSize: fontSize * 0.85),
+              ),
+              SizedBox(
+                // width: 100,
+                child: Divider(
+                  color: DIVIDER_COLOR,
+                  height: 10,
+                ),
+              ),
+              SizedBox(
+                height: 300,
+                child: Center(
+                  child: Text(
+                    '미디어 관리 넣기',
+                    style: TextStyle(
+                        color: WHITE_TEXT_COLOR, fontSize: fontSize),
+                  ),
+                ),
+              ),
+
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  
 }
