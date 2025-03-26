@@ -9,6 +9,7 @@ import 'package:gnu_web_dashboard/common/const/style.dart';
 import 'package:gnu_web_dashboard/common/util/network/test.dart';
 import 'package:gnu_web_dashboard/state/component/custom_line_chart.dart';
 import 'package:gnu_web_dashboard/state/component/state_row.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 class StateView extends StatefulWidget {
   const StateView({super.key});
@@ -151,14 +152,32 @@ class _StateViewState extends State<StateView> {
                     const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
                 child: Column(
                   children: [
-                    Center(
-                      child: Text(
-                        '강의실 상태',
-                        style: TERTIARY_TITLE_TEXT_STYLE.copyWith(
-                          color: WHITE_TEXT_COLOR,
-                          fontSize: fontSize * 0.85,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 16,
                         ),
-                      ),
+                        Text(
+                          '강의실 상태',
+                          style: TERTIARY_TITLE_TEXT_STYLE.copyWith(
+                            color: WHITE_TEXT_COLOR,
+                            fontSize: fontSize * 0.85,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 30,
+                          child:
+                          // LoadingIndicator(
+                          //   indicatorType: Indicator.circleStrokeSpin,
+                          //   colors: [Colors.orangeAccent, Colors.yellowAccent],
+                          // ),
+                              LoadingIndicator(
+                            indicatorType: Indicator.ballClipRotatePulse,
+                            colors: const [Colors.yellow, Colors.green],
+                          ),
+                        ),
+                      ],
                     ),
                     Divider(
                       color: DIVIDER_COLOR,
