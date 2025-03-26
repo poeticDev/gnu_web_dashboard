@@ -6,6 +6,7 @@ import 'package:gnu_web_dashboard/common/component/custom_toggle.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
+import 'package:gnu_web_dashboard/common/util/network/test.dart';
 import 'package:gnu_web_dashboard/state/component/custom_line_chart.dart';
 import 'package:gnu_web_dashboard/state/component/state_row.dart';
 
@@ -67,9 +68,7 @@ class _StateViewState extends State<StateView> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-              constraints: BoxConstraints(
-                maxHeight: 600
-              ),
+              constraints: BoxConstraints(maxHeight: 600),
               child: AspectRatio(
                 aspectRatio: 16 / 9,
                 child: Container(
@@ -91,6 +90,12 @@ class _StateViewState extends State<StateView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                ElevatedButton(
+                  onPressed: () {
+                    connectWS();
+                  },
+                  child: Text('웹소켓 연결'),
+                ),
                 Container(
                   decoration: BoxDecoration(
                     color: PRIMARY_CONTAINER_COLOR,
@@ -201,6 +206,7 @@ class _StateViewState extends State<StateView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
+                  height: 100,
                   decoration: BoxDecoration(
                     color: PRIMARY_CONTAINER_COLOR,
                     borderRadius: BorderRadius.circular(12.0),
@@ -210,14 +216,11 @@ class _StateViewState extends State<StateView> {
                         horizontal: 12.0, vertical: 12.0),
                     child: Column(
                       children: [
-                        Center(
-                          child: Text(
-                            '온도',
-                            style: TERTIARY_TITLE_TEXT_STYLE.copyWith(
+                        Text(
+                          '현재 온도',
+                          style: TextStyle(
                               color: WHITE_TEXT_COLOR,
-                              fontSize: fontSize * 0.85,
-                            ),
-                          ),
+                              fontSize: fontSize * 0.85),
                         ),
                         SizedBox(
                           width: 100,
@@ -236,17 +239,24 @@ class _StateViewState extends State<StateView> {
                   ),
                 ),
                 SizedBox(width: 12.0),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: PRIMARY_CONTAINER_COLOR,
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    child: CustomLineChart(),
+                Container(
+                  width: width - 140,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: PRIMARY_CONTAINER_COLOR,
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: CustomLineChart(
+                    yName: '°C',
+                    minX: 8,
+                    maxX: 20,
+                    minY: 0,
+                    maxY: 38,
                   ),
                 ),
               ],
             ),
+
             ///
             SizedBox(height: verticalPadding),
             Row(
@@ -265,7 +275,7 @@ class _StateViewState extends State<StateView> {
                       children: [
                         Center(
                           child: Text(
-                            '습도',
+                            '현재 습도',
                             style: TERTIARY_TITLE_TEXT_STYLE.copyWith(
                               color: WHITE_TEXT_COLOR,
                               fontSize: fontSize * 0.85,
@@ -304,7 +314,6 @@ class _StateViewState extends State<StateView> {
                 ),
               ],
             ),
-
           ],
         ),
       ),
