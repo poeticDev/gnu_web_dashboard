@@ -10,8 +10,10 @@ class CustomLineChart extends StatefulWidget {
   final double maxX;
   final double minY;
   final double maxY;
+  final double horizontalInterval;
   final Map<double, String>? xTitleMap;
   final Map<double, String>? yTitleMap;
+  final List<FlSpot> spots;
 
   const CustomLineChart({
     super.key,
@@ -22,8 +24,10 @@ class CustomLineChart extends StatefulWidget {
     required this.maxX,
     required this.minY,
     required this.maxY,
+    this.horizontalInterval = 10,
     this.xTitleMap,
     this.yTitleMap,
+    required this.spots,
   });
 
   @override
@@ -69,7 +73,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
         if (widget.yName != null)
           SizedBox(
             width: 60,
-            height: 24,
+            height: 20,
             child: Center(
               child: Text(
                 widget.yName!,
@@ -183,7 +187,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
-        horizontalInterval: 10,
+        horizontalInterval: widget.horizontalInterval,
         verticalInterval: 2,
         getDrawingHorizontalLine: (value) {
           return const FlLine(
@@ -277,19 +281,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
           }),
       lineBarsData: [
         LineChartBarData(
-          spots: const [
-            FlSpot(8, 16.44),
-            FlSpot(9, 12),
-            FlSpot(10, 15),
-            FlSpot(11, 4),
-            FlSpot(12, 20),
-            FlSpot(13, 25.44),
-            FlSpot(14, 22.44),
-            FlSpot(16, 18.44),
-            FlSpot(18, 37),
-            FlSpot(19, 24),
-            FlSpot(20, 10.44),
-          ],
+          spots: widget.spots,
           isCurved: true,
           gradient: LinearGradient(
             begin: Alignment.bottomCenter,
