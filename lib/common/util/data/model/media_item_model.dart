@@ -113,13 +113,13 @@ class MediaItem {
       "roomId": roomId,
       "target": target,
       "title": title,
-      "type": type,
+      "type": type.name,
       "url": url,
       "fileName": fileName,
-      "from": from,
-      "fit": fit,
+      "from": from.name,
+      "fit": fit.name,
       "orderNum": orderNum,
-      "lastUpdated": lastUpdated,
+      "lastUpdated": lastUpdated.toString(),
       "isDead": isDead
     };
 
