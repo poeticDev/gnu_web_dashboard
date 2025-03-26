@@ -132,6 +132,8 @@ class _StateViewState extends State<StateView> {
   }) {
     const double verticalPadding = 20;
 
+    final double stateRowWidth = width / 2.3;
+
     return SizedBox(
       width: width,
       height: height,
@@ -162,37 +164,46 @@ class _StateViewState extends State<StateView> {
                       color: DIVIDER_COLOR,
                       height: 10,
                     ),
-                    Column(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        StateRow(
-                          width: width,
-                          height: fontSize * 1.6,
-                          title: 'All On/Off',
+                        Column(
+                          children: [
+                            StateRow(
+                              width: stateRowWidth,
+                              height: fontSize * 1.6,
+                              title: 'All On/Off',
+                            ),
+                            StateRow(
+                              width: stateRowWidth,
+                              height: fontSize * 1.6,
+                              title: '조명',
+                            ),
+                            StateRow(
+                              width: stateRowWidth,
+                              height: fontSize * 1.6,
+                              title: '냉난방기',
+                            ),
+                          ],
                         ),
-                        StateRow(
-                          width: width,
-                          height: fontSize * 1.6,
-                          title: '조명',
-                        ),
-                        StateRow(
-                          width: width,
-                          height: fontSize * 1.6,
-                          title: '냉난방기',
-                        ),
-                        StateRow(
-                          width: width,
-                          height: fontSize * 1.6,
-                          title: '교수 PC',
-                        ),
-                        StateRow(
-                          width: width,
-                          height: fontSize * 1.6,
-                          title: 'PBL 스크린',
-                        ),
-                        StateRow(
-                          width: width,
-                          height: fontSize * 1.6,
-                          title: '학생 PC',
+                        Column(
+                          children: [
+                            StateRow(
+                              width: stateRowWidth,
+                              height: fontSize * 1.6,
+                              title: '교수 PC',
+                            ),
+                            StateRow(
+                              width: stateRowWidth,
+                              height: fontSize * 1.6,
+                              title: 'PBL 스크린',
+                            ),
+                            StateRow(
+                              width: stateRowWidth,
+                              height: fontSize * 1.6,
+                              title: '학생 PC',
+                            ),
+                          ],
                         ),
                       ],
                     )

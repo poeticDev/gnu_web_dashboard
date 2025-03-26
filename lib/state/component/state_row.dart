@@ -26,7 +26,7 @@ class StateRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            width: width / 2.1,
+            width: width,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -49,10 +49,10 @@ class StateRow extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
-            width: width / 2 - 24,
-            child: Center(child: Text('시계열')),
-          )
+          // SizedBox(
+          //   width: width / 2 - 24,
+          //   child: Center(child: Text('시계열')),
+          // )
         ],
       ),
     );
