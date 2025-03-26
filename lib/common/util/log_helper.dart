@@ -3,6 +3,7 @@ import 'package:logger/web.dart';
 var logger = Logger(
   printer: PrettyPrinter(
     methodCount: 0,
+    errorMethodCount: 8
   )
 );
 

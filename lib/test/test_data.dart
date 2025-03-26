@@ -1,6 +1,12 @@
 import 'package:gnu_web_dashboard/common/util/data/model/media_item_model.dart';
 
 /// 미디어아이템 샘플
+final List<MediaItem> sampleMediaList = [
+  mediaItemSampleImage,
+  mediaItemSampleImageFromG,
+  mediaItemSampleVideo,
+];
+
 final MediaItem mediaItemSampleImage = MediaItem.withoutKey(
   roomId: ['0-004-0111'],
   target: ['wall_hub'],
