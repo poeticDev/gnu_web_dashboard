@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:html';
 
+import 'package:gnu_web_dashboard/common/util/data/model/media_item_model.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 
 const serverIp = 'wss://192.168.219.137/api/v1/ws';
@@ -9,6 +10,7 @@ const serverIp = 'wss://192.168.219.137/api/v1/ws';
 class WsManager {
   static WebSocket? _ws;
   Timer? _pingTimer;
+  Map<String, Function(dynamic data)> jsonEventHandlerMap = {};
 
 // 싱글톤 클래스
   static final WsManager _instance = WsManager._internal();
@@ -24,7 +26,7 @@ class WsManager {
   // }
 
   void connectWS({required String serverIp}) {
-    if(_ws != null) {
+    if (_ws != null) {
       disConnect();
     }
 
@@ -38,6 +40,21 @@ class WsManager {
 
       _ws!.onMessage.listen((event) {
         print('📩 웹소켓 메세지 수신 : ${event.data}');
+        if (event.data.runtimeType == String) {
+          try {
+            final Map<String, dynamic> decodedData = jsonDecode(event.data);
+
+            /// 수신된 key에 해당하는 이벤트 핸들러가 있으면 처리
+            for (String key in decodedData.keys) {
+              if (jsonEventHandlerMap.keys.contains(key)) {
+                final eventHandler = jsonEventHandlerMap[key]!;
+                eventHandler(decodedData[key]);
+              }
+            }
+          } catch (e) {
+            print('제이슨 변환 실패');
+          }
+        }
       });
 
       _ws!.onError.listen((event) {
@@ -74,6 +91,15 @@ class WsManager {
     _pingTimer = null;
   }
 
+  void addJsonEventHandler(
+      String key, void Function(dynamic data) onDataReceived) {
+    jsonEventHandlerMap = {
+      ...jsonEventHandlerMap,
+      key: onDataReceived,
+    };
+    dLog('등록된 핸들러 키 : ${jsonEventHandlerMap.keys}');
+  }
+
   Future<void> sendStringMessage(String message) async {
     if (_ws == null) {
       eLog('❌ 웹소켓 연결 안 됨');
@@ -85,6 +111,18 @@ class WsManager {
     } catch (e) {
       eLog('❌ 웹소켓 발송 실패 : $e');
     }
+  }
+
+  void requestStream(String roomId) {
+    sendStringMessage('{"topic": "realtime_start","payload": $roomId');
+  }
+
+  void stopStream(String roomId) {
+    sendStringMessage('/realtime/stop/$roomId');
+  }
+
+  void requestTodayData(String roomId) {
+    sendStringMessage('/today/$roomId');
   }
 
   String jsonFromMap(Map mapData) {

@@ -1,7 +1,11 @@
 import 'package:uuid/uuid.dart';
 
 class Message {
+  /// 1) 식별 키
   final String key;
+
+  /// 2) 대상 강의실
+
   final DateTime until;
   final MessageType type;
   final String content;

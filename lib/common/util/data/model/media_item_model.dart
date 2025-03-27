@@ -5,39 +5,40 @@ class MediaItem {
   /// 1) 식별 키
   final String key;
 
-  /// 대상 강의실
+  /// 2) 대상 강의실
   final List<String> roomId;
 
-  /// 대상 기기
+  /// 3) 대상 기기
   final List<String> target;
 
-  /// 2) 미디어 이름
+  /// 4) 미디어 이름
   final String title;
 
-  /// 3) 미디어 타입
+  /// 5) 미디어 타입
   final MediaType type;
 
-  /// 4) 주소
+  /// 6) 주소
   final String url;
 
-  /// 5) 파일명
+  /// 7) 파일명
   /// - 없으면 url 마지막 부분에서 파일명 추출
   final String? fileName;
 
-  /// 6) 저장위치
+  /// 8) 저장위치
   final MediaFrom from;
 
-  /// 7) 미디어 표출 방식
+  /// 9) 미디어 표출 방식
   /// - cover(기본): 꽉 채움
   /// - contain: 여백이 있더라도 다 나오게)
   final BoxFit fit;
 
-  /// 8) 표출 순서 : 기본 생성순
+  /// 10) 표출 순서 : 기본 생성순
   final int orderNum;
 
+  /// 11) 마지막 수정 일시
   DateTime? lastUpdated;
 
-  /// 9) 미디어 상태(표출 중, 미표출)
+  /// 12) 미디어 상태(표출 중, 미표출)
   final bool isDead;
 
   MediaItem({
@@ -91,17 +92,31 @@ class MediaItem {
   }
 
   factory MediaItem.fromMap(Map<String, dynamic> mediaDataMap) {
+    final List roomIdList = mediaDataMap["roomId"];
+    final List<String> roomIdListTypeCasted =
+        roomIdList.cast<String>().toList();
+
+    final List targetList = mediaDataMap["target"];
+    final List<String> targetListTypeCasted =
+        targetList.cast<String>().toList();
+
+    final MediaType type = MediaType.values.byName(mediaDataMap["type"]);
+    final MediaFrom from = MediaFrom.values.byName(mediaDataMap["from"]);
+    final BoxFit fit = BoxFit.values.byName(mediaDataMap["fit"]);
+    final DateTime lastUpdated =
+        DateTime.tryParse(mediaDataMap["lastUpdated"]) ?? DateTime.now();
+
     return MediaItem(
       key: mediaDataMap["key"],
-      roomId: mediaDataMap["roomId"],
-      target: mediaDataMap["target"],
+      roomId: roomIdListTypeCasted,
+      target: targetListTypeCasted,
       title: mediaDataMap["title"],
-      type: mediaDataMap["type"],
+      type: type,
       url: mediaDataMap["url"],
-      from: mediaDataMap["from"],
-      fit: mediaDataMap["fit"],
+      from: from,
+      fit: fit,
       orderNum: mediaDataMap["orderNum"],
-      lastUpdated: mediaDataMap["lastUpdated"],
+      lastUpdated: lastUpdated,
       isDead: mediaDataMap["isDead"],
     );
   }

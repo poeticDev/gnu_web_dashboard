@@ -10,12 +10,12 @@ part 'media_controller.g.dart';
 
 @Riverpod(keepAlive: true)
 class MediaController extends _$MediaController {
-  List<MediaItem> get _initialState => [];
+  Map<String, MediaItem> get _initialState => {};
 
   final WsManager _ws = WsManager();
 
   @override
-  List<MediaItem> build() {
+  Map<String, MediaItem> build() {
     return _initialState;
   }
 
@@ -27,15 +27,30 @@ class MediaController extends _$MediaController {
     return 0;
   }
 
-  Future<int> updateMediaItem() async {
-    return 0;
+  /// ws_manager 연결 시 등록. 수신한 미디어 아이템 처리
+  void updateStateMediaItem(var mediaItemList) {
+    if (mediaItemList is List) {
+      for (var item in mediaItemList) {
+        if (item is Map<String, dynamic>) {
+          try {
+            final newItem = MediaItem.fromMap(item);
+            state = {...state, newItem.key: newItem};
+            dLog('미디어 아이템 탑재 성공: ${newItem.key}');
+          } catch (e) {
+            eLog('미디어 아이템 탑재 실패 : $e');
+          }
+        }
+      }
+    } else {
+      eLog('수신한 mediaItemList가 리스트가 아닙니다. : ${mediaItemList.runtimeType}');
+    }
   }
 
-  Future<int> insertMediaItemToServer(
+  Future<int> upsertMediaItemToServer(
       {required List<MediaItem> mediaItemList}) async {
     List<Map> dataList = [];
 
-    for (var mediaItem in sampleMediaList) {
+    for (MediaItem mediaItem in mediaItemList) {
       dataList = [
         ...dataList,
         mediaItem.getMediaItemMap(),
@@ -45,9 +60,6 @@ class MediaController extends _$MediaController {
     final dataMap = {
       "mediaData": dataList,
     };
-
-    print(dataMap);
-    print(jsonEncode(dataMap));
 
     try {
       _ws.sendStringMessage(jsonEncode(dataMap));
@@ -60,9 +72,10 @@ class MediaController extends _$MediaController {
   }
 
   void uploadSampleMedia() {
-    state = [
-      ...state,
-      ...sampleMediaList,
-    ];
+    for (MediaItem mediaItem in sampleMediaList)
+      state = {
+        ...state,
+        mediaItem.key: mediaItem,
+      };
   }
 }
