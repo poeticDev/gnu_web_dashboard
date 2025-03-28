@@ -39,10 +39,12 @@ class WsManager {
       });
 
       _ws!.onMessage.listen((event) {
-        print('📩 웹소켓 메세지 수신 : ${event.data}');
-        if (event.data.runtimeType == String) {
+        final data = event.data;
+
+        dLog('📩 웹소켓 메세지 수신 : $data');
+        if (data.runtimeType == String && data != 'ping') {
           try {
-            final Map<String, dynamic> decodedData = jsonDecode(event.data);
+            final Map<String, dynamic> decodedData = jsonDecode(data);
 
             /// 수신된 key에 해당하는 이벤트 핸들러가 있으면 처리
             for (String key in decodedData.keys) {
@@ -51,9 +53,7 @@ class WsManager {
                 eventHandler(decodedData[key]);
               }
             }
-          } catch (e) {
-            print('제이슨 변환 실패');
-          }
+          } catch (e) {}
         }
       });
 

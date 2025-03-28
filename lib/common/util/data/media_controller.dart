@@ -19,9 +19,19 @@ class MediaController extends _$MediaController {
     return _initialState;
   }
 
-  Future<void> getAliveMediaItemList() async {}
+  Future<void> requestAliveMediaItemList(String roomId) async {
+    final Map req = {"topic": "mediaItem_alive", "payload": roomId};
+    final String encodedReq = jsonEncode(req);
 
-  Future<void> getFullMediaItemList() async {}
+    _ws.sendStringMessage(encodedReq);
+  }
+
+  Future<void> requestEveryMediaItemList(String roomId) async {
+    final Map req = {"topic": "mediaItem_every", "payload": roomId};
+    final String encodedReq = jsonEncode(req);
+
+    _ws.sendStringMessage(encodedReq);
+  }
 
   Future<int> createMediaItem({required MediaItem mediaItem}) async {
     return 0;
