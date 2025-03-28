@@ -6,20 +6,21 @@ part of 'media_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mediaControllerHash() => r'4475c39c90bc51a13fd9097e6f89e4c84cb92c84';
+String _$mediaControllerHash() => r'2a8c4d3e0b23b3801df14b6f804480ceb8cc66c8';
 
 /// See also [MediaController].
 @ProviderFor(MediaController)
 final mediaControllerProvider =
     NotifierProvider<MediaController, Map<String, MediaItem>>.internal(
-  MediaController.new,
-  name: r'mediaControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$mediaControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      MediaController.new,
+      name: r'mediaControllerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$mediaControllerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$MediaController = Notifier<Map<String, MediaItem>>;
 // ignore_for_file: type=lint

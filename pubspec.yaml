@@ -20,7 +20,7 @@ version: 1.0.0+1
 build-name: GNU_Web_Dashboard
 
 environment:
-  sdk: ^3.5.4
+  sdk: '>=3.7.2 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -48,8 +48,10 @@ dependencies:
   google_fonts: ^6.2.1
   #### 토글
   animated_toggle_switch: ^0.8.3
+  #### 데이터 그리드
+  trina_grid: ^1.6.5
   #### 그래프
-  fl_chart: ^0.69.2
+  fl_chart: ^0.70.2
   #### 상태 표시등
   loading_indicator: ^3.1.1
   #### Responsive
@@ -72,7 +74,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
