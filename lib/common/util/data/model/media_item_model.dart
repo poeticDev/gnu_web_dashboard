@@ -8,43 +8,39 @@ class MediaItem {
   /// 2) 대상 강의실
   final List<String> roomId;
 
-  /// 3) 대상 기기
-  final List<String> target;
-
-  /// 4) 미디어 이름
+  /// 3) 미디어 이름
   final String title;
 
-  /// 5) 미디어 타입
+  /// 4) 미디어 타입
   final MediaType type;
 
-  /// 6) 주소
+  /// 5) 주소
   final String url;
 
-  /// 7) 파일명
+  /// 6) 파일명
   /// - 없으면 url 마지막 부분에서 파일명 추출
   final String? fileName;
 
-  /// 8) 저장위치
+  /// 7) 저장위치
   final MediaFrom from;
 
-  /// 9) 미디어 표출 방식
+  /// 8) 미디어 표출 방식
   /// - cover(기본): 꽉 채움
   /// - contain: 여백이 있더라도 다 나오게)
   final BoxFit fit;
 
-  /// 10) 표출 순서 : 기본 생성순
+  /// 9) 표출 순서 : 기본 생성순
   final int orderNum;
 
-  /// 11) 마지막 수정 일시
+  /// 10) 마지막 수정 일시
   DateTime? lastUpdated;
 
-  /// 12) 미디어 상태(표출 중, 미표출)
+  /// 11) 미디어 상태(표출 중, 미표출)
   final bool isDead;
 
   MediaItem({
     required this.key,
     required this.roomId,
-    required this.target,
     required this.title,
     required this.type,
     required this.url,
@@ -60,7 +56,6 @@ class MediaItem {
 
   factory MediaItem.withoutKey({
     required List<String> roomId,
-    required List<String> target,
     required String title,
     required MediaType type,
     required String url,
@@ -74,7 +69,6 @@ class MediaItem {
     return MediaItem(
       key: _generateKey(),
       roomId: roomId,
-      target: target,
       title: title,
       type: type,
       url: url,
@@ -109,7 +103,6 @@ class MediaItem {
     return MediaItem(
       key: mediaDataMap["key"],
       roomId: roomIdListTypeCasted,
-      target: targetListTypeCasted,
       title: mediaDataMap["title"],
       type: type,
       url: mediaDataMap["url"],
@@ -126,7 +119,6 @@ class MediaItem {
     final Map<String, dynamic> result = {
       "key": key,
       "roomId": roomId,
-      "target": target,
       "title": title,
       "type": type.name,
       "url": url,

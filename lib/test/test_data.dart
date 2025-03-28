@@ -11,7 +11,6 @@ final List<MediaItem> sampleMediaList = [
 
 final MediaItem mediaItemSampleImage = MediaItem.withoutKey(
   roomId: ['0-004-0111'],
-  target: ['wall_hub'],
   title: '미디어: 이미지 샘플',
   type: MediaType.image,
   url:
@@ -22,7 +21,6 @@ final MediaItem mediaItemSampleImage = MediaItem.withoutKey(
 
 final MediaItem mediaItemSampleImageFromG = MediaItem.withoutKey(
   roomId: ['0-004-0111'],
-  target: ['wall_hub', 'class_hub'],
   title: '미디어: 구글 드라이브 이미지 샘플',
   type: MediaType.image,
   url:
@@ -32,7 +30,6 @@ final MediaItem mediaItemSampleImageFromG = MediaItem.withoutKey(
 
 final MediaItem mediaItemSampleVideo = MediaItem.withoutKey(
   roomId: ['0-004-0111', '0-601-1007'],
-  target: ['wall_hub'],
   title: '미디어: 구글 드라이브 동영상 샘플',
   type: MediaType.video,
   url:

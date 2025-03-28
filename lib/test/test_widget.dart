@@ -55,7 +55,6 @@ class TestWidget extends ConsumerWidget {
                 final MediaItem test = MediaItem(
                   key: "ediaItem_9536c46e-86c0-45bc-927d-989d87caf827",
                   roomId: ['룸 아이디 바꿨음'],
-                  target: ['wall_hub'],
                   title: '미디어: 이미지 샘플',
                   type: MediaType.image,
                   url:
