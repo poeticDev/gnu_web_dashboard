@@ -135,7 +135,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
     // }
 
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: meta,
       child: textWidget,
     );
   }

@@ -1,4 +1,4 @@
-fianl test = {
+final test = {
   "mediaData": [
     {
       "key": "ediaItem_9536c46e-86c0-45bc-927d-989d87caf827",
