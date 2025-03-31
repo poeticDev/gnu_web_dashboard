@@ -119,6 +119,49 @@ class MediaController extends _$MediaController {
     return 1;
   }
 
+  /// 미디어아이템 필드가 수정됐을 때 호출
+  Future<void> handleFieldChange({
+    required Map<String, MediaItem> currentState,
+    required String key,
+    required String field,
+    required dynamic value,
+  }) async {
+    /// 1. key로 미디어 데이터 불러오기
+    Map<String, dynamic> mediaItemMap = currentState[key]!.getMediaItemMap();
+    dLog('1. 기존 미디어아이템 맵 불러오기 : $mediaItemMap');
+
+    /// 2. 불러온 미디어 데이터의 field와 value 수정
+    switch (field) {
+      case 'type':
+        mediaItemMap[field] = mediaTypeFromLabel(value).name;
+        break;
+      case 'from':
+        mediaItemMap[field] = mediaFromFromLabel(value).name;
+        break;
+      case 'fit':
+        mediaItemMap[field] = boxFitFromLabel(value).name;
+        break;
+      case 'lastUpdated':
+        mediaItemMap[field] = value.toString();
+        break;
+      default:
+        mediaItemMap[field] = value;
+    }
+
+    dLog('2. 미디어아이템 맵 수정 : $mediaItemMap');
+
+    /// 3. 수정된 미디어 데이터 전송 + 4. 응답 수신 후, state 반영
+    final updated = MediaItem.fromMap(mediaItemMap);
+    final result = await upsertSingleMediaItemToServer(mediaItem: updated);
+    dLog('3. 미디어아이템 맵 전송 : $result');
+
+    /// 업데이트 실패 시, 현재 목록을 서버로부터 다시 받아와 복구
+    if (result != 0) {
+      dLog('미디어 목록 갱신 요청');
+      await requestMediaItemList();
+    }
+  }
+
   /// depricated
   Future<int> upsertMediaItemToServer({
     required List<MediaItem> mediaItemList,

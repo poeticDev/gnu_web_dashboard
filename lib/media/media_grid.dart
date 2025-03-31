@@ -5,7 +5,6 @@ import 'package:gnu_web_dashboard/common/util/data/grid_manager.dart';
 import 'package:gnu_web_dashboard/common/util/data/media_controller.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/media_item_model.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:trina_grid/trina_grid.dart';
 import 'package:uuid/v4.dart';
 
@@ -58,47 +57,15 @@ class MediaGrid extends ConsumerWidget {
             final key = event.row.cells['key']!.value;
             final field = event.column.field;
             final value = event.value;
-            dLog('key: $key | field: $field | value: $value');
 
-            /// 1. key로 미디어 데이터 불러오기
-            Map<String, dynamic> mediaItemMap =
-                mediaWatcher[key]!.getMediaItemMap();
-            dLog('1. 기존 미디어아이템 맵 불러오기 : $mediaItemMap');
-
-            /// 2. 불러온 미디어 데이터의 field와 value 수정
-            if (field == 'type') {
-              mediaItemMap = {
-                ...mediaItemMap,
-                field: mediaTypeFromLabel(value).name,
-              };
-            } else if (field == 'from') {
-              mediaItemMap = {
-                ...mediaItemMap,
-                field: mediaFromFromLabel(value).name,
-              };
-            } else if (field == 'fit') {
-              mediaItemMap = {
-                ...mediaItemMap,
-                field: boxFitFromLabel(value).name,
-              };
-            } else if (field == 'lastUpdated') {
-              mediaItemMap = {...mediaItemMap, field: value.toString()};
-            } else {
-              mediaItemMap = {...mediaItemMap, field: value};
-            }
-            dLog('2. 미디어아이템 맵 수정 : $mediaItemMap');
-
-            final MediaItem updatedItem = MediaItem.fromMap(mediaItemMap);
-
-            /// 3. 수정된 미디어 데이터 전송 + 4. 응답 수신 후, state 반영
-            final result = await mediaNotifier.upsertSingleMediaItemToServer(
-              mediaItem: updatedItem,
-            );
-            dLog('3. 미디어아이템 맵 전송 : $result');
-
-            if (result != 0 && context.mounted) {
-              await mediaNotifier.requestMediaItemList();
-            }
+            await ref
+                .read(mediaControllerProvider.notifier)
+                .handleFieldChange(
+                  currentState: ref.read(mediaControllerProvider),
+                  key: key,
+                  field: field,
+                  value: value,
+                );
           },
         ),
       ],
