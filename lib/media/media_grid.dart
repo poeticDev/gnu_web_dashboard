@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/util/data/grid_manager.dart';
 import 'package:gnu_web_dashboard/common/util/data/media_controller.dart';
+import 'package:gnu_web_dashboard/common/util/data/model/media_item_model.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 import 'package:gnu_web_dashboard/test/test_data.dart';
 import 'package:trina_grid/trina_grid.dart';
@@ -15,7 +16,6 @@ class MediaGrid extends ConsumerWidget {
 
   MediaGrid({required this.roomId, super.key});
 
-
   final GridManager gridManager = GridManager();
   late final TrinaGridStateManager stateManager;
 
@@ -24,7 +24,6 @@ class MediaGrid extends ConsumerWidget {
     /// watcher는 나중에 상위 위젯으로 올리기로?
     final mediaWatcher = ref.watch(mediaControllerProvider);
     final mediaNotifier = ref.read(mediaControllerProvider.notifier);
-
 
     final List<TrinaRow> mediaItemRows =
         mediaNotifier
@@ -60,9 +59,32 @@ class MediaGrid extends ConsumerWidget {
         dLog('key: $key | field: $field | value: $value');
 
         /// 1. key로 미디어 데이터 불러오기
+        Map<String, dynamic> mediaItemMap =
+            mediaWatcher[key]!.getMediaItemMap();
+
         /// 2. 불러온 미디어 데이터의 field와 value 수정
-        /// 3. 수정된 미디어 데이터 전송
-        /// 4. 응답 수신 후, state 반영
+        if (field == 'type') {
+          mediaItemMap = {
+            ...mediaItemMap,
+            field: mediaTypeFromLabel(value).name,
+          };
+        } else if (field == 'from') {
+          mediaItemMap = {
+            ...mediaItemMap,
+            field: mediaFromFromLabel(value).name,
+          };
+        } else if (field == 'fit') {
+          mediaItemMap = {...mediaItemMap, field: boxFitFromLabel(value).name};
+        } else if (field == 'lastUpdated') {
+          mediaItemMap = {...mediaItemMap, field: value.toString()};
+        } else {
+          mediaItemMap = {...mediaItemMap, field: value};
+        }
+
+        final MediaItem updatedItem = MediaItem.fromMap(mediaItemMap);
+
+        /// 3. 수정된 미디어 데이터 전송 + 4. 응답 수신 후, state 반영
+        mediaNotifier.upsertSingleMediaItemToServer(mediaItem: updatedItem);
       },
     );
   }

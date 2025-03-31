@@ -98,6 +98,11 @@ class MediaController extends _$MediaController {
         data: jsonData,
       );
 
+      if (response?.statusCode != 200)
+        throw Exception(
+          'res status: ${response?.statusCode} | statusMessage: ${response?.statusMessage}',
+        );
+
       dLog('미디어 upsert res: $response');
     } catch (e) {
       eLog('미디어 upsert http 요청 실패 : $e');

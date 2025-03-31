@@ -20,6 +20,8 @@ class HttpManager {
     BaseOptions(
       baseUrl: _serverIp,
       headers: {'Content-Type': 'application/json'},
+      sendTimeout: Duration(seconds: 5),
+      receiveTimeout: Duration(seconds: 5),
     ),
   );
 

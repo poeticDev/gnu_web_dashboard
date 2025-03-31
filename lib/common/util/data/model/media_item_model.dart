@@ -90,10 +90,6 @@ class MediaItem {
     final List<String> roomIdListTypeCasted =
         roomIdList.cast<String>().toList();
 
-    final List targetList = mediaDataMap["target"];
-    final List<String> targetListTypeCasted =
-        targetList.cast<String>().toList();
-
     final MediaType type = MediaType.values.byName(mediaDataMap["type"]);
     final MediaFrom from = MediaFrom.values.byName(mediaDataMap["from"]);
     final BoxFit fit = BoxFit.values.byName(mediaDataMap["fit"]);
@@ -194,9 +190,30 @@ extension BoxFitLabel on  BoxFit {
   }
 
 
-// MediaFrom? mediaFromFromLabel(String label) {
-//   return MediaFrom.values.firstWhere(
-//         (e) => e.label == label,
-//     orElse: () => MediaFrom.etc,
-//   );
-// }
+MediaType mediaTypeFromLabel(String label) {
+  return MediaType.values.firstWhere(
+        (e) => e.label == label,
+    orElse: () => MediaType.image,
+  );
+}
+
+MediaFrom mediaFromFromLabel(String label) {
+  return MediaFrom.values.firstWhere(
+        (e) => e.label == label,
+    orElse: () => MediaFrom.etc,
+  );
+}
+
+BoxFit boxFitFromLabel(String label) {
+  return BoxFit.values.firstWhere(
+        (e) {
+      try {
+        return e.label == label;
+      } catch (_) {
+        return false; // UnimplementedError 던지는 항목들은 패스
+      }
+    },
+    orElse: () => BoxFit.cover,
+  );
+}
+

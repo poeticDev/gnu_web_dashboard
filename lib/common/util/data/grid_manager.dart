@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:trina_grid/trina_grid.dart';
 
 import 'model/media_item_model.dart';
@@ -15,9 +17,12 @@ class GridManager {
   GridManager();
 
   TrinaRow getRowFromMediaItemModel(MediaItem mediaItem) {
+    final String parsedRoomId = jsonEncode(mediaItem.roomId);
+
     return TrinaRow(
       cells: {
         'key': TrinaCell(value: mediaItem.key),
+        'roomId': TrinaCell(value: parsedRoomId),
         'title': TrinaCell(value: mediaItem.title),
         'type': TrinaCell(value: mediaItem.type.label),
         'url': TrinaCell(value: mediaItem.url),
@@ -26,6 +31,7 @@ class GridManager {
         'fit': TrinaCell(value: mediaItem.fit.label),
         'orderNum': TrinaCell(value: mediaItem.orderNum),
         'lastUpdated': TrinaCell(value: mediaItem.lastUpdated),
+        'isDead': TrinaCell(value: mediaItem.isDead),
       },
     );
   }

@@ -9,6 +9,13 @@ final List<TrinaColumn> mediaItemColumns = [
     hide: true,
   ),
 
+  TrinaColumn(
+    title: 'roomId',
+    field: 'roomId',
+    type: TrinaColumnType.text(),
+    hide: true,
+  ),
+
   TrinaColumn(title: '미디어 이름', field: 'title', type: TrinaColumnType.text()),
 
   TrinaColumn(
@@ -61,5 +68,13 @@ final List<TrinaColumn> mediaItemColumns = [
     width: 150,
     enableEditingMode: false,
     readOnly: true,
+  ),
+
+  TrinaColumn(
+    title: 'isDead',
+    field: 'isDead',
+    type: TrinaColumnType.boolean(),
+    width: 150,
+    hide: true,
   ),
 ];
