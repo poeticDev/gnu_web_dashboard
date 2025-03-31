@@ -4,9 +4,8 @@ import 'package:gnu_web_dashboard/common/util/data/model/message_model.dart';
 /// 미디어아이템 샘플
 final List<MediaItem> sampleMediaList = [
   mediaItemSampleImage,
-
-  // mediaItemSampleImageFromG,
-  // mediaItemSampleVideo,
+  mediaItemSampleImageFromG,
+  mediaItemSampleVideo,
 ];
 
 final MediaItem mediaItemSampleImage = MediaItem.withoutKey(

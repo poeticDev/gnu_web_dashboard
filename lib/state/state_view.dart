@@ -8,6 +8,7 @@ import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
 import 'package:gnu_web_dashboard/common/util/network/ws_manager.dart';
+import 'package:gnu_web_dashboard/media/media_grid.dart';
 import 'package:gnu_web_dashboard/state/component/custom_line_chart.dart';
 import 'package:gnu_web_dashboard/state/component/state_row.dart';
 import 'package:gnu_web_dashboard/test/test_widget.dart';
@@ -33,53 +34,57 @@ class _StateViewState extends State<StateView> {
 
     final colors = AppColors.of(context);
 
-    return LayoutBuilder(builder: (context, constraints) {
-      const double globalPadding = 20;
-      const double betweenPadding = 60;
-      // 전체 화면 크기 가져오기
-      final double mWidth = constraints.maxWidth - globalPadding * 2;
-      final double mHeight = constraints.maxHeight - globalPadding * 2;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const double globalPadding = 20;
+        const double betweenPadding = 60;
+        // 전체 화면 크기 가져오기
+        final double mWidth = constraints.maxWidth - globalPadding * 2;
+        final double mHeight = constraints.maxHeight - globalPadding * 2;
 
-      // Desktop 기준 minWidth
-      final double cameraBoxMinWidth = 520;
-      final double mediaBoxMinWidth = 520;
-      final double stateBoxMinWidth = 520;
+        // Desktop 기준 minWidth
+        final double cameraBoxMinWidth = 520;
+        final double mediaBoxMinWidth = 520;
+        final double stateBoxMinWidth = 520;
 
-      final double stateBoxWidth = 520;
-      final double mediaBoxWidth = 520;
-      final double cameraBoxWidth =
-          mWidth - stateBoxWidth - mediaBoxWidth - betweenPadding * 2;
+        final double stateBoxWidth = 520;
+        final double mediaBoxWidth = 520;
+        final double cameraBoxWidth =
+            mWidth - stateBoxWidth - mediaBoxWidth - betweenPadding * 2;
 
-      return Padding(
-        padding: const EdgeInsets.all(globalPadding),
-        child: SizedBox(
-          width: mWidth,
-          height: mHeight,
-          child: SingleChildScrollView(
-            child: Wrap(
-              alignment: WrapAlignment.spaceAround,
-              spacing: betweenPadding,
-              runSpacing: betweenPadding,
-              children: [
-                _RenderCameraBox(
+        return Padding(
+          padding: const EdgeInsets.all(globalPadding),
+          child: SizedBox(
+            width: mWidth,
+            height: mHeight,
+            child: SingleChildScrollView(
+              child: Wrap(
+                alignment: WrapAlignment.spaceAround,
+                spacing: betweenPadding,
+                runSpacing: betweenPadding,
+                children: [
+                  _RenderCameraBox(
                     width: cameraBoxWidth,
                     height: mHeight,
-                    minWidth: cameraBoxMinWidth),
-                _RenderStateBox(
+                    minWidth: cameraBoxMinWidth,
+                  ),
+                  _RenderStateBox(
                     width: stateBoxWidth,
                     height: mHeight,
-                    minWidth: stateBoxMinWidth),
-                _RenderMediaBox(
-                  width: mediaBoxWidth,
-                  minWidth: mediaBoxMinWidth,
-                ),
-                TestWidget(),
-              ],
+                    minWidth: stateBoxMinWidth,
+                  ),
+                  _RenderMediaBox(
+                    width: mediaBoxWidth,
+                    minWidth: mediaBoxMinWidth,
+                  ),
+                  TestWidget(),
+                ],
+              ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   Widget _RenderCameraBox({
@@ -129,9 +134,7 @@ class _StateViewState extends State<StateView> {
     final double weatherHeight = 120;
 
     return Container(
-      constraints: BoxConstraints(
-        minWidth: minWidth,
-      ),
+      constraints: BoxConstraints(minWidth: minWidth),
       width: width,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -142,16 +145,16 @@ class _StateViewState extends State<StateView> {
               borderRadius: BorderRadius.circular(12.0),
             ),
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+                vertical: 8.0,
+              ),
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(
-                        width: 16,
-                      ),
+                      SizedBox(width: 16),
                       Text(
                         '강의실 상태',
                         style: TERTIARY_TITLE_TEXT_STYLE.copyWith(
@@ -162,21 +165,18 @@ class _StateViewState extends State<StateView> {
                       SizedBox(
                         width: 30,
                         child:
-                            // LoadingIndicator(
-                            //   indicatorType: Indicator.circleStrokeSpin,
-                            //   colors: [Colors.orangeAccent, Colors.yellowAccent],
-                            // ),
-                            LoadingIndicator(
+                        // LoadingIndicator(
+                        //   indicatorType: Indicator.circleStrokeSpin,
+                        //   colors: [Colors.orangeAccent, Colors.yellowAccent],
+                        // ),
+                        LoadingIndicator(
                           indicatorType: Indicator.ballClipRotatePulse,
                           colors: const [Colors.yellow, Colors.green],
                         ),
                       ),
                     ],
                   ),
-                  Divider(
-                    color: DIVIDER_COLOR,
-                    height: 10,
-                  ),
+                  Divider(color: DIVIDER_COLOR, height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -219,7 +219,7 @@ class _StateViewState extends State<StateView> {
                         ],
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -237,26 +237,29 @@ class _StateViewState extends State<StateView> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 12.0, vertical: 12.0),
+                    horizontal: 12.0,
+                    vertical: 12.0,
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Text(
                         '현재 온도',
                         style: TextStyle(
-                            color: WHITE_TEXT_COLOR, fontSize: fontSize * 0.85),
+                          color: WHITE_TEXT_COLOR,
+                          fontSize: fontSize * 0.85,
+                        ),
                       ),
                       SizedBox(
                         width: 100,
-                        child: Divider(
-                          color: DIVIDER_COLOR,
-                          height: 10,
-                        ),
+                        child: Divider(color: DIVIDER_COLOR, height: 10),
                       ),
                       Text(
                         '21°C',
                         style: TextStyle(
-                            color: WHITE_TEXT_COLOR, fontSize: fontSize),
+                          color: WHITE_TEXT_COLOR,
+                          fontSize: fontSize,
+                        ),
                       ),
                     ],
                   ),
@@ -309,7 +312,9 @@ class _StateViewState extends State<StateView> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 12.0, vertical: 12.0),
+                    horizontal: 12.0,
+                    vertical: 12.0,
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -324,15 +329,14 @@ class _StateViewState extends State<StateView> {
                       ),
                       SizedBox(
                         width: 100,
-                        child: Divider(
-                          color: DIVIDER_COLOR,
-                          height: 10,
-                        ),
+                        child: Divider(color: DIVIDER_COLOR, height: 10),
                       ),
                       Text(
                         '48%',
                         style: TextStyle(
-                            color: WHITE_TEXT_COLOR, fontSize: fontSize),
+                          color: WHITE_TEXT_COLOR,
+                          fontSize: fontSize,
+                        ),
                       ),
                     ],
                   ),
@@ -357,7 +361,7 @@ class _StateViewState extends State<StateView> {
                       Colors.yellow,
                       Colors.lightBlue,
                       Colors.lightBlue,
-                      Colors.indigo
+                      Colors.indigo,
                     ],
                     spots: [
                       FlSpot(8, 10),
@@ -382,14 +386,9 @@ class _StateViewState extends State<StateView> {
     );
   }
 
-  Widget _RenderMediaBox({
-    required double width,
-    required double minWidth,
-  }) {
+  Widget _RenderMediaBox({required double width, required double minWidth}) {
     return Container(
-      constraints: BoxConstraints(
-        minWidth: minWidth,
-      ),
+      constraints: BoxConstraints(minWidth: minWidth),
       width: width,
       child: Wrap(
         spacing: 10,
@@ -401,22 +400,23 @@ class _StateViewState extends State<StateView> {
               borderRadius: BorderRadius.circular(12.0),
             ),
             child: Padding(
-              padding:
-              const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12.0,
+                vertical: 12.0,
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     '메세지 관리',
                     style: TextStyle(
-                        color: WHITE_TEXT_COLOR, fontSize: fontSize * 0.85),
+                      color: WHITE_TEXT_COLOR,
+                      fontSize: fontSize * 0.85,
+                    ),
                   ),
                   SizedBox(
                     // width: 100,
-                    child: Divider(
-                      color: DIVIDER_COLOR,
-                      height: 10,
-                    ),
+                    child: Divider(color: DIVIDER_COLOR, height: 10),
                   ),
                   SizedBox(
                     height: 300,
@@ -424,7 +424,9 @@ class _StateViewState extends State<StateView> {
                       child: Text(
                         '메세지 관리 넣기',
                         style: TextStyle(
-                            color: WHITE_TEXT_COLOR, fontSize: fontSize),
+                          color: WHITE_TEXT_COLOR,
+                          fontSize: fontSize,
+                        ),
                       ),
                     ),
                   ),
@@ -432,42 +434,83 @@ class _StateViewState extends State<StateView> {
               ),
             ),
           ),
-          SizedBox(
-            height: 20,
-          ),
+          SizedBox(height: 20),
           Container(
             decoration: BoxDecoration(
               color: PRIMARY_CONTAINER_COLOR,
               borderRadius: BorderRadius.circular(12.0),
             ),
             child: Padding(
-              padding:
-              const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12.0,
+                vertical: 12.0,
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    '미디어 관리',
-                    style: TextStyle(
-                        color: WHITE_TEXT_COLOR, fontSize: fontSize * 0.85),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(),
+                      Text(
+                        '미디어 관리',
+                        style: TextStyle(
+                          color: WHITE_TEXT_COLOR,
+                          fontSize: fontSize * 0.85,
+                        ),
+                      ),
+                      IconButton(
+                        iconSize: fontSize * 0.85,
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              final width = MediaQuery.of(context).size.width * 0.9;
+                              final height = MediaQuery.of(context).size.height * 0.5;
+                              return Dialog(
+                                backgroundColor: BG_COLOR,
+                                child: SizedBox(
+                                  height: height,
+                                  width: width,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 48,
+                                        child: Center(
+                                          child: Text(
+                                            '미디어 관리',
+                                            style: TextStyle(
+                                              color: WHITE_TEXT_COLOR,
+                                              fontSize: fontSize,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        child: Divider(color: DIVIDER_COLOR, height: 10),
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: MediaGrid(),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        icon: Icon(Icons.photo_size_select_small),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     // width: 100,
-                    child: Divider(
-                      color: DIVIDER_COLOR,
-                      height: 10,
-                    ),
+                    child: Divider(color: DIVIDER_COLOR, height: 10),
                   ),
-                  SizedBox(
-                    height: 300,
-                    child: Center(
-                      child: Text(
-                        '미디어 관리 넣기',
-                        style: TextStyle(
-                            color: WHITE_TEXT_COLOR, fontSize: fontSize),
-                      ),
-                    ),
-                  ),
+                  SizedBox(height: 300, child: MediaGrid()),
                 ],
               ),
             ),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 /// 주색상
 const SEED_COLOR = Color(0xFFB5C2CC);
 
-
 /// 배경색
 const BG_COLOR = Color(0xFF1C1C25);
 const COMPONENT_BG_COLOR = Color(0xFFEFF5F8);
@@ -13,6 +12,13 @@ const PRIMARY_CONTAINER_COLOR = Color(0xFF23223A);
 
 const DIVIDER_COLOR = Color(0xFFEB5353);
 
+/// 표 색상
+const GRID_BG_COLOR = PRIMARY_CONTAINER_COLOR;
+const GRID_ODD_ROW_COLOR = BG_COLOR;
+const GRID_EVEN_ROW_COLOR = GRID_BG_COLOR;
+const GRID_BORDER_COLOR = Color(0xFF1C1C25);
+const Color GRID_ICON_COLOR = DIVIDER_COLOR;
+
 /// 전원 스크린
 const Color TOGGLE_TRUE_COLOR = Colors.green;
 const Color TOGGLE_FALSE_COLOR = Color(0xFFE53935);
@@ -21,7 +27,6 @@ const Color TOGGLE_FALSE_COLOR = Color(0xFFE53935);
 const TEXT_COLOR = Color(0xFF2C3740);
 const BODY_TEXT_COLOR = Color(0xFF485157);
 const WHITE_TEXT_COLOR = Color(0xFFFDF8F8);
-
 
 class AppColors {
   final ColorScheme _scheme;

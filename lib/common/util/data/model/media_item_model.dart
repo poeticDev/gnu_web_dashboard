@@ -134,6 +134,69 @@ class MediaItem {
   }
 }
 
-enum MediaType { image, video, webView }
+enum MediaType { image, video,
+  // webView
+}
 
-enum MediaFrom { gDrive, etc, webView }
+extension MediaTypeLabel on MediaType {
+  String get label {
+    switch (this) {
+      case MediaType.image:
+        return '이미지';
+      case MediaType.video:
+        return '영상';
+      // case MediaType.webView:
+      //   return '웹페이지';
+    }
+  }
+}
+
+enum MediaFrom { gDrive, etc,
+  // webView
+}
+
+extension MediaFromLabel on MediaFrom {
+  String get label {
+    switch (this) {
+      case MediaFrom.gDrive:
+        return '전용 구글 드라이브';
+      case MediaFrom.etc:
+        return '기타';
+      // case MediaFrom.webView:
+      //   return '웹페이지';
+    }
+  }
+}
+
+extension BoxFitLabel on  BoxFit {
+  String get label {
+    switch (this) {
+      case BoxFit.cover:
+        return '채우기';
+      case BoxFit.contain:
+        return '큰 폭에 맞춤';
+      case BoxFit.fill:
+        return '늘이기';
+      case BoxFit.fitWidth:
+        // 안 씀
+        throw UnimplementedError();
+      case BoxFit.fitHeight:
+      // 안 씀
+        throw UnimplementedError();
+      case BoxFit.none:
+      // 안 씀
+        throw UnimplementedError();
+      case BoxFit.scaleDown:
+      // 안 씀
+        throw UnimplementedError();
+      }
+    }
+  }
+
+
+// MediaFrom? mediaFromFromLabel(String label) {
+//   return MediaFrom.values.firstWhere(
+//         (e) => e.label == label,
+//     orElse: () => MediaFrom.etc,
+//   );
+// }
