@@ -46,7 +46,7 @@ class MediaController extends _$MediaController {
     try {
       response = await _http.post(
         path: '/read',
-        queryParameters: {"type": "messageData"},
+        queryParameters: {"type": "mediaData"},
         data: deadMap,
         options: Options(contentType: Headers.jsonContentType),
       );
@@ -116,7 +116,7 @@ class MediaController extends _$MediaController {
       iLog('미디어 upsert 성공, but 상태 반영 실패');
     }
 
-    return 0;
+    return 1;
   }
 
   /// depricated
