@@ -28,6 +28,7 @@ class MediaGrid extends StatelessWidget {
       },
       configuration: TrinaGridConfiguration(
         style: TrinaGridStyleConfig.dark(
+          rowColor: BG_COLOR,
           gridBackgroundColor: GRID_BG_COLOR,
           borderColor: Colors.grey,
           oddRowColor: BG_COLOR,

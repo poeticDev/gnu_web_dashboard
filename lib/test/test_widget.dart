@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gnu_web_dashboard/common/util/data/media_controller.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/media_item_model.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
+import 'package:gnu_web_dashboard/common/util/network/http_manager.dart';
 import 'package:gnu_web_dashboard/test/test_data.dart';
 import 'package:gnu_web_dashboard/common/util/network/ws_manager.dart';
 
@@ -25,10 +26,11 @@ class TestWidget extends ConsumerWidget {
             ElevatedButton(
               onPressed: () async {
                 WsManager().addJsonEventHandler(
-                    "mediaData",
-                    ref
-                        .read(mediaControllerProvider.notifier)
-                        .updateStateMediaItem);
+                  "mediaData",
+                  ref
+                      .read(mediaControllerProvider.notifier)
+                      .updateStateMediaItem,
+                );
               },
               child: Text('미디어아이템 수신 핸들러 등록'),
             ),
@@ -88,7 +90,21 @@ class TestWidget extends ConsumerWidget {
               child: Text('메세지 샘플 데이터 리스트 서버 추가 요청'),
             ),
           ],
-        )
+        ),
+        Row(
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                final httpManager = HttpManager();
+                httpManager.post(
+                  path: '${serverHttpApiIp}read',
+                  queryParameters: {"type": "messageData"},
+                );
+              },
+              child: Text('post 테스트'),
+            ),
+          ],
+        ),
       ],
     );
   }
