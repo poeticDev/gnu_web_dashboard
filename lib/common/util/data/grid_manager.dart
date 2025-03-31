@@ -17,6 +17,7 @@ class GridManager {
   TrinaRow getRowFromMediaItemModel(MediaItem mediaItem) {
     return TrinaRow(
       cells: {
+        'key': TrinaCell(value: mediaItem.key),
         'title': TrinaCell(value: mediaItem.title),
         'type': TrinaCell(value: mediaItem.type.label),
         'url': TrinaCell(value: mediaItem.url),

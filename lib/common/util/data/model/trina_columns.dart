@@ -2,6 +2,13 @@ import 'package:gnu_web_dashboard/common/util/data/model/media_item_model.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 final List<TrinaColumn> mediaItemColumns = [
+  TrinaColumn(
+    title: 'key',
+    field: 'key',
+    type: TrinaColumnType.text(),
+    hide: true,
+  ),
+
   TrinaColumn(title: '미디어 이름', field: 'title', type: TrinaColumnType.text()),
 
   TrinaColumn(
@@ -43,16 +50,14 @@ final List<TrinaColumn> mediaItemColumns = [
   TrinaColumn(
     title: '표출 순서',
     field: 'orderNum',
-    type: TrinaColumnType.number(negative: false,),
+    type: TrinaColumnType.number(negative: false),
     width: 120,
   ),
 
   TrinaColumn(
     title: '최종 수정일',
     field: 'lastUpdated',
-    type: TrinaColumnType.date(
-      format: 'yy.MM.dd  hh시 mm분'
-    ),
+    type: TrinaColumnType.date(format: 'yy.MM.dd  hh시 mm분'),
     width: 150,
     enableEditingMode: false,
     readOnly: true,
