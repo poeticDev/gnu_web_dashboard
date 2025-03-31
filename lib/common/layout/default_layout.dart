@@ -35,7 +35,7 @@ class DefaultLayout extends StatelessWidget {
           height: topNaviHeight,
         ),
         resizeToAvoidBottomInset: false,
-        body: StateView(),
+        body: StateView(roomId: '0-004-0111',),
       ),
     );
   }

@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 
 const serverHttpApiIp = 'https://192.168.219.137/api/v1/';
@@ -10,15 +9,27 @@ class HttpManager {
   HttpManager._internal();
 
   factory HttpManager() {
+    if (_serverIp.endsWith('/')) {
+      _serverIp = _serverIp.substring(0, _serverIp.length - 1);
+    }
+
     return _instance;
   }
 
-  static Dio dio = Dio();
-  static final _serverIp = serverHttpApiIp;
+  final Dio _dio = Dio(
+    BaseOptions(
+      baseUrl: _serverIp,
+      headers: {'Content-Type': 'application/json'},
+    ),
+  );
+
+  Dio get dio => _dio;
+
+  static String _serverIp = serverHttpApiIp;
 
   Future<void> getTest({required String address}) async {
     try {
-      final response = await dio.get(_serverIp);
+      final response = await _dio.get(_serverIp);
       dLog('response: $response');
     } catch (e) {
       eLog('get 테스트 실패 : $e');
@@ -32,35 +43,49 @@ class HttpManager {
     //   }
     // );
 
-    dio.options.headers = {'Content-Type': 'application/json'};
-
     try {
-      final response = await dio.post('${_serverIp}read?type=messageData');
+      final response = await _dio.post('/read?type=messageData');
       dLog('response: $response');
     } catch (e) {
       eLog('post 테스트 실패 : $e');
     }
   }
 
-  Future<Response?> post({
-    required String path,
+  Future<Response?> get(
+    String path, {
     Map<String, dynamic>? queryParameters,
-    String? data,
   }) async {
     try {
-      dio.options.headers = {'Content-Type': 'application/json'};
+      final response = await _dio.get(path, queryParameters: queryParameters);
+      dLog('📡 GET [$path] → ${response.statusCode}');
+      return response;
+    } catch (e) {
+      eLog('GET 요청 실패: $e');
+      return null;
+    }
+  }
 
-      final response = await dio.post(
+  Future<Response?> post({
+    String path = '',
+    Map<String, dynamic>? queryParameters,
+    dynamic data,
+    Options? options,
+  }) async {
+    try {
+      _dio.options.headers = {'Content-Type': 'application/json'};
+
+      final response = await _dio.post(
         path,
         queryParameters: queryParameters,
         data: data,
+        options: options,
       );
 
-      dLog('post response: $response');
+      dLog('POST $path: ${response.statusCode}');
 
       return response;
     } catch (e) {
-      eLog('post 요청 실패 : $e');
+      eLog('POST 요청 실패 : $e');
     }
     return null;
   }

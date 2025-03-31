@@ -1,13 +1,13 @@
-import 'dart:convert';
 import 'dart:html';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
-import 'package:gnu_web_dashboard/common/util/network/ws_manager.dart';
+import 'package:gnu_web_dashboard/common/util/data/media_controller.dart';
 import 'package:gnu_web_dashboard/media/media_grid.dart';
 import 'package:gnu_web_dashboard/state/component/custom_line_chart.dart';
 import 'package:gnu_web_dashboard/state/component/state_row.dart';
@@ -15,7 +15,9 @@ import 'package:gnu_web_dashboard/test/test_widget.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
 class StateView extends StatefulWidget {
-  const StateView({super.key});
+  final String roomId;
+
+  const StateView({required this.roomId, super.key});
 
   @override
   State<StateView> createState() => _StateViewState();
@@ -451,7 +453,42 @@ class _StateViewState extends State<StateView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(),
+                      IconButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              final width =
+                                  MediaQuery.of(context).size.width * 0.9;
+                              final height =
+                                  MediaQuery.of(context).size.height * 0.5;
+
+                              return AlertDialog(
+                                title: Text('미디어 아이템 추가하기'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {},
+                                    child: Text('저장'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('취소'),
+                                  ),
+                                ],
+                                content: SizedBox(
+                                  width: width,
+                                  height: height,
+                                  child: Center(child: Text('추가창 만들어주세여')),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        icon: Icon(Icons.add),
+                        iconSize: fontSize * 0.7,
+                      ),
                       Text(
                         '미디어 관리',
                         style: TextStyle(
@@ -460,13 +497,16 @@ class _StateViewState extends State<StateView> {
                         ),
                       ),
                       IconButton(
-                        iconSize: fontSize * 0.85,
+                        icon: Icon(Icons.photo_size_select_small),
+                        iconSize: fontSize * 0.7,
                         onPressed: () {
                           showDialog(
                             context: context,
                             builder: (context) {
-                              final width = MediaQuery.of(context).size.width * 0.9;
-                              final height = MediaQuery.of(context).size.height * 0.5;
+                              final width =
+                                  MediaQuery.of(context).size.width * 0.9;
+                              final height =
+                                  MediaQuery.of(context).size.height * 0.5;
                               return Dialog(
                                 backgroundColor: BG_COLOR,
                                 child: SizedBox(
@@ -487,12 +527,17 @@ class _StateViewState extends State<StateView> {
                                         ),
                                       ),
                                       SizedBox(
-                                        child: Divider(color: DIVIDER_COLOR, height: 10),
+                                        child: Divider(
+                                          color: DIVIDER_COLOR,
+                                          height: 10,
+                                        ),
                                       ),
                                       Expanded(
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: MediaGrid(),
+                                          child: MediaGrid(
+                                            roomId: widget.roomId,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -502,7 +547,6 @@ class _StateViewState extends State<StateView> {
                             },
                           );
                         },
-                        icon: Icon(Icons.photo_size_select_small),
                       ),
                     ],
                   ),
@@ -510,7 +554,10 @@ class _StateViewState extends State<StateView> {
                     // width: 100,
                     child: Divider(color: DIVIDER_COLOR, height: 10),
                   ),
-                  SizedBox(height: 300, child: MediaGrid()),
+                  SizedBox(
+                    height: 300,
+                    child: MediaGrid(roomId: widget.roomId),
+                  ),
                 ],
               ),
             ),
