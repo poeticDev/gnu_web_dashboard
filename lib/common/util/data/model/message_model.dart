@@ -7,17 +7,24 @@ class Message {
   /// 2) 대상 강의실
   final List<String> roomId;
 
-  final DateTime until;
-  final MessageType type;
+  /// 3) 메세지 내용
   final String content;
+
+  /// 4) 표출 기간
+  final DateTime until;
+
+  /// 5) 메세지 타입
+  final MessageType type;
+
+  /// 6) 최종 수정일
   DateTime? lastUpdated;
 
   Message({
     required this.key,
     required this.roomId,
+    required this.content,
     required this.until,
     required this.type,
-    required this.content,
     this.lastUpdated,
   }) {
     lastUpdated ??= DateTime.now();
@@ -99,4 +106,11 @@ extension MessageTypeLabel on MessageType {
         return '공지사항';
     }
   }
+}
+
+MessageType messageTypeFromLabel(String label) {
+  return MessageType.values.firstWhere(
+        (e) => e.label == label,
+    orElse: () => MessageType.normal,
+  );
 }

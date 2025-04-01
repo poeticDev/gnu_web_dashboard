@@ -4,8 +4,6 @@ import 'package:gnu_web_dashboard/common/component/splash_circle.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/util/data/grid_manager.dart';
 import 'package:gnu_web_dashboard/common/util/data/media_controller.dart';
-import 'package:gnu_web_dashboard/common/util/data/model/media_item_model.dart';
-import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 import 'package:trina_grid/trina_grid.dart';
 import 'package:uuid/v4.dart';
 
@@ -23,12 +21,6 @@ class MediaGrid extends ConsumerStatefulWidget {
 class _MediaGridState extends ConsumerState<MediaGrid> {
   final GridManager gridManager = GridManager();
   late TrinaGridStateManager stateManager;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
