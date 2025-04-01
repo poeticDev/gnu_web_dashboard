@@ -85,7 +85,7 @@ class MediaController extends _$MediaController {
     late final String jsonData;
 
     final mediaItemMap = mediaItem.getMediaItemMap();
-    final dataMap = {"mediaData": mediaItemMap};
+    final dataMap = {"mediaData": [mediaItemMap]};
 
     try {
       jsonData = jsonEncode(dataMap);
@@ -124,13 +124,12 @@ class MediaController extends _$MediaController {
 
   /// 미디어아이템 필드가 수정됐을 때 호출
   Future<void> handleFieldChange({
-    required Map<String, MediaItem> currentState,
     required String key,
     required String field,
     required dynamic value,
   }) async {
     /// 1. key로 미디어 데이터 불러오기
-    Map<String, dynamic> mediaItemMap = currentState[key]!.getMediaItemMap();
+    Map<String, dynamic> mediaItemMap = state[key]!.getMediaItemMap();
     dLog('1. 기존 미디어아이템 맵 불러오기 : $mediaItemMap');
 
     /// 2. 불러온 미디어 데이터의 field와 value 수정

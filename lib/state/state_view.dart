@@ -3,11 +3,10 @@ import 'dart:html';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
-import 'package:gnu_web_dashboard/common/util/data/media_controller.dart';
+import 'package:gnu_web_dashboard/media/media_add_dialog.dart';
 import 'package:gnu_web_dashboard/media/media_grid.dart';
 import 'package:gnu_web_dashboard/state/component/custom_line_chart.dart';
 import 'package:gnu_web_dashboard/state/component/state_row.dart';
@@ -24,7 +23,14 @@ class StateView extends StatefulWidget {
 }
 
 class _StateViewState extends State<StateView> {
+  late Future mediaItemList;
   double fontSize = 24;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -463,25 +469,9 @@ class _StateViewState extends State<StateView> {
                               final height =
                                   MediaQuery.of(context).size.height * 0.5;
 
-                              return AlertDialog(
-                                title: Text('미디어 아이템 추가하기'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {},
-                                    child: Text('저장'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('취소'),
-                                  ),
-                                ],
-                                content: SizedBox(
-                                  width: width,
-                                  height: height,
-                                  child: Center(child: Text('추가창 만들어주세여')),
-                                ),
+                              return MediaAddDialog(
+                                width: width,
+                                height: height,
                               );
                             },
                           );

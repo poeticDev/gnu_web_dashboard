@@ -15,7 +15,6 @@ final MediaItem mediaItemSampleImage = MediaItem.withoutKey(
   url:
       'https://www.gnu.ac.kr/upload/main/na/bbs_5171/ntt_2264748/img_44ab9c58-a741-4b93-bd7b-ddeee17c0ac11736728581323.png',
   from: MediaFrom.etc,
-  isDead: true,
 );
 
 final MediaItem mediaItemSampleImageFromG = MediaItem.withoutKey(

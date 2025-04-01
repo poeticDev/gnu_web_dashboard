@@ -28,6 +28,14 @@ const TEXT_COLOR = Color(0xFF2C3740);
 const BODY_TEXT_COLOR = Color(0xFF485157);
 const WHITE_TEXT_COLOR = Color(0xFFFDF8F8);
 
+/// 관리자모드
+// 토스트 배경색
+const TOAST_BG_COLOR = Color(0xDD485157);
+// 텍스트필드 배경 색상
+const INPUT_BG_COLOR = Color(0xFFFBFBFB);
+// 텍스트필드 테두리 색상
+const INPUT_BORDER_COLOR = Color(0xFFF3F2F2);
+
 class AppColors {
   final ColorScheme _scheme;
 
