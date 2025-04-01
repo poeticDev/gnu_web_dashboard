@@ -28,8 +28,6 @@ class MediaAddDialog extends StatefulWidget {
 }
 
 class _MediaAddDialogState extends State<MediaAddDialog> {
-  /// 1) 식별 키
-  late String itemKey;
 
   /// 2) 대상 강의실
   List<String> roomId = [];
@@ -76,8 +74,8 @@ class _MediaAddDialogState extends State<MediaAddDialog> {
       initialRooms
           .where(
             (room) =>
-                room.equipMap['wall_hub'] != null &&
-                room.equipMap['wall_hub'] == true,
+            room.equipMap['wall_hub'] != null &&
+                room.equipMap['wall_hub'] == true
           )
           .toList();
 
@@ -96,9 +94,12 @@ class _MediaAddDialogState extends State<MediaAddDialog> {
           child: Text('취소'),
         ),
       ],
-      content: SizedBox(
+      content: Container(
         width: widget.width,
         height: widget.height,
+        constraints: BoxConstraints(
+            minWidth: 400
+        ),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -157,7 +158,7 @@ class _MediaAddDialogState extends State<MediaAddDialog> {
                   SizedBox(height: 6.0),
                   DropdownSearch<String>(
                     mode: Mode.form,
-                    popupProps: PopupPropsMultiSelection<String>.menu(
+                    popupProps: PopupProps<String>.menu(
                       showSelectedItems: true,
                       constraints: BoxConstraints(maxHeight: 100),
                     ),
@@ -209,7 +210,7 @@ class _MediaAddDialogState extends State<MediaAddDialog> {
                   DropdownSearch<String>(
                     mode: Mode.form,
                     selectedItem: from.label,
-                    popupProps: PopupPropsMultiSelection<String>.menu(
+                    popupProps: PopupProps<String>.menu(
                       showSelectedItems: true,
                       constraints: BoxConstraints(maxHeight: 100),
                     ),
@@ -234,7 +235,7 @@ class _MediaAddDialogState extends State<MediaAddDialog> {
                   DropdownSearch<String>(
                     mode: Mode.form,
                     selectedItem: fit.label,
-                    popupProps: PopupPropsMultiSelection<String>.menu(
+                    popupProps: PopupProps<String>.menu(
                       showSelectedItems: true,
                       constraints: BoxConstraints(maxHeight: 180),
                     ),
@@ -302,7 +303,7 @@ class _MediaAddDialogState extends State<MediaAddDialog> {
         showCustomToast(toastMsg: '미디어가 성공적으로 등록되었습니다!', fToast: fToast);
       else {
         showCustomToast(
-          toastMsg: '미디어 등록 중 에러가 발생했습니다. 실제로 미디어가 등록되었는지 확인해주세요.',
+          toastMsg: '미디어 등록 중 에러가 발생했습니다. 미디어가 등록되었는지 확인해주세요.',
           fToast: fToast,
         );
       }

@@ -208,8 +208,8 @@ class MediaController extends _$MediaController {
   //   }
   // }
   //
-  // void uploadSampleMedia() {
-  //   for (MediaItem mediaItem in sampleMediaList)
-  //     state = {...state, mediaItem.key: mediaItem};
-  // }
+  void uploadSampleMedia() {
+    for (MediaItem mediaItem in sampleMediaList)
+      state = {...state, mediaItem.key: mediaItem};
+  }
 }

@@ -9,6 +9,8 @@ import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
 import 'package:gnu_web_dashboard/media/media_add_dialog.dart';
 import 'package:gnu_web_dashboard/media/media_grid.dart';
+import 'package:gnu_web_dashboard/message/message_add_dialog.dart';
+import 'package:gnu_web_dashboard/message/message_grid.dart';
 import 'package:gnu_web_dashboard/state/component/custom_line_chart.dart';
 import 'package:gnu_web_dashboard/state/component/state_row.dart';
 import 'package:gnu_web_dashboard/test/test_widget.dart';
@@ -416,29 +418,96 @@ class _StateViewState extends ConsumerState<StateView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                '메세지 관리',
-                style: TextStyle(
-                  color: WHITE_TEXT_COLOR,
-                  fontSize: fontSize * 0.85,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: () async{
+                      await showDialog(
+                      context: context,
+                      builder: (context) {
+                        final width = MediaQuery.of(context).size.width * 0.9;
+                        final height = MediaQuery.of(context).size.height * 0.5;
+
+                        return MessageAddDialog(
+                          width: width,
+                          height: height,
+                          ref: ref,
+                        );
+                      },
+                      );
+                      setState(() {});
+
+                    },
+                    icon: Icon(Icons.add),
+                    iconSize: fontSize * 0.7,
+                  ),
+                  Text(
+                    '메세지 관리',
+                    style: TextStyle(
+                      color: WHITE_TEXT_COLOR,
+                      fontSize: fontSize * 0.85,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          final width = MediaQuery.of(context).size.width * 0.9;
+                          final height = MediaQuery.of(context).size.height * 0.5;
+                          return Dialog(
+                            backgroundColor: BG_COLOR,
+                            child: Container(
+                              height: height,
+                              width: width,
+                              constraints: BoxConstraints(
+                                minWidth: 400
+                              ),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 48,
+                                    child: Center(
+                                      child: Text(
+                                        '메세지 관리',
+                                        style: TextStyle(
+                                          color: WHITE_TEXT_COLOR,
+                                          fontSize: fontSize,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    child: Divider(
+                                      color: DIVIDER_COLOR,
+                                      height: 10,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: MessageGrid(roomId: widget.roomId),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+
+                    },
+                    icon: Icon(Icons.photo_size_select_small),
+                    iconSize: fontSize * 0.7,
+                  ),
+                ],
               ),
               SizedBox(
                 // width: 100,
                 child: Divider(color: DIVIDER_COLOR, height: 10),
               ),
-              SizedBox(
-                height: 300,
-                child: Center(
-                  child: Text(
-                    '메세지 관리 넣기',
-                    style: TextStyle(
-                      color: WHITE_TEXT_COLOR,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ),
-              ),
+              SizedBox(height: 300, child: MessageGrid(roomId: widget.roomId)),
             ],
           ),
         ),
@@ -500,9 +569,12 @@ class _StateViewState extends ConsumerState<StateView> {
                         final height = MediaQuery.of(context).size.height * 0.5;
                         return Dialog(
                           backgroundColor: BG_COLOR,
-                          child: SizedBox(
+                          child: Container(
                             height: height,
                             width: width,
+                            constraints: BoxConstraints(
+                                minWidth: 400
+                            ),
                             child: Column(
                               children: [
                                 SizedBox(

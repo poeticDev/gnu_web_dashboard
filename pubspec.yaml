@@ -28,6 +28,7 @@ dependencies:
   google_fonts: ^6.2.1
   animated_toggle_switch: ^0.8.3
   dropdown_search: ^6.0.2
+  omni_datetime_picker: ^2.1.1
   trina_grid: ^1.6.5
   fl_chart: ^0.70.2
   fluttertoast: ^8.2.12

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:gnu_web_dashboard/common/util/data/model/message_model.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 import 'model/media_item_model.dart';
@@ -32,6 +33,21 @@ class GridManager {
         'orderNum': TrinaCell(value: mediaItem.orderNum),
         'lastUpdated': TrinaCell(value: mediaItem.lastUpdated),
         'isDead': TrinaCell(value: mediaItem.isDead),
+      },
+    );
+  }
+
+  TrinaRow getRowFromMessageModel(Message message) {
+    final String parsedRoomId = jsonEncode(message.roomId);
+
+    return TrinaRow(
+      cells: {
+        'key': TrinaCell(value: message.key),
+        'roomId': TrinaCell(value: parsedRoomId),
+        'content': TrinaCell(value: message.content),
+        'until': TrinaCell(value: message.until),
+        'type': TrinaCell(value: message.type.label),
+        'lastUpdated': TrinaCell(value: message.lastUpdated),
       },
     );
   }

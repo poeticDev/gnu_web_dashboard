@@ -44,39 +44,35 @@ class _MediaGridState extends ConsumerState<MediaGrid> {
         // gridKey 강제할당하여, riverpod state가 변할 때마다 TrinaGrid 재생성
         Key gridKey = ValueKey(UuidV4());
 
-        return Stack(
-          children: [
-            TrinaGrid(
-              key: gridKey,
-              columns: mediaItemColumns,
-              rows: mediaItemRows,
-              onLoaded: (event) {
-                stateManager = event.stateManager;
-              },
-              configuration: TrinaGridConfiguration(
-                style: TrinaGridStyleConfig.dark(
-                  rowColor: BG_COLOR,
-                  gridBackgroundColor: GRID_BG_COLOR,
-                  borderColor: Colors.grey,
-                  oddRowColor: BG_COLOR,
-                  evenRowColor: GRID_BG_COLOR,
-                  iconColor: GRID_ICON_COLOR,
-                ),
-                scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
-              ),
-              onChanged: (event) async {
-                final key = event.row.cells['key']!.value;
-                final field = event.column.field;
-                final value = event.value;
-
-                await mediaNotifier.handleFieldChange(
-                  key: key,
-                  field: field,
-                  value: value,
-                );
-              },
+        return TrinaGrid(
+          key: gridKey,
+          columns: mediaItemColumns,
+          rows: mediaItemRows,
+          onLoaded: (event) {
+            stateManager = event.stateManager;
+          },
+          configuration: TrinaGridConfiguration(
+            style: TrinaGridStyleConfig.dark(
+              rowColor: BG_COLOR,
+              gridBackgroundColor: GRID_BG_COLOR,
+              borderColor: Colors.grey,
+              oddRowColor: BG_COLOR,
+              evenRowColor: GRID_BG_COLOR,
+              iconColor: GRID_ICON_COLOR,
             ),
-          ],
+            scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
+          ),
+          onChanged: (event) async {
+            final key = event.row.cells['key']!.value;
+            final field = event.column.field;
+            final value = event.value;
+
+            await mediaNotifier.handleFieldChange(
+              key: key,
+              field: field,
+              value: value,
+            );
+          },
         );
       },
     );

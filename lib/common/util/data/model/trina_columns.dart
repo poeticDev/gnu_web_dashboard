@@ -1,4 +1,5 @@
 import 'package:gnu_web_dashboard/common/util/data/model/media_item_model.dart';
+import 'package:gnu_web_dashboard/common/util/data/model/message_model.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 final List<TrinaColumn> mediaItemColumns = [
@@ -76,5 +77,45 @@ final List<TrinaColumn> mediaItemColumns = [
     type: TrinaColumnType.boolean(),
     width: 150,
     // hide: true,
+  ),
+];
+
+final List<TrinaColumn> messageColumns = [
+  TrinaColumn(
+    title: 'key',
+    field: 'key',
+    type: TrinaColumnType.text(),
+    hide: true,
+  ),
+
+  TrinaColumn(
+    title: 'roomId',
+    field: 'roomId',
+    type: TrinaColumnType.text(),
+    hide: true,
+  ),
+
+  TrinaColumn(title: '메세지', field: 'content', type: TrinaColumnType.text()),
+  TrinaColumn(
+    title: '표출기간(-까지)',
+    field: 'until',
+    type: TrinaColumnType.date(format: 'yy.MM.dd  hh시 mm분'),
+    width: 150,
+  ),
+  TrinaColumn(
+    title: '메세지 타입',
+    field: 'type',
+    type: TrinaColumnType.select([...MessageType.values.map((e) => e.label)]),
+    width: 120,
+    // suppressedAutoSize:
+  ),
+
+  TrinaColumn(
+    title: '최종 수정일',
+    field: 'lastUpdated',
+    type: TrinaColumnType.date(format: 'yy.MM.dd  hh시 mm분'),
+    width: 150,
+    enableEditingMode: false,
+    readOnly: true,
   ),
 ];

@@ -10,6 +10,9 @@ class Message {
   /// 3) 메세지 내용
   final String content;
 
+  /// 4) 대상 기기
+  final List<String> target;
+
   /// 4) 표출 기간
   final DateTime until;
 
@@ -23,6 +26,7 @@ class Message {
     required this.key,
     required this.roomId,
     required this.content,
+    required this.target,
     required this.until,
     required this.type,
     this.lastUpdated,
@@ -32,17 +36,19 @@ class Message {
 
   factory Message.withoutKey({
     required List<String> roomIdList,
+    required String content,
+    required List<String> target,
     required DateTime until,
     required MessageType type,
-    required String content,
     DateTime? lastUpdated,
   }) {
     return Message(
       key: _generateKey(),
       roomId: roomIdList,
+      content: content,
+      target: target,
       until: until,
       type: type,
-      content: content,
       lastUpdated: lastUpdated,
     );
   }
@@ -65,9 +71,10 @@ class Message {
     return Message(
       key: messageDataMap['key'],
       roomId: roomIdListTypeCasted,
+      content: messageDataMap['content'],
+      target: messageDataMap['target'],
       until: until,
       type: type,
-      content: messageDataMap['content'],
       lastUpdated: lastUpdated,
     );
   }
@@ -76,9 +83,9 @@ class Message {
     final Map<String, dynamic> result = {
       "key": key,
       "roomId": roomId,
-      "until": until,
+      "content": target,
+      "until": until.toString(),
       "type": type.name,
-      "content": content,
       "lastUpdated": lastUpdated.toString(),
     };
 

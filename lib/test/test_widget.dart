@@ -23,17 +23,6 @@ class TestWidget extends ConsumerWidget {
               },
               child: Text('웹소켓 연결'),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                WsManager().addJsonEventHandler(
-                  "mediaData",
-                  ref
-                      .read(mediaControllerProvider.notifier)
-                      .updateStateMediaItem,
-                );
-              },
-              child: Text('미디어아이템 수신 핸들러 등록'),
-            ),
           ],
         ),
         Row(
