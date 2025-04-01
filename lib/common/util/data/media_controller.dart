@@ -65,6 +65,8 @@ class MediaController extends _$MediaController {
                 .map((e) => MediaItem.fromMap(e as Map<String, dynamic>))
                 .toList();
 
+        state = _initialState;
+
         for (MediaItem mediaItem in decodedData) {
           updateSingleState(mediaItem);
         }

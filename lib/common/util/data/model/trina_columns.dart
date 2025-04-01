@@ -71,10 +71,10 @@ final List<TrinaColumn> mediaItemColumns = [
   ),
 
   TrinaColumn(
-    title: 'isDead',
+    title: '지울까요?',
     field: 'isDead',
     type: TrinaColumnType.boolean(),
     width: 150,
-    hide: true,
+    // hide: true,
   ),
 ];
