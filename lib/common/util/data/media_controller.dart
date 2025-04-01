@@ -13,11 +13,12 @@ part 'media_controller.g.dart';
 @Riverpod(keepAlive: true)
 class MediaController extends _$MediaController {
   static String _serverHttpApiIp = 'https://192.168.219.137/api/v1/';
+  final HttpManager _http = HttpManager();
 
   Map<String, MediaItem> get _initialState => {};
 
   final WsManager _ws = WsManager();
-  final HttpManager _http = HttpManager();
+
 
   @override
   Map<String, MediaItem> build() {
@@ -99,7 +100,7 @@ class MediaController extends _$MediaController {
     try {
       response = await _http.post(
         path: '$_serverHttpApiIp/edit',
-        queryParameters: {"type": "messageData"},
+        queryParameters: {"type": "mediaData"},
         data: jsonData,
       );
 
@@ -188,31 +189,27 @@ class MediaController extends _$MediaController {
     return 0;
   }
 
-  Future<int> createMediaItem({required MediaItem mediaItem}) async {
-    return 0;
-  }
-
   /// ws_manager 연결 시 등록. 수신한 미디어 아이템 처리
-  void updateStateMediaItem(var mediaItemList) {
-    if (mediaItemList is List) {
-      for (var item in mediaItemList) {
-        if (item is Map<String, dynamic>) {
-          try {
-            final newItem = MediaItem.fromMap(item);
-            state = {...state, newItem.key: newItem};
-            dLog('미디어 아이템 탑재 성공: ${newItem.key}');
-          } catch (e) {
-            eLog('미디어 아이템 탑재 실패 : $e');
-          }
-        }
-      }
-    } else {
-      eLog('수신한 mediaItemList가 리스트가 아닙니다. : ${mediaItemList.runtimeType}');
-    }
-  }
-
-  void uploadSampleMedia() {
-    for (MediaItem mediaItem in sampleMediaList)
-      state = {...state, mediaItem.key: mediaItem};
-  }
+  // void updateStateMediaItem(var mediaItemList) {
+  //   if (mediaItemList is List) {
+  //     for (var item in mediaItemList) {
+  //       if (item is Map<String, dynamic>) {
+  //         try {
+  //           final newItem = MediaItem.fromMap(item);
+  //           state = {...state, newItem.key: newItem};
+  //           dLog('미디어 아이템 탑재 성공: ${newItem.key}');
+  //         } catch (e) {
+  //           eLog('미디어 아이템 탑재 실패 : $e');
+  //         }
+  //       }
+  //     }
+  //   } else {
+  //     eLog('수신한 mediaItemList가 리스트가 아닙니다. : ${mediaItemList.runtimeType}');
+  //   }
+  // }
+  //
+  // void uploadSampleMedia() {
+  //   for (MediaItem mediaItem in sampleMediaList)
+  //     state = {...state, mediaItem.key: mediaItem};
+  // }
 }
