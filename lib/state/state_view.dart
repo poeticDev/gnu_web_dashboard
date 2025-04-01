@@ -68,7 +68,7 @@ class _StateViewState extends ConsumerState<StateView> {
             height: mHeight,
             child: SingleChildScrollView(
               child: Wrap(
-                alignment: WrapAlignment.spaceAround,
+                alignment: WrapAlignment.center,
                 spacing: betweenPadding,
                 runSpacing: betweenPadding,
                 children: [
@@ -82,10 +82,22 @@ class _StateViewState extends ConsumerState<StateView> {
                     height: mHeight,
                     minWidth: stateBoxMinWidth,
                   ),
-                  _RenderMediaBox(
-                    width: mediaBoxWidth,
-                    minWidth: mediaBoxMinWidth,
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: betweenPadding,
+                    runSpacing: betweenPadding,
+                    children: [
+                      _RenderMessageBox(
+                        width: mediaBoxWidth,
+                        minWidth: mediaBoxMinWidth,
+                      ),
+                      _RenderMediaBox(
+                        width: mediaBoxWidth,
+                        minWidth: mediaBoxMinWidth,
+                      ),
+                    ],
                   ),
+
                   TestWidget(),
                 ],
               ),
@@ -102,31 +114,26 @@ class _StateViewState extends ConsumerState<StateView> {
     required double minWidth,
   }) {
     return Container(
-      constraints: BoxConstraints(minWidth: minWidth),
       width: width,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            constraints: BoxConstraints(maxHeight: 600),
-            child: AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Container(
-                decoration: BoxDecoration(color: PRIMARY_CONTAINER_COLOR),
-                child: Center(
-                  child: Text(
-                    '클릭하여 강의실 카메라 보기\n(30초)',
-                    textAlign: TextAlign.center,
-                    style: TERTIARY_TITLE_TEXT_STYLE.copyWith(
-                      fontSize: fontSize * 1,
-                      color: WHITE_TEXT_COLOR,
-                    ),
-                  ),
-                ),
+      constraints: BoxConstraints(maxHeight: 600, minWidth: minWidth),
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: Container(
+          decoration: BoxDecoration(
+            color: PRIMARY_CONTAINER_COLOR,
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: Center(
+            child: Text(
+              '클릭하여 강의실 카메라 보기\n(30초)',
+              textAlign: TextAlign.center,
+              style: TERTIARY_TITLE_TEXT_STYLE.copyWith(
+                fontSize: fontSize * 1,
+                color: WHITE_TEXT_COLOR,
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -395,167 +402,150 @@ class _StateViewState extends ConsumerState<StateView> {
     );
   }
 
+  Widget _RenderMessageBox({required double width, required double minWidth}) {
+    return Container(
+      constraints: BoxConstraints(minWidth: minWidth),
+      width: width,
+      child: Container(
+        decoration: BoxDecoration(
+          color: PRIMARY_CONTAINER_COLOR,
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '메세지 관리',
+                style: TextStyle(
+                  color: WHITE_TEXT_COLOR,
+                  fontSize: fontSize * 0.85,
+                ),
+              ),
+              SizedBox(
+                // width: 100,
+                child: Divider(color: DIVIDER_COLOR, height: 10),
+              ),
+              SizedBox(
+                height: 300,
+                child: Center(
+                  child: Text(
+                    '메세지 관리 넣기',
+                    style: TextStyle(
+                      color: WHITE_TEXT_COLOR,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _RenderMediaBox({required double width, required double minWidth}) {
     return Container(
       constraints: BoxConstraints(minWidth: minWidth),
       width: width,
-      child: Wrap(
-        spacing: 10,
-        runSpacing: 4,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: PRIMARY_CONTAINER_COLOR,
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12.0,
-                vertical: 12.0,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '메세지 관리',
-                    style: TextStyle(
-                      color: WHITE_TEXT_COLOR,
-                      fontSize: fontSize * 0.85,
-                    ),
-                  ),
-                  SizedBox(
-                    // width: 100,
-                    child: Divider(color: DIVIDER_COLOR, height: 10),
-                  ),
-                  SizedBox(
-                    height: 300,
-                    child: Center(
-                      child: Text(
-                        '메세지 관리 넣기',
-                        style: TextStyle(
-                          color: WHITE_TEXT_COLOR,
-                          fontSize: fontSize,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 20),
-          Container(
-            decoration: BoxDecoration(
-              color: PRIMARY_CONTAINER_COLOR,
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12.0,
-                vertical: 12.0,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        onPressed: () async {
-                          await showDialog(
-                            context: context,
-                            builder: (context) {
-                              final width =
-                                  MediaQuery.of(context).size.width * 0.9;
-                              final height =
-                                  MediaQuery.of(context).size.height * 0.5;
+      decoration: BoxDecoration(
+        color: PRIMARY_CONTAINER_COLOR,
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: () async {
+                    await showDialog(
+                      context: context,
+                      builder: (context) {
+                        final width = MediaQuery.of(context).size.width * 0.9;
+                        final height = MediaQuery.of(context).size.height * 0.5;
 
-                              return MediaAddDialog(
-                                width: width,
-                                height: height,
-                                ref: ref,
-                              );
-                            },
-                          );
-                          setState(() {});
-                        },
-                        icon: Icon(Icons.add),
-                        iconSize: fontSize * 0.7,
-                      ),
-                      Text(
-                        '미디어 관리',
-                        style: TextStyle(
-                          color: WHITE_TEXT_COLOR,
-                          fontSize: fontSize * 0.85,
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.photo_size_select_small),
-                        iconSize: fontSize * 0.7,
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              final width =
-                                  MediaQuery.of(context).size.width * 0.9;
-                              final height =
-                                  MediaQuery.of(context).size.height * 0.5;
-                              return Dialog(
-                                backgroundColor: BG_COLOR,
-                                child: SizedBox(
-                                  height: height,
-                                  width: width,
-                                  child: Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 48,
-                                        child: Center(
-                                          child: Text(
-                                            '미디어 관리',
-                                            style: TextStyle(
-                                              color: WHITE_TEXT_COLOR,
-                                              fontSize: fontSize,
-                                            ),
-                                          ),
-                                        ),
+                        return MediaAddDialog(
+                          width: width,
+                          height: height,
+                          ref: ref,
+                        );
+                      },
+                    );
+                    setState(() {});
+                  },
+                  icon: Icon(Icons.add),
+                  iconSize: fontSize * 0.7,
+                ),
+                Text(
+                  '미디어 관리',
+                  style: TextStyle(
+                    color: WHITE_TEXT_COLOR,
+                    fontSize: fontSize * 0.85,
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.photo_size_select_small),
+                  iconSize: fontSize * 0.7,
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        final width = MediaQuery.of(context).size.width * 0.9;
+                        final height = MediaQuery.of(context).size.height * 0.5;
+                        return Dialog(
+                          backgroundColor: BG_COLOR,
+                          child: SizedBox(
+                            height: height,
+                            width: width,
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 48,
+                                  child: Center(
+                                    child: Text(
+                                      '미디어 관리',
+                                      style: TextStyle(
+                                        color: WHITE_TEXT_COLOR,
+                                        fontSize: fontSize,
                                       ),
-                                      SizedBox(
-                                        child: Divider(
-                                          color: DIVIDER_COLOR,
-                                          height: 10,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: MediaGrid(
-                                            roomId: widget.roomId,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
                                 ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    // width: 100,
-                    child: Divider(color: DIVIDER_COLOR, height: 10),
-                  ),
-                  SizedBox(
-                    height: 300,
-                    child: MediaGrid(roomId: widget.roomId),
-                  ),
-                ],
-              ),
+                                SizedBox(
+                                  child: Divider(
+                                    color: DIVIDER_COLOR,
+                                    height: 10,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: MediaGrid(roomId: widget.roomId),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
             ),
-          ),
-        ],
+            SizedBox(
+              // width: 100,
+              child: Divider(color: DIVIDER_COLOR, height: 10),
+            ),
+            SizedBox(height: 300, child: MediaGrid(roomId: widget.roomId)),
+          ],
+        ),
       ),
     );
   }
