@@ -284,7 +284,7 @@ class _MediaAddDialogState extends State<MediaAddDialog> {
       }
 
       final MediaItem mediaItem = MediaItem.withoutKey(
-        roomId: roomId,
+        roomIdList: roomId,
         title: title,
         type: type,
         url: url,

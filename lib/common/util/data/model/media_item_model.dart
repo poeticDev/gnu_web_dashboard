@@ -55,7 +55,7 @@ class MediaItem {
   }
 
   factory MediaItem.withoutKey({
-    required List<String> roomId,
+    required List<String> roomIdList,
     required String title,
     required MediaType type,
     required String url,
@@ -68,7 +68,7 @@ class MediaItem {
   }) {
     return MediaItem(
       key: _generateKey(),
-      roomId: roomId,
+      roomId: roomIdList,
       title: title,
       type: type,
       url: url,
