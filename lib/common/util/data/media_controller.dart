@@ -84,8 +84,11 @@ class MediaController extends _$MediaController {
     Response? response;
     late final String jsonData;
 
+    final mediaItemMap = mediaItem.getMediaItemMap();
+    final dataMap = {"mediaData": mediaItemMap};
+
     try {
-      jsonData = jsonEncode(mediaItem.getMediaItemMap());
+      jsonData = jsonEncode(dataMap);
     } catch (e) {
       eLog('미디어 아이템 json 변환 실패 : $e');
       return 1;
