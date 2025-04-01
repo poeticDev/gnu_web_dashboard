@@ -3,6 +3,7 @@ import 'dart:html';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
@@ -13,16 +14,16 @@ import 'package:gnu_web_dashboard/state/component/state_row.dart';
 import 'package:gnu_web_dashboard/test/test_widget.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
-class StateView extends StatefulWidget {
+class StateView extends ConsumerStatefulWidget {
   final String roomId;
 
   const StateView({required this.roomId, super.key});
 
   @override
-  State<StateView> createState() => _StateViewState();
+  ConsumerState<StateView> createState() => _StateViewState();
 }
 
-class _StateViewState extends State<StateView> {
+class _StateViewState extends ConsumerState<StateView> {
   late Future mediaItemList;
   double fontSize = 24;
 
@@ -460,8 +461,8 @@ class _StateViewState extends State<StateView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                        onPressed: () {
-                          showDialog(
+                        onPressed: () async {
+                          await showDialog(
                             context: context,
                             builder: (context) {
                               final width =
@@ -472,9 +473,11 @@ class _StateViewState extends State<StateView> {
                               return MediaAddDialog(
                                 width: width,
                                 height: height,
+                                ref: ref,
                               );
                             },
                           );
+                          setState(() {});
                         },
                         icon: Icon(Icons.add),
                         iconSize: fontSize * 0.7,

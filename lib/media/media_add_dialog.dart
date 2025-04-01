@@ -1,17 +1,27 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gnu_web_dashboard/common/component/custom_text_form_field.dart';
-import 'package:gnu_web_dashboard/common/component/dropdown_selector.dart';
-import 'package:gnu_web_dashboard/common/const/color.dart';
+import 'package:gnu_web_dashboard/common/component/custom_toast.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
+import 'package:gnu_web_dashboard/common/util/data/media_controller.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/media_item_model.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/room_model.dart';
 
 class MediaAddDialog extends StatefulWidget {
+  final String? roomId;
   final double width;
   final double height;
+  final WidgetRef ref;
 
-  MediaAddDialog({super.key, required this.width, required this.height});
+  MediaAddDialog({
+    super.key,
+    required this.width,
+    required this.height,
+    this.roomId,
+    required this.ref,
+  });
 
   @override
   State<MediaAddDialog> createState() => _MediaAddDialogState();
@@ -25,13 +35,13 @@ class _MediaAddDialogState extends State<MediaAddDialog> {
   List<String> roomId = [];
 
   /// 3) 미디어 이름
-  late String title;
+  String title = '';
 
   /// 4) 미디어 타입
-  late MediaType type;
+  MediaType type = MediaType.image;
 
   /// 5) 주소
-  late String url;
+  String url = '';
 
   /// 6) 파일명
   /// - 없으면 url 마지막 부분에서 파일명 추출
@@ -46,13 +56,20 @@ class _MediaAddDialogState extends State<MediaAddDialog> {
   BoxFit fit = BoxFit.cover;
 
   /// 9) 표출 순서 : 기본 생성순
-  late int orderNum;
+  int orderNum = 999;
 
-  /// 10) 마지막 수정 일시
-  DateTime? lastUpdated;
+  /// 토스트 팝업
+  late FToast fToast;
 
-  /// 11) 미디어 상태(표출 중, 미표출)
-  late bool isDead;
+  @override
+  void initState() {
+    if (widget.roomId != null) {
+      roomId.add(widget.roomId!);
+    }
+    fToast = FToast();
+    fToast.init(context);
+    super.initState();
+  }
 
   // 일단 현재는 하드코딩으로 등록하되, 나중에는 서버에서 룸 정보를 불러오는 방식으로 할 것
   final List<Room> roomList =
@@ -71,7 +88,7 @@ class _MediaAddDialogState extends State<MediaAddDialog> {
     return AlertDialog(
       title: Text('미디어 아이템 추가하기'),
       actions: [
-        TextButton(onPressed: () {}, child: Text('저장')),
+        TextButton(onPressed: _onSaveButtonPressed, child: Text('저장')),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
@@ -99,13 +116,12 @@ class _MediaAddDialogState extends State<MediaAddDialog> {
                     mode: Mode.form,
                     popupProps: PopupPropsMultiSelection<String>.menu(
                       showSelectedItems: true,
-                        constraints: BoxConstraints(
-                          maxHeight: 180,
-                        )
+                      constraints: BoxConstraints(maxHeight: 180),
                     ),
                     items:
                         (filter, cs) =>
                             roomList.map((room) => room.roomName).toList(),
+                    selectedItems: roomId,
                     onChanged: (roomNameList) {
                       for (String roomName in roomNameList) {
                         final room =
@@ -127,7 +143,6 @@ class _MediaAddDialogState extends State<MediaAddDialog> {
                 onChanged: (inputText) {
                   title = inputText;
                 },
-                isRequired: true,
               ),
               SizedBox(height: FIELD_PADDING_VERTICAL),
               Column(
@@ -256,5 +271,42 @@ class _MediaAddDialogState extends State<MediaAddDialog> {
         ),
       ),
     );
+  }
+
+  void _onSaveButtonPressed() async {
+    if (roomId.isEmpty) {
+      showCustomToast(toastMsg: '대상 강의실을 선택해주세요!', fToast: fToast);
+    } else if (url == '') {
+      showCustomToast(toastMsg: '주소를 입력해주세요!', fToast: fToast);
+    } else {
+      if (title == '') {
+        title = '무명';
+      }
+
+      final MediaItem mediaItem = MediaItem.withoutKey(
+        roomId: roomId,
+        title: title,
+        type: type,
+        url: url,
+        fileName: fileName,
+        from: from,
+        fit: fit,
+        orderNum: orderNum,
+      );
+
+      final result = await widget.ref
+          .read(mediaControllerProvider.notifier)
+          .upsertSingleMediaItemToServer(mediaItem: mediaItem);
+
+      if (result == 0)
+        showCustomToast(toastMsg: '미디어가 성공적으로 등록되었습니다!', fToast: fToast);
+      else {
+        showCustomToast(
+          toastMsg: '미디어 등록 중 에러가 발생했습니다. 실제로 미디어가 등록되었는지 확인해주세요.',
+          fToast: fToast,
+        );
+      }
+      Navigator.of(context).pop();
+    }
   }
 }
