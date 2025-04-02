@@ -8,6 +8,7 @@ import 'package:gnu_web_dashboard/common/const/style.dart';
 import 'package:gnu_web_dashboard/common/util/data/message_controller.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/message_model.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/room_model.dart';
+import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 class MessageAddDialog extends StatefulWidget {
@@ -251,6 +252,8 @@ class _MessageAddDialogState extends State<MessageAddDialog> {
         until: until!,
         type: type,
       );
+
+      dLog('message: ${message.getMessageMap()}');
 
       final result = await widget.ref
           .read(messageControllerProvider.notifier)

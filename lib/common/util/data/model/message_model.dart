@@ -1,3 +1,4 @@
+import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 import 'package:uuid/uuid.dart';
 
 class Message {
@@ -58,21 +59,28 @@ class Message {
     final List<String> roomIdListTypeCasted =
         roomIdList.cast<String>().toList();
 
+
+    final List targetList = messageDataMap['target'];
+    final List<String> targetListTypeCasted = targetList.cast<String>().toList();
+
     final DateTime until =
-        DateTime.tryParse(messageDataMap["util"]) ??
+        DateTime.tryParse(messageDataMap["until"]) ??
         DateTime.now().add(Duration(days: 1));
 
+
     final MessageType type = MessageType.values.byName(messageDataMap['type']);
+
 
     final DateTime? lastUpdated = DateTime.tryParse(
       messageDataMap["lastUpdated"],
     );
 
+
     return Message(
       key: messageDataMap['key'],
       roomId: roomIdListTypeCasted,
       content: messageDataMap['content'],
-      target: messageDataMap['target'],
+      target: targetListTypeCasted,
       until: until,
       type: type,
       lastUpdated: lastUpdated,
@@ -83,7 +91,8 @@ class Message {
     final Map<String, dynamic> result = {
       "key": key,
       "roomId": roomId,
-      "content": target,
+      "content": content,
+      "target": target,
       "until": until.toString(),
       "type": type.name,
       "lastUpdated": lastUpdated.toString(),

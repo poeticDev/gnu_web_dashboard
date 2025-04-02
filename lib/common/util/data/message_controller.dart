@@ -54,6 +54,7 @@ class MessageController extends _$MessageController {
     }
 
     try {
+      iLog('response: $response');
       if (response != null && response.statusCode == 200) {
         final List<dynamic> data = response.data;
 
@@ -62,6 +63,7 @@ class MessageController extends _$MessageController {
                 .map((e) => Message.fromMap(e as Map<String, dynamic>))
                 .toList();
 
+
         state = _initialState;
 
         for (Message message in decodedData) {
@@ -69,8 +71,9 @@ class MessageController extends _$MessageController {
         }
 
         return;
+      } else {
+        eLog('메세지 목록 응답 불량: ${response?.statusCode ?? '응답 없음'}');
       }
-      eLog('메세지 목록 응답 불량: ${response?.statusCode ?? '응답 없음'}');
     } catch (e) {
       eLog('메세지 목록 갱신 실패: $e');
     }
@@ -159,7 +162,4 @@ class MessageController extends _$MessageController {
       await requestMessageItemList();
     }
   }
-
-
-
 }
