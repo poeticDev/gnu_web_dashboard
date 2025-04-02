@@ -961,10 +961,10 @@ packages:
     dependency: "direct main"
     description:
       name: trina_grid
-      sha256: "2a22c385a3117c9a95127688438c4d24820e8f343b958adc7d68547915fcf526"
+      sha256: "0d09536500d66b39521ac3e98e9d64c85148685b466d7cc7d39d1e62e821e7f9"
       url: "https://pub.dev"
     source: hosted
-    version: "1.6.5"
+    version: "1.6.6"
   typed_data:
     dependency: transitive
     description:

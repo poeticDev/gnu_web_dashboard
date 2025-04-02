@@ -146,12 +146,11 @@ class MediaController extends _$MediaController {
       case 'fit':
         mediaItemMap[field] = boxFitFromLabel(value).name;
         break;
-      case 'lastUpdated':
-        mediaItemMap[field] = value.toString();
-        break;
       default:
         mediaItemMap[field] = value;
     }
+
+    mediaItemMap['lastUpdated'] = DateTime.now().toString();
 
     dLog('2. 미디어아이템 맵 수정 : $mediaItemMap');
 

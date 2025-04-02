@@ -131,28 +131,28 @@ class MessageController extends _$MessageController {
     required dynamic value,
   }) async {
     /// 1. key로 메세지 데이터 불러오기
-    Map<String, dynamic> mediaItemMap = state[key]!.getMessageMap();
-    dLog('1. 기존 메세지 맵 불러오기 : $mediaItemMap');
+    Map<String, dynamic> messageMap = state[key]!.getMessageMap();
+    dLog('1. 기존 메세지 맵 불러오기 : $messageMap');
 
     /// 2. 불러온 메세지 데이터의 field와 value 수정
     switch (field) {
       case 'until':
-        mediaItemMap[field] = value.toString();
-        break;
-      case 'lastUpdated':
-        mediaItemMap[field] = value.toString();
+        iLog('until: $value');
+        messageMap[field] = value.toString();
         break;
       case 'type':
-        mediaItemMap[field] = messageTypeFromLabel(value).name;
+        messageMap[field] = messageTypeFromLabel(value).name;
         break;
       default:
-        mediaItemMap[field] = value;
+        messageMap[field] = value;
     }
 
-    dLog('2. 메세지 맵 수정 : $mediaItemMap');
+    messageMap['lastUpdated'] = DateTime.now().toString();
+
+    dLog('2. 메세지 맵 수정 : $messageMap');
 
     /// 3. 수정된 메세지 데이터 전송 + 4. 응답 수신 후, state 반영
-    final updated = Message.fromMap(mediaItemMap);
+    final updated = Message.fromMap(messageMap);
     final result = await upsertSingleMessageToServer(message: updated);
     dLog('3. 메세지 맵 전송 : $result');
 
