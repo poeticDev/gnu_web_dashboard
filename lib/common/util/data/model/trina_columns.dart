@@ -99,8 +99,8 @@ final List<TrinaColumn> messageColumns = [
   TrinaColumn(
     title: '표출기간(-까지)',
     field: 'until',
-    type: TrinaColumnType.date(format: 'yy.MM.dd  hh시 mm분'),
-    width: 150,
+    type: TrinaColumnType.dateTime(format: 'yy.MM.dd  hh시 mm분'),
+    width: 180,
   ),
   TrinaColumn(
     title: '메세지 타입',
