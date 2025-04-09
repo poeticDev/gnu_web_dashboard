@@ -8,10 +8,11 @@ const serverIp = 'wss://192.168.219.137/api/v1/ws';
 
 class WsManager {
   static WebSocket? _ws;
+  static bool _isConnected = false;
   Timer? _pingTimer;
   Map<String, Function(dynamic data)> jsonEventHandlerMap = {};
 
-// 싱글톤 클래스
+  // 싱글톤 클래스
   static final WsManager _instance = WsManager._internal();
 
   WsManager._internal();
@@ -20,9 +21,9 @@ class WsManager {
     return _instance;
   }
 
-  // bool isConnected() {
-  //   if
-  // }
+  bool isConnected() {
+    return _isConnected;
+  }
 
   void connectWS({required String serverIp}) {
     if (_ws != null) {
@@ -36,6 +37,8 @@ class WsManager {
         print('✅ 웹소켓 연결 성공');
         startPing();
       });
+
+      _isConnected = true;
 
       _ws!.onMessage.listen((event) {
         final data = event.data;
@@ -57,6 +60,7 @@ class WsManager {
       });
 
       _ws!.onError.listen((event) {
+        _isConnected = false;
         print('❌ 웹소켓 오류 발생: $event');
         stopPing();
         // 웹소켓 오류는 이벤트 객체에서 직접적인 메시지를 제공하지 않을 수 있음.
@@ -66,15 +70,18 @@ class WsManager {
       _ws!.onClose.listen((event) {
         print('🔌 웹소켓 연결 종료');
         stopPing();
+        _isConnected = false;
       });
     } catch (e) {
       print('❌ 웹소켓 연결 실패 : $e');
+      _isConnected = false;
     }
   }
 
   void disConnect() {
     _ws?.close();
     stopPing();
+    _isConnected = false;
   }
 
   void startPing() {
@@ -91,11 +98,10 @@ class WsManager {
   }
 
   void addJsonEventHandler(
-      String key, void Function(dynamic data) onDataReceived) {
-    jsonEventHandlerMap = {
-      ...jsonEventHandlerMap,
-      key: onDataReceived,
-    };
+    String key,
+    void Function(dynamic data) onDataReceived,
+  ) {
+    jsonEventHandlerMap = {...jsonEventHandlerMap, key: onDataReceived};
     dLog('등록된 핸들러 키 : ${jsonEventHandlerMap.keys}');
   }
 

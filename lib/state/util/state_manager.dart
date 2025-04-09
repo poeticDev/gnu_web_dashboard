@@ -28,24 +28,34 @@ class StateManager extends _$StateManager {
     dLog('StateManager 빌드 시, MQTT로 현재 상태 받아오는 메서드 필요');
 
     try {
-      _isConnected = true;
+      final List<String> currentRoomIdList = initialState['currentRoomIdList'];
+
+      ws.requestStream(currentRoomIdList.first);
     } catch (e) {
       eLog('스테이트 매니저 빌드 실패 :\n$e');
     }
+
     return initialState;
   }
 
+  /// 기존 구독 목록을 없애고, 새 구독 요청
   void replaceRooms({required List<String> roomIdList}) {
     final List<String> currentList = state['currentRoomIdList'];
 
-    for(String roomId in currentList) {
-      if(!roomIdList.contains(roomId)) {
+    try {
+      /// 모든 구독 해제
+      for (String roomId in currentList) {
         ws.stopStream(roomId);
       }
-    }
 
-    for (String roomId in roomIdList) {
-      ws.requestStream(roomId);
+      /// 새로운 구독 추가
+      for (String roomId in roomIdList) {
+        ws.requestStream(roomId);
+      }
+
+      state = {...state, 'currentRoomIdList': roomIdList};
+    } catch (e) {
+      eLog('구독 교체 실패 : $e');
     }
   }
 }
