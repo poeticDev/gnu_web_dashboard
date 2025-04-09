@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gnu_web_dashboard/common/component/room_tab.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
+import 'package:gnu_web_dashboard/common/util/data/model/room_model.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 
@@ -31,9 +32,10 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
       elevation: 8,
       toolbarHeight: height,
       titleSpacing: 0,
-      title: currentDevice == Device.DESKTOP
-          ? _buildDesktopLayout()
-          : currentDevice == Device.TABLET
+      title:
+          currentDevice == Device.DESKTOP
+              ? _buildDesktopLayout()
+              : currentDevice == Device.TABLET
               ? _buildTabletLayout()
               : _buildMobileLayout(),
     );
@@ -55,33 +57,23 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
       ),
       child: Column(
         children: [
-          SizedBox(
-            height: upperPadding,
-          ),
+          SizedBox(height: upperPadding),
           SizedBox(
             height: (height - upperPadding) / 2,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildRoomButtons(buttonCount: 3),
-                // SizedBox(width: 600, child: _buildTabButtons()),
-              ],
+              children: [_buildRoomButtons(roomList: initialRooms)],
             ),
           ),
           Container(
             width: double.infinity,
             height: (height - upperPadding) / 2,
-            decoration: BoxDecoration(
-              color: PRIMARY_CONTAINER_COLOR,
-            ),
+            decoration: BoxDecoration(color: PRIMARY_CONTAINER_COLOR),
             child: Center(
               child: Text(
                 '(아이콘?) (강의실명) | {시작 시간} ~ {종료시간} {강의명} {교수명}님 수업 중입니다.',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: WHITE_TEXT_COLOR,
-                  fontSize: fontSize,
-                ),
+                style: TextStyle(color: WHITE_TEXT_COLOR, fontSize: fontSize),
               ),
             ),
           ),
@@ -90,48 +82,43 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget _buildRoomButtons({required int buttonCount}) {
+  Widget _buildRoomButtons({required List<Room> roomList}) {
     /// 주어진 너비가 충분하지 않으면 햄버거 버튼으로 바꾸기
-    return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-      // 왼쪽 여백
-      SizedBox(width: 40.0),
-      ...List.generate(
-        buttonCount,
-        (index) => RoomTab(height: height - 20)
-      ),
-    ]);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        // 왼쪽 여백
+        SizedBox(width: 40.0),
+        ...roomList.map((room) => RoomTab(roomData: room, height: height - 20)),
+      ],
+    );
   }
 
   Widget _buildTabButtons() {
     const double width = 600;
 
-    return LayoutBuilder(builder: (context, constraints) {
-      final maxWidth = constraints.maxWidth;
-      bool isExpanded = maxWidth > width;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final maxWidth = constraints.maxWidth;
+        bool isExpanded = maxWidth > width;
 
-      /// 주어진 너비가 충분하지 않으면 햄버거 버튼으로 바꾸기
-      return SizedBox(
-        width: width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text('강의실 현황'),
-            Text('메세지/미디어 관리'),
-            Text('시간표 관리'),
-          ],
-        ),
-      );
-    });
+        /// 주어진 너비가 충분하지 않으면 햄버거 버튼으로 바꾸기
+        return SizedBox(
+          width: width,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [Text('강의실 현황'), Text('메세지/미디어 관리'), Text('시간표 관리')],
+          ),
+        );
+      },
+    );
   }
 
   Widget _buildMobileLayout() {
     return Center(
       child: Text(
         '강의 중',
-        style: TextStyle(
-          color: WHITE_TEXT_COLOR,
-          fontSize: fontSize,
-        ),
+        style: TextStyle(color: WHITE_TEXT_COLOR, fontSize: fontSize),
       ),
     );
   }
@@ -143,10 +130,7 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
         Text(
           '강의과목 교수명\n수업 중입니다.',
           textAlign: TextAlign.start,
-          style: TextStyle(
-            color: WHITE_TEXT_COLOR,
-            fontSize: fontSize,
-          ),
+          style: TextStyle(color: WHITE_TEXT_COLOR, fontSize: fontSize),
         ),
         // _buildRoomButtons(colors, buttonCount: 2),
       ],

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
+import 'package:gnu_web_dashboard/common/util/data/model/room_model.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
-import 'package:go_router/go_router.dart';
 
 class RoomTab extends StatelessWidget {
+  final Room roomData;
   final double height;
   final double fontSize;
 
   const RoomTab({
     super.key,
+    required this.roomData,
     required this.height,
     this.fontSize = 24,
   });
@@ -28,25 +30,26 @@ class RoomTab extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Container(
           decoration: BoxDecoration(
-              color: PRIMARY_CONTAINER_COLOR,
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(borderRadius),
-                topLeft: Radius.circular(borderRadius),
+            color: PRIMARY_CONTAINER_COLOR,
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(borderRadius),
+              topLeft: Radius.circular(borderRadius),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: colors.onInverseSurface,
+                offset: Offset(2, 2),
+                blurRadius: 8,
+                spreadRadius: 1,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: colors.onInverseSurface,
-                  offset: Offset(2, 2),
-                  blurRadius: 8,
-                  spreadRadius: 1,
-                ),
-                BoxShadow(
-                  color: colors.shadow,
-                  offset: Offset(-2, -2),
-                  blurRadius: 8,
-                  spreadRadius: 1,
-                ),
-              ]),
+              BoxShadow(
+                color: colors.shadow,
+                offset: Offset(-2, -2),
+                blurRadius: 8,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
           height: height,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -63,7 +66,7 @@ class RoomTab extends StatelessWidget {
                   ),
                   SizedBox(width: 4),
                   Text(
-                    '000동 0000호',
+                    roomData.roomName,
                     style: TextStyle(
                       color: colors.onSurfaceVariant,
                       fontSize: fontSize,
