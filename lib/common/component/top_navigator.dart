@@ -13,6 +13,8 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
   double fontSize = 24;
   double containerWidth = 120;
 
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     // 나중에 initilizer나 어디로 넣자.
@@ -60,9 +62,13 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
           SizedBox(height: upperPadding),
           SizedBox(
             height: (height - upperPadding) / 2,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [_buildRoomButtons(roomList: initialRooms)],
+            child: Scrollbar(
+              controller: _scrollController,
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                scrollDirection: Axis.horizontal,
+                child: _buildRoomButtons(roomList: initialRooms),
+              ),
             ),
           ),
           Container(
@@ -87,8 +93,6 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        // 왼쪽 여백
-        SizedBox(width: 40.0),
         ...roomList.map((room) => RoomTab(roomData: room, height: height - 20)),
       ],
     );
