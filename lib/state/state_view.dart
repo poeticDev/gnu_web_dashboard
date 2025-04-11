@@ -511,6 +511,7 @@ class _StateViewState extends ConsumerState<StateView> {
             Divider(color: DIVIDER_COLOR, height: 10),
             Expanded(
               child: TimetableLayout(
+                roomId: widget.roomId,
                 lectures: [
                   Lecture(
                     id: 0,

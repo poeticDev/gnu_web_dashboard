@@ -1,8 +1,10 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:gnu_web_dashboard/common/component/splash_circle.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/lecture.dart';
+import 'package:gnu_web_dashboard/common/util/network/google_sheets.dart';
 import 'package:gnu_web_dashboard/timetable/component/lecture_box.dart';
 
 List<String> weekdays = ['월', '화', '수', '목', '금', '토', '일'];
@@ -11,17 +13,40 @@ enum WeekendOption { none, included }
 
 const weekendRowLengths = {WeekendOption.none: 5, WeekendOption.included: 7};
 
-class TimetableLayout extends StatelessWidget {
+class TimetableLayout extends StatefulWidget {
+  final String roomId;
   int columnLength;
   WeekendOption weekendOption;
   final List<Lecture> lectures;
 
   TimetableLayout({
+    required this.roomId,
     this.columnLength = 10,
     this.weekendOption = WeekendOption.none,
     super.key,
     required this.lectures,
   });
+
+  @override
+  State<TimetableLayout> createState() => _TimetableLayoutState();
+}
+
+class _TimetableLayoutState extends State<TimetableLayout> {
+  late final gSheet;
+  bool isInitialized = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initGSheet();
+  }
+
+  Future<void> initGSheet() async {
+    gSheet = GoogleSheets(sheetName: widget.roomId);
+    await gSheet.initialize();
+    isInitialized = true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,66 +56,90 @@ class TimetableLayout extends StatelessWidget {
         final mHeight = constraints.maxHeight;
 
         final double headerHeight = mHeight * 0.04;
-        final double boxHeight = (mHeight - headerHeight) / columnLength;
-        final rowLength = weekendRowLengths[weekendOption]!;
+        final double boxHeight = (mHeight - headerHeight) / widget.columnLength;
+        final rowLength = weekendRowLengths[widget.weekendOption]!;
 
-        return SizedBox(
-          width: mWidth,
-          height: mHeight,
-          child: Row(
-            children: [
-              _buildTimeColumn(
-                headerHeight: headerHeight,
-                boxHeight: boxHeight,
-                timeLength: columnLength,
-              ),
-              // Column(
-              //   children: [
-              //     ElevatedButton(
-              //       onPressed: () {
-              //         final Lecture lecture = Lecture(
-              //           id: 1,
-              //           lectureName: '강의명',
-              //           instructorName: '교수명',
-              //           weekday: Weekday.monday,
-              //           startAt: TimeOfDay(hour: 10, minute: 30),
-              //           endAt: TimeOfDay(hour: 12, minute: 0),
-              //         );
-              //
-              //         gSheet.insertLecture(lecture);
-              //       },
-              //       child: Text('1 업댓'),
-              //     ),
-              //     ElevatedButton(
-              //       onPressed: () async {
-              //         final lecture = await gSheet.fetchLecture(3);
-              //
-              //         print(lecture.id);
-              //         print(lecture.lectureName);
-              //         print(lecture.instructorName);
-              //         print(lecture.startAt);
-              //         print(lecture.endAt);
-              //         print(lecture.weekday);
-              //         print(lecture.colorIndex);
-              //
-              //         // print(await gSheet.getRow(3));
-              //       },
-              //       child: Text('프린트'),
-              //     ),
-              //   ],
-              // ),
-              ...List.generate(
-                rowLength,
-                (index) => _buildDayColumn(
-                  weekdayIndex: index,
-                  headerHeight: headerHeight,
-                  boxHeight: boxHeight,
-                  timeLength: columnLength,
-                ),
-              ).expand((widgetList) => widgetList),
-            ],
-          ),
-        );
+        if(!isInitialized){
+          return SplashCircle();
+        }
+
+        Future<List<Lecture>> lectures = gSheet.fetchAllLectures();
+
+        return FutureBuilder<Object>(
+              future: lectures,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      '에러가 발생했습니다. 관리자에게 문의하세요.\nError: ${snapshot.error.toString()}',
+                    ),
+                  );
+                }
+
+                if (snapshot.data == null ||
+                    snapshot.connectionState != ConnectionState.done) {
+                  return Center(child: SplashCircle(statusMsg: '시간표 불러오는 중'));
+                }
+
+                return SizedBox(
+                  width: mWidth,
+                  height: mHeight,
+                  child: Row(
+                    children: [
+                      _buildTimeColumn(
+                        headerHeight: headerHeight,
+                        boxHeight: boxHeight,
+                        timeLength: widget.columnLength,
+                      ),
+                      // Column(
+                      //   children: [
+                      //     ElevatedButton(
+                      //       onPressed: () {
+                      //         final Lecture lecture = Lecture(
+                      //           id: 1,
+                      //           lectureName: '강의명',
+                      //           instructorName: '교수명',
+                      //           weekday: Weekday.monday,
+                      //           startAt: TimeOfDay(hour: 10, minute: 30),
+                      //           endAt: TimeOfDay(hour: 12, minute: 0),
+                      //         );
+                      //
+                      //         gSheet.insertLecture(lecture);
+                      //       },
+                      //       child: Text('1 업댓'),
+                      //     ),
+                      //     ElevatedButton(
+                      //       onPressed: () async {
+                      //         final lecture = await gSheet.fetchLecture(3);
+                      //
+                      //         print(lecture.id);
+                      //         print(lecture.lectureName);
+                      //         print(lecture.instructorName);
+                      //         print(lecture.startAt);
+                      //         print(lecture.endAt);
+                      //         print(lecture.weekday);
+                      //         print(lecture.colorIndex);
+                      //
+                      //         // print(await gSheet.getRow(3));
+                      //       },
+                      //       child: Text('프린트'),
+                      //     ),
+                      //   ],
+                      // ),
+                      ...List.generate(
+                        rowLength,
+                        (index) => _buildDayColumn(
+                          weekdayIndex: index,
+                          headerHeight: headerHeight,
+                          boxHeight: boxHeight,
+                          timeLength: widget.columnLength,
+                        ),
+                      ).expand((widgetList) => widgetList),
+                    ],
+                  ),
+                );
+              },
+            );
       },
     );
   }
@@ -147,7 +196,7 @@ class TimetableLayout extends StatelessWidget {
 
             List lectureBoxes = [];
 
-            for (Lecture lecture in lectures) {
+            for (Lecture lecture in widget.lectures) {
               if (lecture.weekday.index == weekdayIndex) {
                 lectureBoxes = [
                   ...lectureBoxes,
