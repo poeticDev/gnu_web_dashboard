@@ -15,6 +15,7 @@ const TextStyle TERTIARY_TITLE_TEXT_STYLE = TextStyle(
   fontVariations: [FontVariation('wght', 500)],
 );
 
+
 /// 관리자 모드
 final FIELD_TITLE_TEXT_STYLE = TextStyle(
   color: WHITE_TEXT_COLOR,
