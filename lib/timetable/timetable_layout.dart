@@ -7,6 +7,7 @@ import 'package:gnu_web_dashboard/common/util/data/model/lecture.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 import 'package:gnu_web_dashboard/common/util/network/google_sheets.dart';
 import 'package:gnu_web_dashboard/timetable/component/lecture_box.dart';
+import 'package:gnu_web_dashboard/timetable/component/lecture_dialog.dart';
 
 List<String> weekdays = ['월', '화', '수', '목', '금', '토', '일'];
 
@@ -65,87 +66,91 @@ class _TimetableLayoutState extends State<TimetableLayout> {
         final double boxHeight = (mHeight - headerHeight) / widget.columnLength;
         final rowLength = weekendRowLengths[widget.weekendOption]!;
 
-        if(!isInitialized){
-          return SplashCircle();
+        if (!isInitialized) {
+          Future.delayed(Duration(seconds: 2), () {
+            setState(() {});
+          });
+          return SplashCircle(statusMsg: '시간표 불러오는 중');
         }
 
         Future<List<Lecture>> lectures = gSheet.fetchAllLectures();
 
-        return FutureBuilder<Object>(
-              future: lectures,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      '에러가 발생했습니다. 관리자에게 문의하세요.\nError: ${snapshot.error.toString()}',
-                    ),
-                  );
-                }
+        return FutureBuilder<List<Lecture>>(
+          future: lectures,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  '에러가 발생했습니다. 관리자에게 문의하세요.\nError: ${snapshot.error.toString()}',
+                ),
+              );
+            }
 
-                if (snapshot.data == null ||
-                    snapshot.connectionState != ConnectionState.done) {
-                  return Center(child: SplashCircle(statusMsg: '시간표 불러오는 중'));
-                }
+            if (snapshot.data == null ||
+                snapshot.connectionState != ConnectionState.done) {
+              return Center(child: SplashCircle(statusMsg: '시간표 불러오는 중'));
+            }
 
-                return SizedBox(
-                  width: mWidth,
-                  height: mHeight,
-                  child: Row(
-                    children: [
-                      _buildTimeColumn(
-                        headerHeight: headerHeight,
-                        boxHeight: boxHeight,
-                        timeLength: widget.columnLength,
-                      ),
-                      // Column(
-                      //   children: [
-                      //     ElevatedButton(
-                      //       onPressed: () {
-                      //         final Lecture lecture = Lecture(
-                      //           id: 1,
-                      //           lectureName: '강의명',
-                      //           instructorName: '교수명',
-                      //           weekday: Weekday.monday,
-                      //           startAt: TimeOfDay(hour: 10, minute: 30),
-                      //           endAt: TimeOfDay(hour: 12, minute: 0),
-                      //         );
-                      //
-                      //         gSheet.insertLecture(lecture);
-                      //       },
-                      //       child: Text('1 업댓'),
-                      //     ),
-                      //     ElevatedButton(
-                      //       onPressed: () async {
-                      //         final lecture = await gSheet.fetchLecture(3);
-                      //
-                      //         print(lecture.id);
-                      //         print(lecture.lectureName);
-                      //         print(lecture.instructorName);
-                      //         print(lecture.startAt);
-                      //         print(lecture.endAt);
-                      //         print(lecture.weekday);
-                      //         print(lecture.colorIndex);
-                      //
-                      //         // print(await gSheet.getRow(3));
-                      //       },
-                      //       child: Text('프린트'),
-                      //     ),
-                      //   ],
-                      // ),
-                      ...List.generate(
-                        rowLength,
-                        (index) => _buildDayColumn(
-                          weekdayIndex: index,
-                          headerHeight: headerHeight,
-                          boxHeight: boxHeight,
-                          timeLength: widget.columnLength,
-                        ),
-                      ).expand((widgetList) => widgetList),
-                    ],
+            return SizedBox(
+              width: mWidth,
+              height: mHeight,
+              child: Row(
+                children: [
+                  _buildTimeColumn(
+                    headerHeight: headerHeight,
+                    boxHeight: boxHeight,
+                    timeLength: widget.columnLength,
                   ),
-                );
-              },
+                  // Column(
+                  //   children: [
+                  //     ElevatedButton(
+                  //       onPressed: () {
+                  //         final Lecture lecture = Lecture(
+                  //           id: 1,
+                  //           lectureName: '강의명',
+                  //           instructorName: '교수명',
+                  //           weekday: Weekday.monday,
+                  //           startAt: TimeOfDay(hour: 10, minute: 30),
+                  //           endAt: TimeOfDay(hour: 12, minute: 0),
+                  //         );
+                  //
+                  //         gSheet.insertLecture(lecture);
+                  //       },
+                  //       child: Text('1 업댓'),
+                  //     ),
+                  //     ElevatedButton(
+                  //       onPressed: () async {
+                  //         final lecture = await gSheet.fetchLecture(3);
+                  //
+                  //         print(lecture.id);
+                  //         print(lecture.lectureName);
+                  //         print(lecture.instructorName);
+                  //         print(lecture.startAt);
+                  //         print(lecture.endAt);
+                  //         print(lecture.weekday);
+                  //         print(lecture.colorIndex);
+                  //
+                  //         // print(await gSheet.getRow(3));
+                  //       },
+                  //       child: Text('프린트'),
+                  //     ),
+                  //   ],
+                  // ),
+                  ...List.generate(
+                    rowLength,
+                    (index) => _buildDayColumn(
+                      weekdayIndex: index,
+                      headerHeight: headerHeight,
+                      boxHeight: boxHeight,
+                      timeLength: widget.columnLength,
+                      lectures: snapshot.data!,
+                    ),
+                  ).expand((widgetList) => widgetList),
+                ],
+              ),
             );
+          },
+        );
       },
     );
   }
@@ -191,6 +196,7 @@ class _TimetableLayoutState extends State<TimetableLayout> {
     required double headerHeight,
     required double boxHeight,
     required int timeLength,
+    required List<Lecture> lectures,
   }) {
     return [
       const VerticalDivider(color: TIMETABLE_DIVIDER_COLOR, width: 0),
@@ -202,7 +208,7 @@ class _TimetableLayoutState extends State<TimetableLayout> {
 
             List lectureBoxes = [];
 
-            for (Lecture lecture in widget.lectures) {
+            for (Lecture lecture in lectures) {
               if (lecture.weekday.index == weekdayIndex) {
                 lectureBoxes = [
                   ...lectureBoxes,
@@ -211,6 +217,22 @@ class _TimetableLayoutState extends State<TimetableLayout> {
                     width: boxWidth,
                     height: boxHeight,
                     headerHeight: headerHeight,
+                    onTap: () async {
+                      await showDialog(
+                        context: context,
+                        builder: (context) {
+                          List<Lecture> lectureList =
+                              lectures
+                                  .where(
+                                    (e) => e.id.floor() == lecture.id.floor(),
+                                  )
+                                  .toList();
+
+
+                          return LectureDialog(lectureList: lectureList);
+                        },
+                      );
+                    },
                   ),
                 ];
               }

@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:gnu_web_dashboard/common/util/data/model/Weekday.dart';
+import 'package:gnu_web_dashboard/common/util/data/model/lecture.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/message_model.dart';
+import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 import 'model/media_item_model.dart';
@@ -50,5 +53,20 @@ class GridManager {
         'lastUpdated': TrinaCell(value: message.lastUpdated),
       },
     );
+  }
+
+  TrinaRow getRowFromLectureModel(Lecture lecture) {
+    iLog('id:${lecture.id}');
+    iLog('weekday:${getWeekdayInKR(lecture.weekday)}');
+    iLog('startAt:${lecture.startAt.hour}:${lecture.startAt.minute}');
+    iLog('endAt:${lecture.endAt.hour}:${lecture.endAt.minute}');
+
+    return TrinaRow(cells: {
+      'id': TrinaCell(value: lecture.id),
+      'weekday': TrinaCell(value: getWeekdayInKR(lecture.weekday)),
+      'startAt': TrinaCell(value: '${lecture.startAt.hour.toString().padLeft(2,'0')}:${lecture.startAt.minute.toString().padLeft(2,'0')}'),
+      'endAt': TrinaCell(value: '${lecture.endAt.hour.toString().padLeft(2,'0')}:${lecture.endAt.minute.toString().padLeft(2,'0')}'),
+    });
+
   }
 }

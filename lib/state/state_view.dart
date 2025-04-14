@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
+import 'package:gnu_web_dashboard/common/util/data/model/Weekday.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/lecture.dart';
 import 'package:gnu_web_dashboard/media/media_add_dialog.dart';
 import 'package:gnu_web_dashboard/media/media_grid.dart';

@@ -2,6 +2,8 @@ import 'package:gnu_web_dashboard/common/util/data/model/media_item_model.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/message_model.dart';
 import 'package:trina_grid/trina_grid.dart';
 
+import 'Weekday.dart';
+
 final List<TrinaColumn> mediaItemColumns = [
   TrinaColumn(
     title: 'key',
@@ -117,5 +119,27 @@ final List<TrinaColumn> messageColumns = [
     width: 150,
     enableEditingMode: false,
     readOnly: true,
+  ),
+];
+
+final List<TrinaColumn> lectureColumns = [
+  TrinaColumn(title: 'id', field: 'id', type: TrinaColumnType.number(), hide: true),
+  TrinaColumn(
+    title: '요일',
+    field: 'weekday',
+    type: TrinaColumnType.select(weekdays),
+    width: 80,
+  ),
+  TrinaColumn(
+    title: '시작시간',
+    field: 'startAt',
+    type: TrinaColumnType.time(),
+    width: 120,
+  ),
+  TrinaColumn(
+    title: '종료시간',
+    field: 'endAt',
+    type: TrinaColumnType.time(),
+    width: 120,
   ),
 ];

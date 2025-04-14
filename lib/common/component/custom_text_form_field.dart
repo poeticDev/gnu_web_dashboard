@@ -13,6 +13,7 @@ class CustomTextFormField extends StatefulWidget {
   final bool autofocus;
   final ValueChanged<String> onChanged;
   final bool isRequired;
+  final int? maxLines;
 
   const CustomTextFormField({
     super.key,
@@ -26,6 +27,7 @@ class CustomTextFormField extends StatefulWidget {
     this.autofocus = false,
     required this.onChanged,
     this.isRequired = false,
+    this.maxLines
   });
 
   @override
@@ -71,6 +73,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         ),
         if (widget.title != null) SizedBox(height: 6.0),
         TextFormField(
+          maxLines: widget.maxLines,
           controller: _controller,
           readOnly: widget.isReadOnly,
           keyboardType: widget.textInputType,

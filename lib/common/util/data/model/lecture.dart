@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gnu_web_dashboard/common/util/data/model/Weekday.dart';
 
-enum Weekday { monday, tuesday, wednesday, thursday, friday, saturday, sunday }
-
-List<String> weekdays = ['월', '화', '수', '목', '금', '토', '일'];
 
 class Lecture {
-  final int id;
+  final double id;
   final String lectureName;
   final String instructorName;
   final Weekday weekday;
@@ -26,7 +24,7 @@ class Lecture {
   /// 📌 **스프레드시트 → Lecture 객체 변환**
   factory Lecture.fromGsheets(Map<String, String> json) {
     return Lecture(
-      id: int.tryParse(json['id'] ?? '0') ?? 0,
+      id: double.tryParse(json['id'] ?? '0') ?? 0,
       lectureName: json['lectureName'] ?? '불러오기 실패',
       instructorName: json['instructorName'] ?? '',
       weekday: getWeekDayFromKr(json['weekday'] ?? ''),
@@ -42,7 +40,7 @@ class Lecture {
       'id': id.toString(),
       'lectureName': lectureName,
       'instructorName': instructorName,
-      'weekday': getWeekdayInKR(),
+      'weekday': getWeekdayInKR(weekday),
       'startAt': getTimeToString(startAt),
       'endAt': getTimeToString(endAt),
       'colorIndex': colorIndex.toString(),
@@ -67,16 +65,5 @@ class Lecture {
     return '$time:$min';
   }
 
-  /// 📌 **한국어 요일(String) → Weekday 변환**
-  // int getWeekdayNumber(Weekday day) => day.index + 1;
-  static Weekday getWeekDayFromKr(String krName) {
-    for (int i = 0; i < weekdays.length; i++) {
-      if (krName.contains(weekdays[i])) {
-        return Weekday.values[i];
-      }
-    }
-    return Weekday.sunday;
-  }
 
-  String getWeekdayInKR() => weekdays[weekday.index];
 }
