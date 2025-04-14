@@ -45,13 +45,8 @@ class _TimetableLayoutState extends State<TimetableLayout> {
   }
 
   Future<void> initGSheet() async {
-    dLog('구글 시트 이닛 시작');
-    dLog('구글 시트 인스턴스 생성 시작');
     gSheet = GoogleSheets(sheetName: widget.roomId);
-    dLog('구글 시트 인스턴스 생성 완료');
-    dLog('구글 시트 이니셜라이즈 시작');
     await gSheet.initialize();
-    dLog('구글 시트 이니셜라이즈 완료');
     isInitialized = true;
   }
 
@@ -221,17 +216,23 @@ class _TimetableLayoutState extends State<TimetableLayout> {
                       await showDialog(
                         context: context,
                         builder: (context) {
+                          final int idInteger = lecture.id.floor();
+
                           List<Lecture> lectureList =
                               lectures
                                   .where(
-                                    (e) => e.id.floor() == lecture.id.floor(),
+                                    (e) => e.id.floor() == idInteger,
                                   )
                                   .toList();
 
 
-                          return LectureDialog(lectureList: lectureList);
+                          return LectureDialog(lectureList: lectureList, idInteger: idInteger, gSheet: gSheet);
                         },
                       );
+
+                      setState(() {
+                        Future.delayed(Duration(seconds: 3));
+                      });
                     },
                   ),
                 ];

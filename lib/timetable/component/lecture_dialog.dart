@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gnu_web_dashboard/common/component/custom_text_form_field.dart';
+import 'package:gnu_web_dashboard/common/component/custom_toast.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
 import 'package:gnu_web_dashboard/common/util/data/grid_manager.dart';
@@ -7,25 +9,34 @@ import 'package:gnu_web_dashboard/common/util/data/model/Weekday.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/lecture.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/trina_columns.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
+import 'package:gnu_web_dashboard/common/util/network/google_sheets.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class LectureDialog extends StatefulWidget {
   final List<Lecture>? lectureList;
+  final int idInteger;
+  final GoogleSheets gSheet;
 
-  const LectureDialog({required this.lectureList, super.key});
+  const LectureDialog({
+    required this.lectureList,
+    super.key,
+    required this.idInteger,
+    required this.gSheet,
+  });
 
   @override
   State<LectureDialog> createState() => _LectureDialogState();
 }
 
 class _LectureDialogState extends State<LectureDialog> {
+  late FToast fToast;
   late TrinaGridStateManager stateManager;
 
   String lectureName = '';
   String instructorName = '';
   int colorIndex = 0;
 
-  double id = 0;
+  double idInteger = 0;
   Weekday weekday = Weekday.monday;
   TimeOfDay startAt = TimeOfDay.now();
   TimeOfDay endAt = TimeOfDay.now();
@@ -48,6 +59,8 @@ class _LectureDialogState extends State<LectureDialog> {
         setState(() {});
       }
     }
+    fToast = FToast();
+    fToast.init(context);
     super.initState();
   }
 
@@ -59,8 +72,8 @@ class _LectureDialogState extends State<LectureDialog> {
       title: Text('강의 시간표 생성/수정하기'),
       actions: [
         TextButton(
-          onPressed: () {
-            _onSaveButtonPressed();
+          onPressed: () async {
+            await _onSaveButtonPressed();
             Navigator.of(context).pop();
           },
           child: Text('저장'),
@@ -75,7 +88,7 @@ class _LectureDialogState extends State<LectureDialog> {
       content: SingleChildScrollView(
         child: SizedBox(
           width: 500,
-          height: 500,
+          height: 480,
           child: Wrap(
             // crossAxisAlignment: CrossAxisAlignment.start,
             runSpacing: FIELD_PADDING_VERTICAL,
@@ -161,19 +174,69 @@ class _LectureDialogState extends State<LectureDialog> {
     );
   }
 
-  Future<void> _onSaveButtonPressed() async {}
+  Future<void> _onSaveButtonPressed() async {
+    final List<Lecture> newLectureList = [];
+    final List<double> newIdList = [];
+
+    for (TrinaRow row in stateManager.rows) {
+      final double id = row.cells['id']!.value;
+      final String? weekday = row.cells['weekday']?.value;
+      if (weekday == null) {
+        showCustomToast(toastMsg: '요일이 정해지지 않은 강의가 있습니다!', fToast: fToast);
+        return;
+      }
+      final String? startAt = row.cells['startAt']?.value;
+      if (startAt == null) {
+        showCustomToast(toastMsg: '시작 시간이 정해지지 않은 강의가 있습니다!', fToast: fToast);
+        return;
+      }
+
+      final String? endAt = row.cells['endAt']?.value;
+      if (endAt == null) {
+        showCustomToast(toastMsg: '종료 시간이 정해지지 않은 강의가 있습니다!', fToast: fToast);
+        return;
+      }
+      Lecture lecture = Lecture(
+        id: id,
+        lectureName: lectureName,
+        instructorName: instructorName,
+        weekday: getWeekDayFromKr(weekday),
+        startAt: getTimeFromString(startAt),
+        endAt: getTimeFromString(endAt),
+        colorIndex: colorIndex,
+      );
+
+      newLectureList.add(lecture);
+      newIdList.add(id);
+    }
+
+    for (Lecture lecture in newLectureList) {
+      await widget.gSheet.insertLecture(lecture);
+    }
+
+    if(widget.lectureList != null) {
+      List<double> oldIdList = widget.lectureList!.map((e) => e.id).toList();
+      for(double id in oldIdList) {
+        if(!newIdList.contains(id)) {
+          await widget.gSheet.deleteById(id);
+        }
+      }
+    }
+
+
+
+    // showCustomToast(toastMsg: '강의 생성/수정이 정상적으로 완료되었습니다.', fToast: fToast);
+
+  }
 
   TrinaGrid _RenderLectureGrid() {
     return TrinaGrid(
       columns: lectureColumns,
       rows: lectureRows,
-      // rows: [],
       onLoaded: (event) {
         stateManager = event.stateManager;
       },
-      onChanged: (event) {
-        dLog(event.value);
-      },
+      onChanged: (event) {},
       configuration: TrinaGridConfiguration(
         style: TrinaGridStyleConfig.dark(
           rowColor: BG_COLOR,
@@ -189,7 +252,32 @@ class _LectureDialogState extends State<LectureDialog> {
   }
 
   void _handleAddRow() {
-    stateManager.appendNewRows();
+    final newRows = stateManager.getNewRows(count: 1);
+
+    double maxId = idInteger;
+
+    for (var lectureRow in lectureRows) {
+      double id = lectureRow.cells['id']?.value ?? maxId;
+      maxId = maxId < id ? id : maxId;
+      if (maxId + 0.1 == idInteger + 1) {
+        return;
+      }
+    }
+
+    for (var e in newRows) {
+      e.cells['id']?.value = maxId + 0.1;
+
+      if (stateManager.currentRow != null) {
+        e.cells['weekday']?.value =
+            stateManager.currentRow!.cells['weekday']?.value;
+        e.cells['startAt']?.value =
+            stateManager.currentRow!.cells['startAt']?.value;
+        e.cells['endAt']?.value =
+            stateManager.currentRow!.cells['endAt']?.value;
+      }
+    }
+
+    stateManager.appendRows(newRows);
   }
 
   void _handleRemoveCurrentRow() {
@@ -210,7 +298,7 @@ class _LectureDialogState extends State<LectureDialog> {
           double dotSize = 24;
 
           if (colorIndex == index) {
-            borderColor = Colors.grey.withAlpha(80);
+            borderColor = Colors.grey.withAlpha(120);
             borderWidth = 4;
             dotSize = 36;
           }

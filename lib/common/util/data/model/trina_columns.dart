@@ -123,7 +123,7 @@ final List<TrinaColumn> messageColumns = [
 ];
 
 final List<TrinaColumn> lectureColumns = [
-  TrinaColumn(title: 'id', field: 'id', type: TrinaColumnType.number(), hide: true),
+  TrinaColumn(title: 'id', field: 'id', type: TrinaColumnType.number(format: '###.#'), hide: false),
   TrinaColumn(
     title: '요일',
     field: 'weekday',

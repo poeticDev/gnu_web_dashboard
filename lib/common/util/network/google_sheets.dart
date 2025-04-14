@@ -97,6 +97,7 @@ class GoogleSheets {
     await _worksheet!.values.map.insertRowByKey(
       lecture.id,
       lecture.toGsheets(),
+      overwrite: true
     );
   }
 
@@ -110,5 +111,22 @@ class GoogleSheets {
     final rows = await _worksheet!.values.map.allRows(fromRow: 3);
     if (rows == null) return [];
     return rows.map((json) => Lecture.fromGsheets(json)).toList();
+  }
+
+  // id(key)를 통해 해당 row를 지움
+  Future<void> deleteById(double id) async {
+    final map = await _worksheet!.values.map.allRows();
+
+    // ID를 string으로 변환해 비교 (Google Sheets는 key를 문자열로 저장함)
+    final String idStr = id.toString();
+
+    // rowIndex는 실제 시트 상의 줄 번호
+    for (int rowIndex = 2; rowIndex < map!.length + 2; rowIndex++) {
+      final rowMap = await _worksheet!.values.map.row(rowIndex);
+      if (rowMap['id'] == idStr) {
+        await _worksheet!.deleteRow(rowIndex);
+        return;
+      }
+    }
   }
 }
