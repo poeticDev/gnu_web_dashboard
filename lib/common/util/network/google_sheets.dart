@@ -12,7 +12,9 @@ class GoogleSheets {
   GoogleSheets({required this.sheetName});
 
   Future<Map<String, dynamic>> loadCredentials() async {
-    final jsonString = await rootBundle.loadString('asset/env/credentials.json');
+    final jsonString = await rootBundle.loadString(
+      'assets/env/credentials.json',
+    );
     return jsonDecode(jsonString);
   }
 
@@ -34,12 +36,12 @@ class GoogleSheets {
   //   }
   // '''
 
-  static final _sheet = GSheets(_credentials); // 스프레드시트
+  late final GSheets _sheet; // 스프레드시트
   static Worksheet? _worksheet; // 스프레드시트 중 작업 대상 시트
 
   Future<void> initialize() async {
     _credentials = await loadCredentials();
-
+    _sheet = GSheets(_credentials);
     _worksheet = await _getWorksheet(
       await _sheet.spreadsheet(_spreadSheetId),
       title: sheetName.toString(),
@@ -67,7 +69,7 @@ class GoogleSheets {
         'weekday',
         'startAt',
         'endAt',
-        'colorIndex'
+        'colorIndex',
       ]);
       return worksheet;
     } catch (e) {
@@ -77,8 +79,11 @@ class GoogleSheets {
 
   /// appendRow는 insert처럼 덮어씌우기가 아니라, 아래 로우에 차곡차곡 insert 된다.
   static Future<void> append() async {
-    await _worksheet!.values
-        .appendRow(fromColumn: 1, ['test1', 'test2', 'test3']);
+    await _worksheet!.values.appendRow(fromColumn: 1, [
+      'test1',
+      'test2',
+      'test3',
+    ]);
   }
 
   Future<List<String>> getRow(int row) async {
@@ -89,8 +94,10 @@ class GoogleSheets {
   }
 
   Future<void> insertLecture(Lecture lecture) async {
-    await _worksheet!.values.map
-        .insertRowByKey(lecture.id, lecture.toGsheets());
+    await _worksheet!.values.map.insertRowByKey(
+      lecture.id,
+      lecture.toGsheets(),
+    );
   }
 
   Future<Lecture> fetchLecture(int row) async {

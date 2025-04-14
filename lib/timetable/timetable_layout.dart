@@ -4,6 +4,7 @@ import 'package:gnu_web_dashboard/common/component/splash_circle.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/lecture.dart';
+import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 import 'package:gnu_web_dashboard/common/util/network/google_sheets.dart';
 import 'package:gnu_web_dashboard/timetable/component/lecture_box.dart';
 
@@ -43,8 +44,13 @@ class _TimetableLayoutState extends State<TimetableLayout> {
   }
 
   Future<void> initGSheet() async {
+    dLog('구글 시트 이닛 시작');
+    dLog('구글 시트 인스턴스 생성 시작');
     gSheet = GoogleSheets(sheetName: widget.roomId);
+    dLog('구글 시트 인스턴스 생성 완료');
+    dLog('구글 시트 이니셜라이즈 시작');
     await gSheet.initialize();
+    dLog('구글 시트 이니셜라이즈 완료');
     isInitialized = true;
   }
 
