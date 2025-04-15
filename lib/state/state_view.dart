@@ -16,6 +16,7 @@ import 'package:gnu_web_dashboard/message/message_grid.dart';
 import 'package:gnu_web_dashboard/state/component/custom_line_chart.dart';
 import 'package:gnu_web_dashboard/state/component/state_row.dart';
 import 'package:gnu_web_dashboard/test/test_widget.dart';
+import 'package:gnu_web_dashboard/timetable/component/lecture_dialog.dart';
 import 'package:gnu_web_dashboard/timetable/timetable_layout.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
@@ -88,9 +89,10 @@ class _StateViewState extends ConsumerState<StateView> {
                     height: mHeight,
                     minWidth: stateBoxMinWidth,
                   ),
-                  _RenderTimeTable(
+                  TimetableLayout(
                     width: mediaBoxWidth,
                     minWidth: timetableMinWidth,
+                    roomId: widget.roomId,
                   ),
                   Wrap(
                     alignment: WrapAlignment.center,
@@ -412,124 +414,63 @@ class _StateViewState extends ConsumerState<StateView> {
     );
   }
 
-  Widget _RenderTimeTable({required double width, required double minWidth}) {
-    return Container(
-      constraints: BoxConstraints(minWidth: minWidth),
-      width: width,
-      height: 600,
-      decoration: BoxDecoration(
-        color: PRIMARY_CONTAINER_COLOR,
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  onPressed: () async {
-                    // await showDialog(
-                    //   context: context,
-                    //   builder: (context) {
-                    //     final width = MediaQuery.of(context).size.width * 0.9;
-                    //     final height =
-                    //         MediaQuery.of(context).size.height * 0.5;
-                    //
-                    //     return MessageAddDialog(
-                    //       width: width,
-                    //       height: height,
-                    //       ref: ref,
-                    //     );
-                    //   },
-                    // );
-                    // setState(() {});
-                  },
-                  icon: Icon(Icons.add),
-                  iconSize: fontSize * 0.7,
-                ),
-                Text(
-                  '강의시간표',
-                  style: TextStyle(
-                    color: WHITE_TEXT_COLOR,
-                    fontSize: fontSize * 0.85,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    // showDialog(
-                    //   context: context,
-                    //   builder: (context) {
-                    //     final width = MediaQuery.of(context).size.width * 0.9;
-                    //     final height =
-                    //         MediaQuery.of(context).size.height * 0.5;
-                    //     return Dialog(
-                    //       backgroundColor: BG_COLOR,
-                    //       child: Container(
-                    //         height: height,
-                    //         width: width,
-                    //         constraints: BoxConstraints(minWidth: 400),
-                    //         child: Column(
-                    //           children: [
-                    //             SizedBox(
-                    //               height: 48,
-                    //               child: Center(
-                    //                 child: Text(
-                    //                   '강의시간표',
-                    //                   style: TextStyle(
-                    //                     color: WHITE_TEXT_COLOR,
-                    //                     fontSize: fontSize,
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //             SizedBox(
-                    //               child: Divider(
-                    //                 color: DIVIDER_COLOR,
-                    //                 height: 10,
-                    //               ),
-                    //             ),
-                    //             Expanded(
-                    //               child: Padding(
-                    //                 padding: const EdgeInsets.all(8.0),
-                    //                 child: MessageGrid(roomId: widget.roomId),
-                    //               ),
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       ),
-                    //     );
-                    //   },
-                    // );
-                  },
-                  icon: Icon(Icons.photo_size_select_small),
-                  iconSize: fontSize * 0.7,
-                ),
-              ],
-            ),
-            Divider(color: DIVIDER_COLOR, height: 10),
-            Expanded(
-              child: TimetableLayout(
-                roomId: widget.roomId,
-                lectures: [
-                  Lecture(
-                    id: 0,
-                    lectureName: '강의명',
-                    instructorName: '교수명',
-                    weekday: Weekday.monday,
-                    startAt: TimeOfDay(hour: 10, minute: 30),
-                    endAt: TimeOfDay(hour: 12, minute: 00),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _RenderTimeTable({required double width, required double minWidth}) {
+  //   return Container(
+  //     constraints: BoxConstraints(minWidth: minWidth),
+  //     width: width,
+  //     height: 600,
+  //     decoration: BoxDecoration(
+  //       color: PRIMARY_CONTAINER_COLOR,
+  //       borderRadius: BorderRadius.circular(12.0),
+  //     ),
+  //     child: Padding(
+  //       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //             children: [
+  //               IconButton(
+  //                 onPressed: () async {
+  //                   await showDialog(
+  //                     context: context,
+  //                     builder: (context) {
+  //                       final width = MediaQuery.of(context).size.width * 0.9;
+  //                       final height =
+  //                           MediaQuery.of(context).size.height * 0.5;
+  //
+  //                       return LectureDialog(
+  //                         gSheet: ,
+  //                       );
+  //                     },
+  //                   );
+  //                   setState(() {});
+  //                 },
+  //                 icon: Icon(Icons.add),
+  //                 iconSize: fontSize * 0.7,
+  //               ),
+  //               Text(
+  //                 '강의시간표',
+  //                 style: TextStyle(
+  //                   color: WHITE_TEXT_COLOR,
+  //                   fontSize: fontSize * 0.85,
+  //                 ),
+  //               ),
+  //               SizedBox(),
+  //             ],
+  //           ),
+  //           Divider(color: DIVIDER_COLOR, height: 10),
+  //           Expanded(
+  //             child: TimetableLayout(
+  //               roomId: widget.roomId,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _RenderMessageBox({required double width, required double minWidth}) {
     return Container(
