@@ -79,7 +79,6 @@ class _TimetableLayoutState extends State<TimetableLayout> {
                     await showDialog(
                       context: context,
                       builder: (context) {
-
                         int integer = idInteger;
 
                         return LectureDialog(
@@ -100,7 +99,13 @@ class _TimetableLayoutState extends State<TimetableLayout> {
                     fontSize: widget.fontSize * 0.85,
                   ),
                 ),
-                SizedBox(),
+                IconButton(
+                  onPressed: () async {
+                    setState(() {});
+                  },
+                  icon: Icon(Icons.refresh),
+                  iconSize: widget.fontSize * 0.7,
+                ),
               ],
             ),
             Divider(color: DIVIDER_COLOR, height: 10),
@@ -148,7 +153,7 @@ class _TimetableLayoutState extends State<TimetableLayout> {
 
             double maxId = 0;
 
-            for(Lecture lecture in snapshot.data!) {
+            for (Lecture lecture in snapshot.data!) {
               double id = lecture.id;
               maxId = maxId < id ? id : maxId;
               dLog(maxId);
