@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 
-const serverHttpApiIp = 'https://192.168.219.137/api/v1/';
+const serverHttpApiIp = 'https://192.168.219.137/api/v1';
 
 class HttpManager {
   static final HttpManager _instance = HttpManager._internal();
@@ -68,7 +68,7 @@ class HttpManager {
   }
 
   Future<Response?> post({
-    String path = '',
+    String path = serverHttpApiIp,
     Map<String, dynamic>? queryParameters,
     dynamic data,
     Options? options,

@@ -118,10 +118,6 @@ class WsManager {
     }
   }
 
-  void requestStream(String roomId) {
-    sendStringMessage('{"topic": "realtime_start","payload": $roomId');
-  }
-
   void stopStream(String roomId) {
     sendStringMessage('/realtime/stop/$roomId');
   }

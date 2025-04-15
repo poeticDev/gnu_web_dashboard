@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gnu_web_dashboard/common/component/top_navigator.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/state/state_view.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-class DefaultLayout extends StatelessWidget {
+class DefaultLayout extends ConsumerWidget {
   final Color? backgroundColor;
 
   DefaultLayout({super.key, this.backgroundColor});
@@ -14,7 +15,7 @@ class DefaultLayout extends StatelessWidget {
 
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     const double globalPadding = 60.0;
     double topNaviHeight = 100;
 

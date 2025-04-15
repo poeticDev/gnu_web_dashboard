@@ -7,16 +7,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
-import 'package:gnu_web_dashboard/common/util/data/model/Weekday.dart';
-import 'package:gnu_web_dashboard/common/util/data/model/lecture.dart';
+import 'package:gnu_web_dashboard/common/util/log_helper.dart';
+import 'package:gnu_web_dashboard/common/util/network/ws_manager.dart';
 import 'package:gnu_web_dashboard/media/media_add_dialog.dart';
 import 'package:gnu_web_dashboard/media/media_grid.dart';
 import 'package:gnu_web_dashboard/message/message_add_dialog.dart';
 import 'package:gnu_web_dashboard/message/message_grid.dart';
 import 'package:gnu_web_dashboard/state/component/custom_line_chart.dart';
 import 'package:gnu_web_dashboard/state/component/state_toggle_row.dart';
+import 'package:gnu_web_dashboard/state/util/state_manager.dart';
 import 'package:gnu_web_dashboard/test/test_widget.dart';
-import 'package:gnu_web_dashboard/timetable/component/lecture_dialog.dart';
 import 'package:gnu_web_dashboard/timetable/timetable_layout.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
@@ -33,14 +33,31 @@ class _StateViewState extends ConsumerState<StateView> {
   late Future mediaItemList;
   double fontSize = 24;
 
+  final ws = WsManager();
+
   @override
   void initState() {
     // TODO: implement initState
+
+    _initWs();
     super.initState();
+  }
+
+  void _initWs() async {
+    final stateNotifier =  ref.read(stateManagerProvider.notifier);
+
+    ws.connectWS(serverIp: serverIp);
+    ws.addJsonEventHandler(
+      'latestSensorData',
+      ref.read(stateManagerProvider.notifier).stateDataHandler,
+    );
+    ws.    announceRoomList(selectedRoom);
   }
 
   @override
   Widget build(BuildContext context) {
+    final stateNotifier =  ref.read(stateManagerProvider.notifier);
+
     if (currentDevice != Device.DESKTOP) {
       fontSize = 16;
     } else {
@@ -48,6 +65,8 @@ class _StateViewState extends ConsumerState<StateView> {
     }
 
     final colors = AppColors.of(context);
+
+    stateNotifier.getPeriodData(roomId: widget.roomId);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -203,16 +222,21 @@ class _StateViewState extends ConsumerState<StateView> {
                       width: stateRowWidth,
                       height: fontSize * 1.6,
                       title: 'All On/Off',
+                      onChanged: () {
+
+                      },
                     ),
                     StateToggleRow(
                       width: stateRowWidth,
                       height: fontSize * 1.6,
                       title: '조명',
+                      onChanged: () {},
                     ),
                     StateToggleRow(
                       width: stateRowWidth,
                       height: fontSize * 1.6,
                       title: '냉난방기',
+                      onChanged: () {},
                     ),
                   ],
                 ),
@@ -222,16 +246,19 @@ class _StateViewState extends ConsumerState<StateView> {
                       width: stateRowWidth,
                       height: fontSize * 1.6,
                       title: '교수 PC',
+                      onChanged: () {},
                     ),
                     StateToggleRow(
                       width: stateRowWidth,
                       height: fontSize * 1.6,
                       title: 'PBL 스크린',
+                      onChanged: () {},
                     ),
                     StateToggleRow(
                       width: stateRowWidth,
                       height: fontSize * 1.6,
                       title: '학생 PC',
+                      onChanged: () {},
                     ),
                   ],
                 ),
@@ -301,44 +328,7 @@ class _StateViewState extends ConsumerState<StateView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Column(
-                        children: [
-                          StateToggleRow(
-                            width: stateRowWidth,
-                            height: fontSize * 1.6,
-                            title: 'All On/Off',
-                          ),
-                          StateToggleRow(
-                            width: stateRowWidth,
-                            height: fontSize * 1.6,
-                            title: '조명',
-                          ),
-                          StateToggleRow(
-                            width: stateRowWidth,
-                            height: fontSize * 1.6,
-                            title: '냉난방기',
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          StateToggleRow(
-                            width: stateRowWidth,
-                            height: fontSize * 1.6,
-                            title: '교수 PC',
-                          ),
-                          StateToggleRow(
-                            width: stateRowWidth,
-                            height: fontSize * 1.6,
-                            title: 'PBL 스크린',
-                          ),
-                          StateToggleRow(
-                            width: stateRowWidth,
-                            height: fontSize * 1.6,
-                            title: '학생 PC',
-                          ),
-                        ],
-                      ),
+
                     ],
                   ),
                 ],

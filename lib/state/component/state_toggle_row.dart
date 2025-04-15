@@ -6,6 +6,7 @@ class StateToggleRow extends StatelessWidget {
   final double width;
   final double height;
   final String title;
+  final Function onChanged;
   double? fontSize;
 
   StateToggleRow({
@@ -13,6 +14,7 @@ class StateToggleRow extends StatelessWidget {
     required this.width,
     required this.height,
     required this.title,
+    required this.onChanged,
     this.fontSize,
   });
 
@@ -43,7 +45,7 @@ class StateToggleRow extends StatelessWidget {
                   height: height,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: CustomToggle(isOn: true),
+                    child: CustomToggle(isOn: true, onChanged: () {}),
                   ),
                 ),
               ],
