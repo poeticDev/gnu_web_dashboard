@@ -14,7 +14,7 @@ import 'package:gnu_web_dashboard/media/media_grid.dart';
 import 'package:gnu_web_dashboard/message/message_add_dialog.dart';
 import 'package:gnu_web_dashboard/message/message_grid.dart';
 import 'package:gnu_web_dashboard/state/component/custom_line_chart.dart';
-import 'package:gnu_web_dashboard/state/component/state_row.dart';
+import 'package:gnu_web_dashboard/state/component/state_toggle_row.dart';
 import 'package:gnu_web_dashboard/test/test_widget.dart';
 import 'package:gnu_web_dashboard/timetable/component/lecture_dialog.dart';
 import 'package:gnu_web_dashboard/timetable/timetable_layout.dart';
@@ -150,6 +150,99 @@ class _StateViewState extends ConsumerState<StateView> {
     );
   }
 
+  Widget _RenderControlBox({
+    required double width,
+    required double height,
+    required double minWidth,
+  }) {
+    const double verticalPadding = 20;
+
+    final double stateRowWidth = width / 2.3;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: PRIMARY_CONTAINER_COLOR,
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(width: 16),
+                Text(
+                  '강의실 관리',
+                  style: TERTIARY_TITLE_TEXT_STYLE.copyWith(
+                    color: WHITE_TEXT_COLOR,
+                    fontSize: fontSize * 0.85,
+                  ),
+                ),
+                SizedBox(
+                  width: 30,
+                  child:
+                  // LoadingIndicator(
+                  //   indicatorType: Indicator.circleStrokeSpin,
+                  //   colors: [Colors.orangeAccent, Colors.yellowAccent],
+                  // ),
+                  LoadingIndicator(
+                    indicatorType: Indicator.ballClipRotatePulse,
+                    colors: const [Colors.yellow, Colors.green],
+                  ),
+                ),
+              ],
+            ),
+            Divider(color: DIVIDER_COLOR, height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  children: [
+                    StateToggleRow(
+                      width: stateRowWidth,
+                      height: fontSize * 1.6,
+                      title: 'All On/Off',
+                    ),
+                    StateToggleRow(
+                      width: stateRowWidth,
+                      height: fontSize * 1.6,
+                      title: '조명',
+                    ),
+                    StateToggleRow(
+                      width: stateRowWidth,
+                      height: fontSize * 1.6,
+                      title: '냉난방기',
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    StateToggleRow(
+                      width: stateRowWidth,
+                      height: fontSize * 1.6,
+                      title: '교수 PC',
+                    ),
+                    StateToggleRow(
+                      width: stateRowWidth,
+                      height: fontSize * 1.6,
+                      title: 'PBL 스크린',
+                    ),
+                    StateToggleRow(
+                      width: stateRowWidth,
+                      height: fontSize * 1.6,
+                      title: '학생 PC',
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _RenderStateBox({
     required double width,
     required double height,
@@ -210,17 +303,17 @@ class _StateViewState extends ConsumerState<StateView> {
                     children: [
                       Column(
                         children: [
-                          StateRow(
+                          StateToggleRow(
                             width: stateRowWidth,
                             height: fontSize * 1.6,
                             title: 'All On/Off',
                           ),
-                          StateRow(
+                          StateToggleRow(
                             width: stateRowWidth,
                             height: fontSize * 1.6,
                             title: '조명',
                           ),
-                          StateRow(
+                          StateToggleRow(
                             width: stateRowWidth,
                             height: fontSize * 1.6,
                             title: '냉난방기',
@@ -229,17 +322,17 @@ class _StateViewState extends ConsumerState<StateView> {
                       ),
                       Column(
                         children: [
-                          StateRow(
+                          StateToggleRow(
                             width: stateRowWidth,
                             height: fontSize * 1.6,
                             title: '교수 PC',
                           ),
-                          StateRow(
+                          StateToggleRow(
                             width: stateRowWidth,
                             height: fontSize * 1.6,
                             title: 'PBL 스크린',
                           ),
-                          StateRow(
+                          StateToggleRow(
                             width: stateRowWidth,
                             height: fontSize * 1.6,
                             title: '학생 PC',
@@ -326,7 +419,7 @@ class _StateViewState extends ConsumerState<StateView> {
             ],
           ),
 
-          ///
+          /// 온/습도
           SizedBox(height: verticalPadding),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
