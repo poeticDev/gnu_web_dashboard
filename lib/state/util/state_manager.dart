@@ -34,35 +34,42 @@ class StateManager extends _$StateManager {
 
   @override
   Map<String, dynamic> build() {
-    dLog('StateManager Build!');
-    try {
-      final List<String> selectedRoom = initialState['selectedRoom'];
-    } catch (e) {
-      eLog('스테이트 매니저 빌드 실패 :\n$e');
-    }
+    // dLog('StateManager Build!');
+    // try {
+    //   final List<String> selectedRoom = initialState['selectedRoom'];
+    // } catch (e) {
+    //   eLog('스테이트 매니저 빌드 실패 :\n$e');
+    // }
 
     return initialState;
+  }
+
+  void replaceRoomId(String roomId) {
+    _announceRoomList([roomId]);
+    state = {
+      ...state,
+      'selectedRoom': [roomId],
+    };
   }
 
   void registerRoomId(String roomId) {
     final List<String> selectedRoomList = state['selectedRoom'];
     selectedRoomList.add(roomId);
 
+    _announceRoomList(selectedRoomList);
     state = {...state, 'selectedRoom': selectedRoomList};
 
-    announceRoomList(selectedRoomList);
   }
 
   void deleteRoomId(String roomId) {
     final List<String> selectedRoomList = state['selectedRoom'];
     selectedRoomList.remove(roomId);
+    _announceRoomList(selectedRoomList);
     state = {...state, 'selectedRoom': selectedRoomList};
 
-    announceRoomList(selectedRoomList);
   }
 
   /// Post:
-
   Future toggleState(String stateName) async {
     final currentState = state[stateName];
     if (currentState == 'on') {
@@ -82,7 +89,7 @@ class StateManager extends _$StateManager {
   }
 
   /// WS
-  Future<void> announceRoomList(List<String> roomIdList) async {
+  Future<void> _announceRoomList(List<String> roomIdList) async {
     final map = {'selectedRoom': roomIdList};
     final message = jsonEncode(map);
     ws.sendStringMessage(message);
@@ -90,9 +97,7 @@ class StateManager extends _$StateManager {
 
   // ws데이터 수신 시, roomId를 키로 stateData 등록
   void stateDataHandler(dynamic data) {
-    dLog("data: $data");
     final Map<String, dynamic> dataMap = data;
-    dLog("dataMap: $dataMap");
 
     // 해당 roomId의 현재 데이터를 등록
     for (String roomId in dataMap.keys) {

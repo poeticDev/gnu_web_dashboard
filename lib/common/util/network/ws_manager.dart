@@ -25,7 +25,7 @@ class WsManager {
     return _isConnected;
   }
 
-  void connectWS({required String serverIp}) {
+  Future<void> connectWS({required String serverIp}) async {
     if (_ws != null) {
       disConnect();
     }

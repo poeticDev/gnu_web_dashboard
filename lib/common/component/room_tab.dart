@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/room_model.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
+import 'package:gnu_web_dashboard/state/util/state_manager.dart';
 
-class RoomTab extends StatelessWidget {
+class RoomTab extends ConsumerWidget {
   final Room roomData;
   final double height;
   final double fontSize;
@@ -18,13 +20,13 @@ class RoomTab extends StatelessWidget {
   static const double borderRadius = 16.0;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
 
     return GestureDetector(
       onTap: () {
+        ref.read(stateManagerProvider.notifier).replaceRoomId(roomData.roomId);
         // context.go('/fixedName');
-        dLog('탭 정보 입력하기');
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),

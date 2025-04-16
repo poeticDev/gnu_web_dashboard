@@ -39,19 +39,19 @@ class _StateViewState extends ConsumerState<StateView> {
   void initState() {
     // TODO: implement initState
 
-    _initWs();
+    // _initWs();
     super.initState();
   }
 
   void _initWs() async {
     final stateNotifier =  ref.read(stateManagerProvider.notifier);
 
-    ws.connectWS(serverIp: serverIp);
     ws.addJsonEventHandler(
       'latestSensorData',
       ref.read(stateManagerProvider.notifier).stateDataHandler,
     );
-    ws.    announceRoomList(selectedRoom);
+    ws.connectWS(serverIp: serverIp);
+    // ws.    announceRoomList(selectedRoom);
   }
 
   @override

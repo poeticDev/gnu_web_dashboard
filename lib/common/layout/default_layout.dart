@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gnu_web_dashboard/common/component/splash_circle.dart';
 import 'package:gnu_web_dashboard/common/component/top_navigator.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
+import 'package:gnu_web_dashboard/common/util/initializer.dart';
+import 'package:gnu_web_dashboard/common/util/network/ws_manager.dart';
 import 'package:gnu_web_dashboard/state/state_view.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -12,7 +15,6 @@ class DefaultLayout extends ConsumerWidget {
   DefaultLayout({super.key, this.backgroundColor});
 
   // final TabController _tabController = TabController(length: length, vsync: vsync);
-
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,11 +34,24 @@ class DefaultLayout extends ConsumerWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: backgroundColor ?? BG_COLOR,
-        appBar: TopNavigator(
-          height: topNaviHeight,
-        ),
+        appBar: TopNavigator(height: topNaviHeight),
         resizeToAvoidBottomInset: false,
-        body: StateView(roomId: '0-004-0111',),
+        body: StreamBuilder<String>(
+          stream: AppInitializer.initialize(ref),
+          builder: (context, snapshot) {
+            if (!AppInitializer.getInitializedStatus()) {
+              return Center(
+                child: SizedBox(
+                  width: 400,
+                  height: 400,
+                  child: SplashCircle(statusMsg: snapshot.data),
+                ),
+              );
+            }
+
+            return StateView(roomId: '0-004-0111');
+          },
+        ),
       ),
     );
   }

@@ -156,7 +156,6 @@ class _TimetableLayoutState extends State<TimetableLayout> {
             for (Lecture lecture in snapshot.data!) {
               double id = lecture.id;
               maxId = maxId < id ? id : maxId;
-              dLog(maxId);
             }
 
             idInteger = maxId.floor() + 1;
