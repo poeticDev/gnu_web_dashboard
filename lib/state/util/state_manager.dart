@@ -26,7 +26,7 @@ class StateManager extends _$StateManager {
     'airConditioner': null,
   };
 
-  Map<String, dynamic> periodData = {
+  Map<String, dynamic> periodDataMap = {
     "roomId": [
       {"timestamp": "2025-04-15 00:00:11", "온도": null, "습도": null},
     ],
@@ -58,7 +58,6 @@ class StateManager extends _$StateManager {
 
     _announceRoomList(selectedRoomList);
     state = {...state, 'selectedRoom': selectedRoomList};
-
   }
 
   void deleteRoomId(String roomId) {
@@ -66,7 +65,6 @@ class StateManager extends _$StateManager {
     selectedRoomList.remove(roomId);
     _announceRoomList(selectedRoomList);
     state = {...state, 'selectedRoom': selectedRoomList};
-
   }
 
   /// Post:
@@ -77,7 +75,7 @@ class StateManager extends _$StateManager {
     }
   }
 
-  Future getPeriodData({required String roomId}) async {
+  Future<void> getPeriodData({required String roomId}) async {
     final Response? response = await _http.post(
       path: '$serverHttpApiIp/read',
       queryParameters: {'type': 'sensorData'},
@@ -86,6 +84,14 @@ class StateManager extends _$StateManager {
 
     dLog('getPeriodData res code: ${response?.statusCode}');
     dLog('getPeriodData res data: ${response?.data}');
+
+    if (response?.data != null) {
+      final Map<String, dynamic> dataMap = response!.data;
+
+      for (String roomId in dataMap.keys) {
+        periodDataMap = {...periodDataMap, roomId: dataMap[roomId]};
+      }
+    }
   }
 
   /// WS

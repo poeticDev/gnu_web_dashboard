@@ -1,20 +1,18 @@
 import 'dart:html';
 
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
-import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 import 'package:gnu_web_dashboard/common/util/network/ws_manager.dart';
 import 'package:gnu_web_dashboard/media/media_add_dialog.dart';
 import 'package:gnu_web_dashboard/media/media_grid.dart';
 import 'package:gnu_web_dashboard/message/message_add_dialog.dart';
 import 'package:gnu_web_dashboard/message/message_grid.dart';
-import 'package:gnu_web_dashboard/state/component/custom_line_chart.dart';
 import 'package:gnu_web_dashboard/state/component/state_toggle_row.dart';
+import 'package:gnu_web_dashboard/state/state_box.dart';
 import 'package:gnu_web_dashboard/state/util/state_manager.dart';
 import 'package:gnu_web_dashboard/test/test_widget.dart';
 import 'package:gnu_web_dashboard/timetable/timetable_layout.dart';
@@ -87,53 +85,72 @@ class _StateViewState extends ConsumerState<StateView> {
         final double cameraBoxWidth =
             mWidth - stateBoxWidth - mediaBoxWidth - betweenPadding * 2;
 
-        return Padding(
-          padding: const EdgeInsets.all(globalPadding),
-          child: SizedBox(
-            width: mWidth,
-            height: mHeight,
-            child: SingleChildScrollView(
-              child: Wrap(
-                alignment: WrapAlignment.center,
-                spacing: betweenPadding,
-                runSpacing: betweenPadding,
-                children: [
-                  _RenderCameraBox(
-                    width: cameraBoxWidth,
-                    height: mHeight,
-                    minWidth: cameraBoxMinWidth,
-                  ),
-                  _RenderStateBox(
-                    width: stateBoxWidth,
-                    height: mHeight,
-                    minWidth: stateBoxMinWidth,
-                  ),
-                  TimetableLayout(
-                    width: mediaBoxWidth,
-                    minWidth: timetableMinWidth,
-                    roomId: widget.roomId,
-                  ),
-                  Wrap(
+        final double topBoxHeight = 50;
+
+        return Column(
+          children: [
+            Container(
+              width: double.infinity,
+              height: topBoxHeight,
+              decoration: BoxDecoration(color: PRIMARY_CONTAINER_COLOR),
+              child: Center(
+                child: Text(
+                  '(아이콘?) (강의실명) | {시작 시간} ~ {종료시간} {강의명} {교수명}님 수업 중입니다.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: WHITE_TEXT_COLOR, fontSize: fontSize),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(globalPadding),
+              child: SizedBox(
+                width: mWidth,
+                height: mHeight - topBoxHeight,
+                child: SingleChildScrollView(
+                  child: Wrap(
                     alignment: WrapAlignment.center,
                     spacing: betweenPadding,
                     runSpacing: betweenPadding,
                     children: [
-                      _RenderMessageBox(
-                        width: mediaBoxWidth,
-                        minWidth: mediaBoxMinWidth,
+                      _RenderCameraBox(
+                        width: cameraBoxWidth,
+                        height: mHeight - topBoxHeight,
+                        minWidth: cameraBoxMinWidth,
                       ),
-                      _RenderMediaBox(
-                        width: mediaBoxWidth,
-                        minWidth: mediaBoxMinWidth,
+                      StateBox(
+                        roomId: widget.roomId,
+                        width: stateBoxWidth,
+                        height: mHeight,
+                        minWidth: stateBoxMinWidth, fontSize: fontSize,
                       ),
+                      TimetableLayout(
+                        width: mediaBoxWidth,
+                        minWidth: timetableMinWidth,
+                        roomId: widget.roomId,
+                      ),
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: betweenPadding,
+                        runSpacing: betweenPadding,
+                        children: [
+                          _RenderMessageBox(
+                            width: mediaBoxWidth,
+                            minWidth: mediaBoxMinWidth,
+                          ),
+                          _RenderMediaBox(
+                            width: mediaBoxWidth,
+                            minWidth: mediaBoxMinWidth,
+                          ),
+                        ],
+                      ),
+
+                      TestWidget(),
                     ],
                   ),
-
-                  TestWidget(),
-                ],
+                ),
               ),
             ),
-          ),
+          ],
         );
       },
     );
@@ -266,233 +283,6 @@ class _StateViewState extends ConsumerState<StateView> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _RenderStateBox({
-    required double width,
-    required double height,
-    required double minWidth,
-  }) {
-    const double verticalPadding = 20;
-
-    final double stateRowWidth = width / 2.3;
-
-    final double weatherHeight = 120;
-
-    return Container(
-      constraints: BoxConstraints(minWidth: minWidth),
-      width: width,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: PRIMARY_CONTAINER_COLOR,
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 8.0,
-                vertical: 8.0,
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(width: 16),
-                      Text(
-                        '강의실 상태',
-                        style: TERTIARY_TITLE_TEXT_STYLE.copyWith(
-                          color: WHITE_TEXT_COLOR,
-                          fontSize: fontSize * 0.85,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 30,
-                        child:
-                        // LoadingIndicator(
-                        //   indicatorType: Indicator.circleStrokeSpin,
-                        //   colors: [Colors.orangeAccent, Colors.yellowAccent],
-                        // ),
-                        LoadingIndicator(
-                          indicatorType: Indicator.ballClipRotatePulse,
-                          colors: const [Colors.yellow, Colors.green],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Divider(color: DIVIDER_COLOR, height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: verticalPadding),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: weatherHeight,
-                decoration: BoxDecoration(
-                  color: PRIMARY_CONTAINER_COLOR,
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12.0,
-                    vertical: 12.0,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(
-                        '현재 온도',
-                        style: TextStyle(
-                          color: WHITE_TEXT_COLOR,
-                          fontSize: fontSize * 0.85,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 100,
-                        child: Divider(color: DIVIDER_COLOR, height: 10),
-                      ),
-                      Text(
-                        '21°C',
-                        style: TextStyle(
-                          color: WHITE_TEXT_COLOR,
-                          fontSize: fontSize,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(width: 12.0),
-              Expanded(
-                child: Container(
-                  height: weatherHeight,
-                  decoration: BoxDecoration(
-                    color: PRIMARY_CONTAINER_COLOR,
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  child: CustomLineChart(
-                    yName: '°C',
-                    minX: 8,
-                    maxX: 20,
-                    minY: 0,
-                    maxY: 38,
-                    spots: [
-                      FlSpot(8, 16.44),
-                      FlSpot(9, 12),
-                      FlSpot(10, 15),
-                      FlSpot(11, 4),
-                      FlSpot(12, 20),
-                      FlSpot(13, 25.44),
-                      FlSpot(14, 22.44),
-                      FlSpot(16, 18.44),
-                      FlSpot(18, 37),
-                      FlSpot(19, 24),
-                      FlSpot(20, 10.44),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          /// 온/습도
-          SizedBox(height: verticalPadding),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: weatherHeight,
-                decoration: BoxDecoration(
-                  color: PRIMARY_CONTAINER_COLOR,
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12.0,
-                    vertical: 12.0,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Center(
-                        child: Text(
-                          '현재 습도',
-                          style: TERTIARY_TITLE_TEXT_STYLE.copyWith(
-                            color: WHITE_TEXT_COLOR,
-                            fontSize: fontSize * 0.85,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 100,
-                        child: Divider(color: DIVIDER_COLOR, height: 10),
-                      ),
-                      Text(
-                        '48%',
-                        style: TextStyle(
-                          color: WHITE_TEXT_COLOR,
-                          fontSize: fontSize,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(width: 12.0),
-              Expanded(
-                child: Container(
-                  height: weatherHeight,
-                  decoration: BoxDecoration(
-                    color: PRIMARY_CONTAINER_COLOR,
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  child: CustomLineChart(
-                    yName: '%',
-                    minX: 8,
-                    maxX: 20,
-                    minY: 0,
-                    maxY: 100,
-                    horizontalInterval: 25,
-                    gradientColors: [
-                      Colors.yellow,
-                      Colors.lightBlue,
-                      Colors.lightBlue,
-                      Colors.indigo,
-                    ],
-                    spots: [
-                      FlSpot(8, 10),
-                      FlSpot(9, 30),
-                      FlSpot(10, 40),
-                      FlSpot(11, 50),
-                      FlSpot(12, 35),
-                      FlSpot(13, 40),
-                      FlSpot(14, 70),
-                      FlSpot(16, 100),
-                      FlSpot(18, 100),
-                      FlSpot(19, 80),
-                      FlSpot(20, 60),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }

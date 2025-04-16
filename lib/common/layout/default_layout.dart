@@ -19,7 +19,7 @@ class DefaultLayout extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     const double globalPadding = 60.0;
-    double topNaviHeight = 100;
+    double topNaviHeight = 60;
 
     if (!ResponsiveBreakpoints.of(context).isDesktop) {
       topNaviHeight = 60;

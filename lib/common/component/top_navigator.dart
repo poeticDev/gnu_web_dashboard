@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gnu_web_dashboard/common/component/room_tab.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/room_model.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
+import 'package:gnu_web_dashboard/state/util/state_manager.dart';
 
-class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
+class TopNavigator extends ConsumerWidget implements PreferredSizeWidget {
   final double height;
 
   TopNavigator({super.key, required this.height});
@@ -16,7 +17,7 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
   final ScrollController _scrollController = ScrollController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // 나중에 initilizer나 어디로 넣자.
     // final colors = AppColors.of(context);
 
@@ -36,14 +37,17 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
       titleSpacing: 0,
       title:
           currentDevice == Device.DESKTOP
-              ? _buildDesktopLayout()
+              ? _buildDesktopLayout(ref)
               : currentDevice == Device.TABLET
               ? _buildTabletLayout()
               : _buildMobileLayout(),
     );
   }
 
-  Widget _buildDesktopLayout() {
+  Widget _buildDesktopLayout(WidgetRef ref) {
+    final stateWatcher = ref.watch(stateManagerProvider);
+    final stateNotifier = ref.read(stateManagerProvider.notifier);
+
     const double upperPadding = 12;
     return Container(
       decoration: BoxDecoration(
@@ -61,7 +65,7 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
         children: [
           SizedBox(height: upperPadding),
           SizedBox(
-            height: (height - upperPadding) / 2,
+            height: (height - upperPadding),
             child: Scrollbar(
               controller: _scrollController,
               child: SingleChildScrollView(
@@ -71,18 +75,7 @@ class TopNavigator extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
           ),
-          Container(
-            width: double.infinity,
-            height: (height - upperPadding) / 2,
-            decoration: BoxDecoration(color: PRIMARY_CONTAINER_COLOR),
-            child: Center(
-              child: Text(
-                '(아이콘?) (강의실명) | {시작 시간} ~ {종료시간} {강의명} {교수명}님 수업 중입니다.',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: WHITE_TEXT_COLOR, fontSize: fontSize),
-              ),
-            ),
-          ),
+
         ],
       ),
     );
