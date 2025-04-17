@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 
-const serverHttpApiIp = 'https://192.168.219.137/api/v1';
+const serverHttpApiIp = 'https://117.16.154.97/api/v1';
 
 class HttpManager {
   static final HttpManager _instance = HttpManager._internal();

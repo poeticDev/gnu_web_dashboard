@@ -4,7 +4,7 @@ import 'dart:html';
 
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 
-const serverIp = 'wss://192.168.219.137/api/v1/ws';
+const serverIp = 'wss://117.16.154.97/api/v1/ws';
 
 class WsManager {
   static WebSocket? _ws;

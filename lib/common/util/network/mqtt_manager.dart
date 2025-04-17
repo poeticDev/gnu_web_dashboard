@@ -15,7 +15,7 @@ const List<String> SUBSCRIBING_TOPICS = [
 
 final mqttManagerProvider = Provider<MqttManager>((ref) {
   return MqttManager(
-    broker: 'wss://192.168.219.137/api/v1/ws/example',
+    broker: 'wss://117.16.154.97/api/v1/ws/example',
     port: 80,
     // userName: 'mdk',
     // password: '12344321',
