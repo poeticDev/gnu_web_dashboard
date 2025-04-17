@@ -37,20 +37,9 @@ class _StateViewState extends ConsumerState<StateView> {
   void initState() {
     // TODO: implement initState
 
-    // _initWs();
     super.initState();
   }
 
-  void _initWs() async {
-    final stateNotifier =  ref.read(stateManagerProvider.notifier);
-
-    ws.addJsonEventHandler(
-      'latestSensorData',
-      ref.read(stateManagerProvider.notifier).stateDataHandler,
-    );
-    ws.connectWS(serverIp: serverIp);
-    // ws.    announceRoomList(selectedRoom);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +52,6 @@ class _StateViewState extends ConsumerState<StateView> {
     }
 
     final colors = AppColors.of(context);
-
-    stateNotifier.getPeriodData(roomId: widget.roomId);
 
     return LayoutBuilder(
       builder: (context, constraints) {

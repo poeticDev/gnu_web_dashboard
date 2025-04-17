@@ -30,10 +30,14 @@ class StateManager extends _$StateManager {
     'airConditioner': null,
   };
 
-  Map<String, dynamic> periodDataMap = {
+  static Map<String, dynamic> _periodDataMap = {
     "roomId": [
       {"timestamp": "2025-04-15 00:00:11", "온도": null, "습도": null},
     ],
+  };
+
+  static Map<String, Map<String, List<FlSpot>>> _periodSpotMap = {
+    "roomId": {"temperSpotList": [], "humidSpotList": []},
   };
 
   @override
@@ -44,7 +48,15 @@ class StateManager extends _$StateManager {
     // } catch (e) {
     //   eLog('스테이트 매니저 빌드 실패 :\n$e');
     // }
-    _timer = Timer.periodic(Duration(minutes: 30), (timer) {});
+    _timer = Timer.periodic(Duration(minutes: 15), (timer) async {
+      await getPeriodData();
+
+      List<String> selectedRoomList = state["selectedRoom"];
+
+      for (String roomId in selectedRoomList) {
+        Map<String, List<FlSpot>> spotMap = _getSpotFromState(roomId);
+      }
+    });
 
     return initialState;
   }
@@ -80,7 +92,7 @@ class StateManager extends _$StateManager {
     }
   }
 
-  Future<void> getPeriodData({required String roomId}) async {
+  Future<void> getPeriodData() async {
     final Response? response = await _http.post(
       path: '$serverHttpApiIp/read',
       queryParameters: {'type': 'sensorData'},
@@ -94,12 +106,12 @@ class StateManager extends _$StateManager {
       final Map<String, dynamic> dataMap = response!.data;
 
       for (String roomId in dataMap.keys) {
-        periodDataMap = {...periodDataMap, roomId: dataMap[roomId]};
+        _periodDataMap = {..._periodDataMap, roomId: dataMap[roomId]};
       }
     }
   }
 
-  double getTimeDoubleFromTimestamp(String timestamp) {
+  static double _getTimeDoubleFromTimestamp(String timestamp) {
     final DateTime? parsedTimestamp = DateTime.tryParse(timestamp);
 
     dLog('parsedTimestamp: $parsedTimestamp');
@@ -115,19 +127,19 @@ class StateManager extends _$StateManager {
     return timeDouble;
   }
 
-  Map<String, List<FlSpot>> getSpotFromState(String roomId) {
+  static Map<String, List<FlSpot>> _getSpotFromState(String roomId) {
     // Map<String, dynamic> periodDataMap = {
     //   "roomId": [
     //     {"timestamp": "2025-04-15 00:00:11", "온도": null, "습도": null},
     //   ],
     // };
-    final List<Map<String, dynamic>> dataMapList = periodDataMap[roomId];
+    final List<Map<String, dynamic>> dataMapList = _periodDataMap[roomId];
 
     final List<FlSpot> temperSpotList = [];
     final List<FlSpot> humidSpotList = [];
 
     for (Map<String, dynamic> dataMap in dataMapList) {
-      final double time = getTimeDoubleFromTimestamp(dataMap["timestamp"]);
+      final double time = _getTimeDoubleFromTimestamp(dataMap["timestamp"]);
       final double temperature = dataMap["온도"] + 0.0;
       final double humidity = dataMap["습도"] + 0.0;
 
@@ -140,6 +152,8 @@ class StateManager extends _$StateManager {
 
     return {"temperSpotList": temperSpotList, "humidSpotList": humidSpotList};
   }
+
+  Map<String, Map<String, List<FlSpot>>> getPeriodSpotMap() => _periodSpotMap;
 
   /// WS
   Future<void> _announceRoomList(List<String> roomIdList) async {

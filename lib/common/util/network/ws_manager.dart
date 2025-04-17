@@ -38,8 +38,6 @@ class WsManager {
         startPing();
       });
 
-      _isConnected = true;
-
       _ws!.onMessage.listen((event) {
         final data = event.data;
 
@@ -76,6 +74,8 @@ class WsManager {
       print('❌ 웹소켓 연결 실패 : $e');
       _isConnected = false;
     }
+
+    _isConnected = true;
   }
 
   void disConnect() {

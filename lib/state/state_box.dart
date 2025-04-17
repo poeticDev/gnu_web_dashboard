@@ -41,6 +41,12 @@ class StateBox extends ConsumerWidget {
       humidity = state['humidity'] ?? '-';
     }
 
+    final Map<String, List<FlSpot>> periodSpotList =
+        notifier.getPeriodSpotMap()[roomId] ?? {};
+
+    List<FlSpot> temperSpotList = periodSpotList['temperSpotList'] ?? [];
+    List<FlSpot> humidSpotList = periodSpotList['humidSpotList'] ?? [];
+
     return Container(
       constraints: BoxConstraints(minWidth: minWidth),
       width: width,
@@ -147,19 +153,7 @@ class StateBox extends ConsumerWidget {
                     maxX: 20,
                     minY: 0,
                     maxY: 38,
-                    spots: [
-                      FlSpot(8, 16.44),
-                      FlSpot(9, 12),
-                      FlSpot(10, 15),
-                      FlSpot(11, 4),
-                      FlSpot(12, 20),
-                      FlSpot(13, 25.44),
-                      FlSpot(14, 22.44),
-                      FlSpot(16, 18.44),
-                      FlSpot(18, 37),
-                      FlSpot(19, 24),
-                      FlSpot(20, 10.44),
-                    ],
+                    spots: temperSpotList,
                   ),
                 ),
               ),
@@ -231,19 +225,7 @@ class StateBox extends ConsumerWidget {
                       Colors.lightBlue,
                       Colors.indigo,
                     ],
-                    spots: [
-                      FlSpot(8, 10),
-                      FlSpot(9, 30),
-                      FlSpot(10, 40),
-                      FlSpot(11, 50),
-                      FlSpot(12, 35),
-                      FlSpot(13, 40),
-                      FlSpot(14, 70),
-                      FlSpot(16, 100),
-                      FlSpot(18, 100),
-                      FlSpot(19, 80),
-                      FlSpot(20, 60),
-                    ],
+                    spots: humidSpotList,
                   ),
                 ),
               ),
