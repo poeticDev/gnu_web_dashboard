@@ -36,11 +36,10 @@ class StateBox extends ConsumerWidget {
     String temperature = '-';
     String humidity = '-';
 
-    if(state != null) {
+    if (state != null) {
       temperature = state['temperature'] ?? '-';
       humidity = state['humidity'] ?? '-';
     }
-
 
     return Container(
       constraints: BoxConstraints(minWidth: minWidth),
@@ -124,7 +123,7 @@ class StateBox extends ConsumerWidget {
                         child: Divider(color: DIVIDER_COLOR, height: 10),
                       ),
                       Text(
-                        '${state['temperature'] ?? "-"}°C',
+                        temperature,
                         style: TextStyle(
                           color: WHITE_TEXT_COLOR,
                           fontSize: fontSize,
@@ -201,7 +200,7 @@ class StateBox extends ConsumerWidget {
                         child: Divider(color: DIVIDER_COLOR, height: 10),
                       ),
                       Text(
-                        '${state['humidity'] ?? "-"}%',
+                        humidity,
                         style: TextStyle(
                           color: WHITE_TEXT_COLOR,
                           fontSize: fontSize,

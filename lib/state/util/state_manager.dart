@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
 import 'package:gnu_web_dashboard/common/util/network/http_manager.dart';
 import 'package:gnu_web_dashboard/common/util/network/ws_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,6 +17,7 @@ class StateManager extends _$StateManager {
   static bool _isConnected = false;
   WsManager ws = WsManager();
   HttpManager _http = HttpManager();
+  Timer? _timer;
 
   Map<String, dynamic> initialState = {
     'selectedRoom': [initialRooms.first.roomId],
@@ -40,6 +44,7 @@ class StateManager extends _$StateManager {
     // } catch (e) {
     //   eLog('스테이트 매니저 빌드 실패 :\n$e');
     // }
+    _timer = Timer.periodic(Duration(minutes: 30), (timer) {});
 
     return initialState;
   }
@@ -92,6 +97,48 @@ class StateManager extends _$StateManager {
         periodDataMap = {...periodDataMap, roomId: dataMap[roomId]};
       }
     }
+  }
+
+  double getTimeDoubleFromTimestamp(String timestamp) {
+    final DateTime? parsedTimestamp = DateTime.tryParse(timestamp);
+
+    dLog('parsedTimestamp: $parsedTimestamp');
+    TimeOfDay timeOfDay = TimeOfDay(hour: 0, minute: 0);
+    double timeDouble = 0.0;
+    if (parsedTimestamp != null) {
+      final int hour = parsedTimestamp.hour;
+      final int min = parsedTimestamp.minute;
+
+      timeDouble = hour + min / 60;
+    }
+
+    return timeDouble;
+  }
+
+  Map<String, List<FlSpot>> getSpotFromState(String roomId) {
+    // Map<String, dynamic> periodDataMap = {
+    //   "roomId": [
+    //     {"timestamp": "2025-04-15 00:00:11", "온도": null, "습도": null},
+    //   ],
+    // };
+    final List<Map<String, dynamic>> dataMapList = periodDataMap[roomId];
+
+    final List<FlSpot> temperSpotList = [];
+    final List<FlSpot> humidSpotList = [];
+
+    for (Map<String, dynamic> dataMap in dataMapList) {
+      final double time = getTimeDoubleFromTimestamp(dataMap["timestamp"]);
+      final double temperature = dataMap["온도"] + 0.0;
+      final double humidity = dataMap["습도"] + 0.0;
+
+      final FlSpot temperSpot = FlSpot(time, temperature);
+      final FlSpot humidSpot = FlSpot(time, humidity);
+
+      temperSpotList.add(temperSpot);
+      humidSpotList.add(humidSpot);
+    }
+
+    return {"temperSpotList": temperSpotList, "humidSpotList": humidSpotList};
   }
 
   /// WS
