@@ -36,7 +36,7 @@ class _StateBoxState extends ConsumerState<StateBox> {
     super.initState();
   }
 
-@override
+  @override
   Widget build(BuildContext context) {
     const double verticalPadding = 20;
     final double stateRowWidth = widget.width / 2.3;
@@ -58,16 +58,16 @@ class _StateBoxState extends ConsumerState<StateBox> {
 
     Map<String, List<FlSpot>> periodSpotList = {};
 
-    periodSpotList = {...periodSpotList,...?notifier.getPeriodSpotMap()[widget.roomId]};
-
-
+    periodSpotList = {
+      ...periodSpotList,
+      ...?notifier.getPeriodSpotMap()[widget.roomId],
+    };
 
     List<FlSpot> temperSpotList = periodSpotList['temperSpotList'] ?? [];
     List<FlSpot> humidSpotList = periodSpotList['humidSpotList'] ?? [];
 
     iLog('temperSpotList: $temperSpotList');
     iLog('humidSpotList: $humidSpotList');
-
 
     return Container(
       constraints: BoxConstraints(minWidth: widget.minWidth),
@@ -108,14 +108,18 @@ class _StateBoxState extends ConsumerState<StateBox> {
                     ],
                   ),
                   Divider(color: DIVIDER_COLOR, height: 10),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //   children: [
-                  //     state == null
-                  //         ? SplashCircle(statusMsg: '상태 불러오는 중')
-                  //         : SizedBox(),
-                  //   ],
-                  // ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      state == null
+                          ? SizedBox(
+                            width: 120,
+                            height: 120,
+                            child: SplashCircle(statusMsg: '상태 불러오는 중'),
+                          )
+                          : SizedBox(),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -143,7 +147,7 @@ class _StateBoxState extends ConsumerState<StateBox> {
                         '현재 온도',
                         style: TextStyle(
                           color: WHITE_TEXT_COLOR,
-                          fontSize: widget.  fontSize * 0.85,
+                          fontSize: widget.fontSize * 0.85,
                         ),
                       ),
                       SizedBox(
