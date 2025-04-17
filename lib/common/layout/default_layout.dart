@@ -6,6 +6,7 @@ import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/util/initializer.dart';
 import 'package:gnu_web_dashboard/state/state_view.dart';
+import 'package:gnu_web_dashboard/state/util/state_manager.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class DefaultLayout extends ConsumerWidget {
@@ -17,6 +18,7 @@ class DefaultLayout extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final roomId = ref.watch(stateManagerProvider)['selectedRoom'].first;
     const double globalPadding = 60.0;
     double topNaviHeight = 60;
 
@@ -48,7 +50,7 @@ class DefaultLayout extends ConsumerWidget {
               );
             }
 
-            return StateView(roomId: '0-004-0111');
+            return StateView(roomId: roomId);
           },
         ),
       ),

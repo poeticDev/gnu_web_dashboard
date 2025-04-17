@@ -26,6 +26,7 @@ class RoomTab extends ConsumerWidget {
     return GestureDetector(
       onTap: () {
         ref.read(stateManagerProvider.notifier).replaceRoomId(roomData.roomId);
+        ref.read(stateManagerProvider.notifier).updatePeriodSpotMap();
         // context.go('/fixedName');
       },
       child: Padding(

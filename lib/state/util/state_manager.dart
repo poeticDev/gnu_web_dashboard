@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
 import 'package:gnu_web_dashboard/common/util/network/http_manager.dart';
 import 'package:gnu_web_dashboard/common/util/network/ws_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -22,13 +21,17 @@ class StateManager extends _$StateManager {
 
   Map<String, dynamic> initialState = {
     'selectedRoom': [initialRooms.first.roomId],
-    'temperature': null,
-    'humidity': null,
-    'power': null,
-    'profPc': null,
-    'lights': null,
-    'studentScreens': null,
-    'airConditioner': null,
+    // 'roomId' : {
+    //   'temperature': null,
+    //   'humidity': null,
+    //   'power': null,
+    //   'profPc': null,
+    //   'lights': null,
+    //   'studentScreens': null,
+    //   'airConditioner': null,
+    // }
+    'lastUpdated': null,
+
   };
 
   static Map<String, dynamic> _periodDataMap = {
@@ -128,9 +131,6 @@ class StateManager extends _$StateManager {
 
   static double _getTimeDoubleFromTimestamp(String timestamp) {
     final DateTime? parsedTimestamp = DateTime.tryParse(timestamp);
-
-    dLog('parsedTimestamp: $parsedTimestamp');
-    TimeOfDay timeOfDay = TimeOfDay(hour: 0, minute: 0);
     double timeDouble = 0.0;
     if (parsedTimestamp != null) {
       final int hour = parsedTimestamp.hour;
@@ -182,12 +182,20 @@ class StateManager extends _$StateManager {
 
   // ws데이터 수신 시, roomId를 키로 stateData 등록
   void stateDataHandler(dynamic data) {
-    final Map<String, dynamic> dataMap = data;
+    try{
+      final Map<String, dynamic> dataMap = data;
 
-    // 해당 roomId의 현재 데이터를 등록
-    for (String roomId in dataMap.keys) {
-      state = {...state, roomId: dataMap[roomId]};
+      // 해당 roomId의 현재 데이터를 등록
+      for (String roomId in dataMap.keys) {
+        dLog('$roomId 현재 데이터 등록!');
+        final Map<String, dynamic> statesMap = dataMap[roomId]['states'];
+        dLog('statesMap: $statesMap');
+        state = {...state, roomId: statesMap, 'lastUpdated':DateTime.now()};
+      }
+    } catch(e) {
+      eLog('stateDataHandler 실패 : $e');
     }
+
   }
 
   /// 기존 구독 목록을 없애고, 새 구독 요청

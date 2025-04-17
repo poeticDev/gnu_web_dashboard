@@ -48,6 +48,12 @@ class _StateBoxState extends ConsumerState<StateBox> {
     String temperature = '-';
     String humidity = '-';
 
+    final infoState = ref.watch(stateManagerProvider);
+
+    iLog('infoState: $infoState');
+
+    dLog('state: $state');
+
     if (state != null) {
       temperature = state['temperature'] ?? '-';
       humidity = state['humidity'] ?? '-';
