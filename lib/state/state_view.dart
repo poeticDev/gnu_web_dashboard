@@ -31,27 +31,21 @@ class _StateViewState extends ConsumerState<StateView> {
   late Future mediaItemList;
   double fontSize = 24;
 
-  final ws = WsManager();
-
   @override
   void initState() {
     // TODO: implement initState
-
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
-    final stateNotifier =  ref.read(stateManagerProvider.notifier);
+    final stateNotifier = ref.read(stateManagerProvider.notifier);
 
     if (currentDevice != Device.DESKTOP) {
       fontSize = 16;
     } else {
       fontSize = 22;
     }
-
-    final colors = AppColors.of(context);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -108,7 +102,8 @@ class _StateViewState extends ConsumerState<StateView> {
                         roomId: widget.roomId,
                         width: stateBoxWidth,
                         height: mHeight,
-                        minWidth: stateBoxMinWidth, fontSize: fontSize,
+                        minWidth: stateBoxMinWidth,
+                        fontSize: fontSize,
                       ),
                       TimetableLayout(
                         width: mediaBoxWidth,
@@ -226,9 +221,7 @@ class _StateViewState extends ConsumerState<StateView> {
                       width: stateRowWidth,
                       height: fontSize * 1.6,
                       title: 'All On/Off',
-                      onChanged: () {
-
-                      },
+                      onChanged: () {},
                     ),
                     StateToggleRow(
                       width: stateRowWidth,

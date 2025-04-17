@@ -5,7 +5,6 @@ import 'package:gnu_web_dashboard/common/component/top_navigator.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/util/initializer.dart';
-import 'package:gnu_web_dashboard/common/util/network/ws_manager.dart';
 import 'package:gnu_web_dashboard/state/state_view.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 

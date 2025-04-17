@@ -14,10 +14,11 @@ part 'state_manager.g.dart';
 
 @Riverpod(keepAlive: true)
 class StateManager extends _$StateManager {
-  static bool _isConnected = false;
   WsManager ws = WsManager();
   HttpManager _http = HttpManager();
   Timer? _timer;
+
+  // final List<String> selectedRoom = [initialRooms.first.roomId];
 
   Map<String, dynamic> initialState = {
     'selectedRoom': [initialRooms.first.roomId],
@@ -55,10 +56,24 @@ class StateManager extends _$StateManager {
 
       for (String roomId in selectedRoomList) {
         Map<String, List<FlSpot>> spotMap = _getSpotFromState(roomId);
+
+        _periodSpotMap = {..._periodSpotMap, roomId: spotMap};
       }
     });
 
     return initialState;
+  }
+
+  Future<void> updatePeriodSpotMap() async {
+    await getPeriodData();
+
+    List<String> selectedRoomList = state["selectedRoom"];
+
+    for (String roomId in selectedRoomList) {
+      Map<String, List<FlSpot>> spotMap = _getSpotFromState(roomId);
+
+      _periodSpotMap = {..._periodSpotMap, roomId: spotMap};
+    }
   }
 
   void replaceRoomId(String roomId) {
@@ -133,15 +148,18 @@ class StateManager extends _$StateManager {
     //     {"timestamp": "2025-04-15 00:00:11", "온도": null, "습도": null},
     //   ],
     // };
-    final List<Map<String, dynamic>> dataMapList = _periodDataMap[roomId];
+    final List<dynamic> dataList = _periodDataMap[roomId];
+
+    final List<Map<String, dynamic>> dataMapList =
+        dataList.map((e) => e as Map<String, dynamic>).toList();
 
     final List<FlSpot> temperSpotList = [];
     final List<FlSpot> humidSpotList = [];
 
     for (Map<String, dynamic> dataMap in dataMapList) {
       final double time = _getTimeDoubleFromTimestamp(dataMap["timestamp"]);
-      final double temperature = dataMap["온도"] + 0.0;
-      final double humidity = dataMap["습도"] + 0.0;
+      final double temperature = dataMap["온도"] ?? 0;
+      final double humidity = dataMap["습도"] ?? 0;
 
       final FlSpot temperSpot = FlSpot(time, temperature);
       final FlSpot humidSpot = FlSpot(time, humidity);
