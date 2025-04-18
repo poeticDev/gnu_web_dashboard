@@ -8,6 +8,7 @@ import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/room_model.dart';
+import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 import 'package:gnu_web_dashboard/common/util/network/ws_manager.dart';
 import 'package:gnu_web_dashboard/media/media_add_dialog.dart';
 import 'package:gnu_web_dashboard/media/media_grid.dart';
@@ -42,8 +43,13 @@ class _StateViewState extends ConsumerState<StateView> {
   @override
   Widget build(BuildContext context) {
     final stateNotifier = ref.read(stateManagerProvider.notifier);
-    final roomName =
-        initialRooms.firstWhere((e) => e.roomId == widget.roomId).roomName;
+    final roomData = initialRooms.firstWhere((e) => e.roomId == widget.roomId);
+
+    final String roomName = roomData.roomName;
+
+    // iLog('roomData.equipMap["wall_hub"]: ${roomData.equipMap["wall_hub"]}');
+    final bool hasKiosk = roomData.equipMap["wall_hub"] == true;
+
 
     if (currentDevice != Device.DESKTOP) {
       fontSize = 16;
@@ -115,21 +121,22 @@ class _StateViewState extends ConsumerState<StateView> {
                         minWidth: timetableMinWidth,
                         roomId: widget.roomId,
                       ),
-                      Wrap(
-                        alignment: WrapAlignment.center,
-                        spacing: betweenPadding,
-                        runSpacing: betweenPadding,
-                        children: [
-                          _RenderMessageBox(
-                            width: mediaBoxWidth,
-                            minWidth: mediaBoxMinWidth,
-                          ),
-                          _RenderMediaBox(
-                            width: mediaBoxWidth,
-                            minWidth: mediaBoxMinWidth,
-                          ),
-                        ],
-                      ),
+                      if (hasKiosk)
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: betweenPadding,
+                          runSpacing: betweenPadding,
+                          children: [
+                            _RenderMessageBox(
+                              width: mediaBoxWidth,
+                              minWidth: mediaBoxMinWidth,
+                            ),
+                            _RenderMediaBox(
+                              width: mediaBoxWidth,
+                              minWidth: mediaBoxMinWidth,
+                            ),
+                          ],
+                        ),
 
                       TestWidget(),
                     ],

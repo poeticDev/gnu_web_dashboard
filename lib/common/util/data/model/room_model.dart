@@ -59,8 +59,8 @@ final initialRooms = [
     roomNum: 1011,
     roomName: '601동 1011호 G큐브',
     equipMap: {
-      "wall_hub": true,
-      "class_hub": true,
+      "wall_hub": false,
+      "class_hub": false,
       "All": true,
       "교수PC": true,
       "조명": true,
@@ -76,8 +76,8 @@ final initialRooms = [
     roomNum: 116,
     roomName: '24동 116호 G큐브',
     equipMap: {
-      "wall_hub": true,
-      "class_hub": true,
+      "wall_hub": false,
+      "class_hub": false,
       "All": true,
       "교수PC": true,
       "조명": true,
