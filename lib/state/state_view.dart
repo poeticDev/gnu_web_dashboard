@@ -3,6 +3,7 @@ import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gnu_web_dashboard/camera/component/rtsp_player.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
@@ -41,7 +42,8 @@ class _StateViewState extends ConsumerState<StateView> {
   @override
   Widget build(BuildContext context) {
     final stateNotifier = ref.read(stateManagerProvider.notifier);
-    final roomName = initialRooms.firstWhere((e)=> e.roomId == widget.roomId).roomName;
+    final roomName =
+        initialRooms.firstWhere((e) => e.roomId == widget.roomId).roomName;
 
     if (currentDevice != Device.DESKTOP) {
       fontSize = 16;
@@ -95,10 +97,10 @@ class _StateViewState extends ConsumerState<StateView> {
                     spacing: betweenPadding,
                     runSpacing: betweenPadding,
                     children: [
-                      _RenderCameraBox(
+                      RtspPlayer(
                         width: cameraBoxWidth,
-                        height: mHeight - topBoxHeight,
                         minWidth: cameraBoxMinWidth,
+                        fontSize: fontSize,
                       ),
                       // _RenderControlBox(width: stateBoxWidth, height: mHeight, minWidth: stateBoxMinWidth),
                       StateBox(

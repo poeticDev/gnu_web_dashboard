@@ -81,8 +81,8 @@ class _StateBoxState extends ConsumerState<StateBox> {
     List<FlSpot> temperSpotList = periodSpotList['temperSpotList'] ?? [];
     List<FlSpot> humidSpotList = periodSpotList['humidSpotList'] ?? [];
 
-    iLog('temperSpotList: $temperSpotList');
-    iLog('humidSpotList: $humidSpotList');
+    // iLog('temperSpotList: $temperSpotList');
+    // iLog('humidSpotList: $humidSpotList');
 
     return Container(
       constraints: BoxConstraints(minWidth: widget.minWidth),
