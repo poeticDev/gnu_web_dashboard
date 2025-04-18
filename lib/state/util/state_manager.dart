@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:gnu_web_dashboard/common/util/data/model/lecture.dart';
 import 'package:gnu_web_dashboard/state/util/room_selector.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:gnu_web_dashboard/common/util/network/http_manager.dart';
@@ -22,7 +23,6 @@ class StateManager extends _$StateManager {
   // final List<String> selectedRoom = [initialRooms.first.roomId];
 
   Map<String, dynamic> initialState = {
-    // 'selectedRoom': [initialRooms.first.roomId],
     // 'roomId' : {
     //   'temperature': null,
     //   'humidity': null,
@@ -33,6 +33,7 @@ class StateManager extends _$StateManager {
     //   'airConditioner': null,
     // }
     'lastUpdated': null,
+    'currentLecture': null,
   };
 
   static Map<String, dynamic> _periodDataMap = {
@@ -162,9 +163,9 @@ class StateManager extends _$StateManager {
     for (Map<String, dynamic> dataMap in dataMapList) {
       double time = _getTimeDoubleFromTimestamp(dataMap["timestamp"]);
       if (time >= 8 && time <= 20) {
-        if(time < 8.5) {
+        if (time < 8.5) {
           time = 8.0;
-        } else if(time > 19.5) {
+        } else if (time > 19.5) {
           time = 20;
         }
 
@@ -206,6 +207,10 @@ class StateManager extends _$StateManager {
     } catch (e) {
       eLog('stateDataHandler 실패 : $e');
     }
+  }
+
+  void updateCurrentLecture(Lecture? lecture) {
+    state = {...state, 'currentLecture': lecture};
   }
 
   /// 기존 구독 목록을 없애고, 새 구독 요청

@@ -14,3 +14,8 @@ Weekday getWeekDayFromKr(String krName) {
 }
 
 String getWeekdayInKR(Weekday weekday) => weekdays[weekday.index];
+
+Weekday getWeekdayFromDateTime(DateTime dateTime) {
+  final int today = dateTime.weekday;
+  return Weekday.values[today - 1]; // DateTime은 1(월) ~ 7(일), Weekday는 0 index 기반
+}

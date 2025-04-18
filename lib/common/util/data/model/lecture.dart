@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gnu_web_dashboard/common/util/data/model/Weekday.dart';
+import 'package:gnu_web_dashboard/common/util/data/model/weekday.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 
 

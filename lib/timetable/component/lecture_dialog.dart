@@ -6,7 +6,7 @@ import 'package:gnu_web_dashboard/common/component/splash_circle.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
 import 'package:gnu_web_dashboard/common/util/data/grid_manager.dart';
-import 'package:gnu_web_dashboard/common/util/data/model/Weekday.dart';
+import 'package:gnu_web_dashboard/common/util/data/model/weekday.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/lecture.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/trina_columns.dart';
 import 'package:gnu_web_dashboard/common/util/network/google_sheets.dart';

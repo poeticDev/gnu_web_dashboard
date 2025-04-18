@@ -86,7 +86,7 @@ class _StateViewState extends ConsumerState<StateView> {
               decoration: BoxDecoration(color: PRIMARY_CONTAINER_COLOR),
               child: Center(
                 child: Text(
-                  '(아이콘?) $roomName | {시작 시간} ~ {종료시간} {강의명} {교수명}님 수업 중입니다.',
+                  '$roomName | {시작 시간} ~ {종료시간} {강의명} {교수명}님 수업 중입니다.',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: WHITE_TEXT_COLOR, fontSize: fontSize),
                 ),

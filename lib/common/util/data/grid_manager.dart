@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:gnu_web_dashboard/common/util/data/model/Weekday.dart';
+import 'package:gnu_web_dashboard/common/util/data/model/weekday.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/lecture.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/message_model.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';

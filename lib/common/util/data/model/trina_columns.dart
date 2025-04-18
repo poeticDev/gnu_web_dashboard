@@ -2,7 +2,7 @@ import 'package:gnu_web_dashboard/common/util/data/model/media_item_model.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/message_model.dart';
 import 'package:trina_grid/trina_grid.dart';
 
-import 'Weekday.dart';
+import 'weekday.dart';
 
 final List<TrinaColumn> mediaItemColumns = [
   TrinaColumn(

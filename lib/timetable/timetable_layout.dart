@@ -1,11 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:dotted_line/dotted_line.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gnu_web_dashboard/common/component/splash_circle.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/lecture.dart';
+import 'package:gnu_web_dashboard/common/util/data/model/weekday.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 import 'package:gnu_web_dashboard/common/util/network/google_sheets.dart';
+import 'package:gnu_web_dashboard/state/util/state_manager.dart';
 import 'package:gnu_web_dashboard/timetable/component/lecture_box.dart';
 import 'package:gnu_web_dashboard/timetable/component/lecture_dialog.dart';
 import 'package:gsheets/gsheets.dart';
@@ -16,7 +21,7 @@ enum WeekendOption { none, included }
 
 const weekendRowLengths = {WeekendOption.none: 5, WeekendOption.included: 7};
 
-class TimetableLayout extends StatefulWidget {
+class TimetableLayout extends ConsumerStatefulWidget {
   final double width;
   final double minWidth;
   final double fontSize;
@@ -35,19 +40,63 @@ class TimetableLayout extends StatefulWidget {
   });
 
   @override
-  State<TimetableLayout> createState() => _TimetableLayoutState();
+  ConsumerState<TimetableLayout> createState() => _TimetableLayoutState();
 }
 
-class _TimetableLayoutState extends State<TimetableLayout> {
+class _TimetableLayoutState extends ConsumerState<TimetableLayout> {
   late GoogleSheets gSheet;
   bool isInitialized = false;
   int idInteger = 0;
+  Timer? _updateTimer;
 
   @override
   void initState() {
     initGSheet();
     super.initState();
+  }
 
+  @override
+  void dispose() {
+    _updateTimer?.cancel();
+    super.dispose();
+  }
+
+  void setTimerForCurrentLecture(List<Lecture> lectureList) {
+    // 1. 즉시 1회 실행
+    _checkLectureAndUpdate(lectureList);
+
+    // 2. 다음 HH:00 또는 HH:30까지 기다렸다가 이후 30분 주기 타이머 실행
+    final now = DateTime.now();
+    final int nextMinute = now.minute < 30 ? 30 : 60;
+
+    final DateTime nextRun = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      now.hour + (nextMinute == 60 ? 1 : 0),
+      nextMinute == 60 ? 0 : 30,
+    );
+
+    final Duration initialDelay = nextRun.difference(now);
+
+    // 일정 지연 후 30분 주기 타이머 시작
+    _updateTimer = Timer(initialDelay, () {
+      _checkLectureAndUpdate(lectureList);
+
+      _updateTimer = Timer.periodic(const Duration(minutes: 30), (_) {
+        _checkLectureAndUpdate(lectureList);
+      });
+    });
+  }
+
+  void _checkLectureAndUpdate(List<Lecture> lectureList) {
+    final Lecture? oldLecture =
+        ref.read(stateManagerProvider)['currentLecture'];
+    final Lecture? newLecture = getCurrentLecture(lectureList);
+
+    if (oldLecture?.id != newLecture?.id) {
+      ref.read(stateManagerProvider.notifier).updateCurrentLecture(newLecture);
+    }
   }
 
   Future<void> initGSheet() async {
@@ -59,7 +108,7 @@ class _TimetableLayoutState extends State<TimetableLayout> {
 
   @override
   Widget build(BuildContext context) {
-    if(gSheet.sheetName != widget.roomId) {
+    if (gSheet.sheetName != widget.roomId) {
       isInitialized = false;
       initGSheet();
     }
@@ -165,6 +214,9 @@ class _TimetableLayoutState extends State<TimetableLayout> {
             }
 
             idInteger = maxId.floor() + 1;
+
+            // 현재 강의 업데이트
+            setTimerForCurrentLecture(snapshot.data!);
 
             return SizedBox(
               width: mWidth,
@@ -320,4 +372,30 @@ class _TimetableLayoutState extends State<TimetableLayout> {
       ),
     ];
   }
+}
+
+Lecture? getCurrentLecture(List<Lecture> lectureList) {
+  final now = DateTime.now();
+  final today = getWeekdayFromDateTime(now);
+  final TimeOfDay time = TimeOfDay.fromDateTime(now);
+
+  try {
+    return lectureList.firstWhere(
+      (lecture) =>
+          lecture.weekday == today &&
+          isBetween(time, lecture.startAt, lecture.endAt),
+    );
+  } catch (_) {
+    return null;
+  }
+}
+
+bool isBetween(TimeOfDay time, TimeOfDay startAt, TimeOfDay endAt) {
+  int toMinutes(TimeOfDay t) => t.hour * 60 + t.minute;
+
+  final int timeMinutes = toMinutes(time);
+  final int startMinutes = toMinutes(startAt);
+  final int endMinutes = toMinutes(endAt);
+
+  return timeMinutes >= startMinutes && timeMinutes <= endMinutes;
 }
