@@ -161,14 +161,16 @@ class StateManager extends _$StateManager {
 
     for (Map<String, dynamic> dataMap in dataMapList) {
       final double time = _getTimeDoubleFromTimestamp(dataMap["timestamp"]);
-      final double temperature = dataMap["온도"] ?? 0;
-      final double humidity = dataMap["습도"] ?? 0;
+      if (time > 8 && time < 20) {
+        final double temperature = dataMap["온도"] ?? 0;
+        final double humidity = dataMap["습도"] ?? 0;
 
-      final FlSpot temperSpot = FlSpot(time, temperature);
-      final FlSpot humidSpot = FlSpot(time, humidity);
+        final FlSpot temperSpot = FlSpot(time, temperature);
+        final FlSpot humidSpot = FlSpot(time, humidity);
 
-      temperSpotList.add(temperSpot);
-      humidSpotList.add(humidSpot);
+        temperSpotList.add(temperSpot);
+        humidSpotList.add(humidSpot);
+      }
     }
 
     return {"temperSpotList": temperSpotList, "humidSpotList": humidSpotList};
@@ -185,7 +187,7 @@ class StateManager extends _$StateManager {
 
   // ws데이터 수신 시, roomId를 키로 stateData 등록
   void stateDataHandler(dynamic data) {
-    try{
+    try {
       final Map<String, dynamic> dataMap = data;
 
       // 해당 roomId의 현재 데이터를 등록
@@ -193,12 +195,11 @@ class StateManager extends _$StateManager {
         dLog('$roomId 현재 데이터 등록!');
         final Map<String, dynamic> statesMap = dataMap[roomId]['states'];
         dLog('statesMap: $statesMap');
-        state = {...state, roomId: statesMap, 'lastUpdated':DateTime.now()};
+        state = {...state, roomId: statesMap, 'lastUpdated': DateTime.now()};
       }
-    } catch(e) {
+    } catch (e) {
       eLog('stateDataHandler 실패 : $e');
     }
-
   }
 
   /// 기존 구독 목록을 없애고, 새 구독 요청

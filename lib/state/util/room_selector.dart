@@ -13,6 +13,8 @@ class RoomSelector extends _$RoomSelector {
 
   List<String> build() {
 
+    _announceRoomList(initialRoomId);
+
     return initialRoomId;
   }
 

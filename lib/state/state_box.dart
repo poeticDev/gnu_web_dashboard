@@ -55,8 +55,8 @@ class _StateBoxState extends ConsumerState<StateBox> {
     dLog('state: $state');
 
     if (state != null) {
-      temperature = state['temperature'] ?? '-';
-      humidity = state['humidity'] ?? '-';
+      temperature = state['온도'].toString() ?? '-';
+      humidity = state['습도'].toString() ?? '-';
     }
 
     // final Map<String, List<FlSpot>> periodSpotList =
@@ -161,7 +161,7 @@ class _StateBoxState extends ConsumerState<StateBox> {
                         child: Divider(color: DIVIDER_COLOR, height: 10),
                       ),
                       Text(
-                        temperature,
+                        '$temperature°C',
                         style: TextStyle(
                           color: WHITE_TEXT_COLOR,
                           fontSize: widget.fontSize,
@@ -226,7 +226,7 @@ class _StateBoxState extends ConsumerState<StateBox> {
                         child: Divider(color: DIVIDER_COLOR, height: 10),
                       ),
                       Text(
-                        humidity,
+                        '$humidity%',
                         style: TextStyle(
                           color: WHITE_TEXT_COLOR,
                           fontSize: widget.fontSize,
