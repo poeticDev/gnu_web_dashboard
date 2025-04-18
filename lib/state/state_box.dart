@@ -4,8 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gnu_web_dashboard/common/component/splash_circle.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
+import 'package:gnu_web_dashboard/common/util/data/model/room_model.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 import 'package:gnu_web_dashboard/state/component/custom_line_chart.dart';
+import 'package:gnu_web_dashboard/state/component/state_indicator_row.dart';
 import 'package:gnu_web_dashboard/state/util/state_manager.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
@@ -41,6 +43,17 @@ class _StateBoxState extends ConsumerState<StateBox> {
     const double verticalPadding = 20;
     final double stateRowWidth = widget.width / 2.3;
     final double weatherHeight = 120;
+
+    final Room roomData = initialRooms.firstWhere(
+      (e) => e.roomId == widget.roomId,
+    );
+    final equipMap =
+        roomData.equipMap..removeWhere(
+          (key, value) =>
+              key == 'wall_hub' || key == 'class_hub' || value == false,
+        );
+
+    final List<String> equipNameList = equipMap.keys.toList();
 
     final state = ref.watch(stateManagerProvider)[widget.roomId];
     final notifier = ref.read(stateManagerProvider.notifier);
@@ -110,17 +123,28 @@ class _StateBoxState extends ConsumerState<StateBox> {
                     ],
                   ),
                   Divider(color: DIVIDER_COLOR, height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      state == null
-                          ? SizedBox(
-                            width: 120,
-                            height: 120,
-                            child: SplashCircle(statusMsg: '상태 불러오는 중'),
-                          )
-                          : SizedBox(),
-                    ],
+                  Wrap(
+                    spacing: 16,
+                    children:
+                        state == null
+                            ? [
+                              SizedBox(
+                                width: 120,
+                                height: 120,
+                                child: SplashCircle(statusMsg: '상태 불러오는 중'),
+                              ),
+                            ]
+                            : equipNameList
+                                .map(
+                                  (equipName) => StateIndicatorRow(
+                                    width: stateRowWidth,
+                                    height: widget.fontSize * 1.6,
+                                    title: equipName,
+                                    isOn:
+                                        state[equipName] == 'on' ? true : false,
+                                  ),
+                                )
+                                .toList(),
                   ),
                 ],
               ),

@@ -25,7 +25,7 @@ class _CustomToggleState extends State<CustomToggle> {
       current: widget.isOn,
       first: true,
       second: false,
-      spacing: 24.0,
+      spacing: 20.0,
       animationDuration: const Duration(milliseconds: 600),
       style: const ToggleStyle(
         borderColor: Colors.transparent,
