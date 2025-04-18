@@ -63,7 +63,10 @@ class _TimetableLayoutState extends ConsumerState<TimetableLayout> {
 
   void setTimerForCurrentLecture(List<Lecture> lectureList) {
     // 1. 즉시 1회 실행
-    _checkLectureAndUpdate(lectureList);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkLectureAndUpdate(lectureList);
+    });
+
 
     // 2. 다음 HH:00 또는 HH:30까지 기다렸다가 이후 30분 주기 타이머 실행
     final now = DateTime.now();

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gnu_web_dashboard/camera/component/rtsp_player.dart';
+import 'package:gnu_web_dashboard/common/component/title_box.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
@@ -50,7 +51,6 @@ class _StateViewState extends ConsumerState<StateView> {
     // iLog('roomData.equipMap["wall_hub"]: ${roomData.equipMap["wall_hub"]}');
     final bool hasKiosk = roomData.equipMap["wall_hub"] == true;
 
-
     if (currentDevice != Device.DESKTOP) {
       fontSize = 16;
     } else {
@@ -80,17 +80,10 @@ class _StateViewState extends ConsumerState<StateView> {
 
         return Column(
           children: [
-            Container(
-              width: double.infinity,
+            TitleBox(
               height: topBoxHeight,
-              decoration: BoxDecoration(color: PRIMARY_CONTAINER_COLOR),
-              child: Center(
-                child: Text(
-                  '$roomName | {시작 시간} ~ {종료시간} {강의명} {교수명}님 수업 중입니다.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: WHITE_TEXT_COLOR, fontSize: fontSize),
-                ),
-              ),
+              roomName: roomName,
+              fontSize: fontSize,
             ),
             Padding(
               padding: const EdgeInsets.all(globalPadding),
