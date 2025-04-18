@@ -160,8 +160,14 @@ class StateManager extends _$StateManager {
     final List<FlSpot> humidSpotList = [];
 
     for (Map<String, dynamic> dataMap in dataMapList) {
-      final double time = _getTimeDoubleFromTimestamp(dataMap["timestamp"]);
-      if (time > 8 && time < 20) {
+      double time = _getTimeDoubleFromTimestamp(dataMap["timestamp"]);
+      if (time >= 8 && time <= 20) {
+        if(time < 8.5) {
+          time = 8.0;
+        } else if(time > 19.5) {
+          time = 20;
+        }
+
         final double temperature = dataMap["온도"] ?? 0;
         final double humidity = dataMap["습도"] ?? 0;
 

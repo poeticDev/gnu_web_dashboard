@@ -100,6 +100,7 @@ class _StateViewState extends ConsumerState<StateView> {
                         height: mHeight - topBoxHeight,
                         minWidth: cameraBoxMinWidth,
                       ),
+                      // _RenderControlBox(width: stateBoxWidth, height: mHeight, minWidth: stateBoxMinWidth),
                       StateBox(
                         roomId: widget.roomId,
                         width: stateBoxWidth,
@@ -180,6 +181,7 @@ class _StateViewState extends ConsumerState<StateView> {
     final double stateRowWidth = width / 2.3;
 
     return Container(
+      width: width,
       decoration: BoxDecoration(
         color: PRIMARY_CONTAINER_COLOR,
         borderRadius: BorderRadius.circular(12.0),
@@ -216,6 +218,7 @@ class _StateViewState extends ConsumerState<StateView> {
             Divider(color: DIVIDER_COLOR, height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Column(
                   children: [
@@ -253,12 +256,12 @@ class _StateViewState extends ConsumerState<StateView> {
                       title: 'PBL 스크린',
                       onChanged: () {},
                     ),
-                    StateToggleRow(
-                      width: stateRowWidth,
-                      height: fontSize * 1.6,
-                      title: '학생 PC',
-                      onChanged: () {},
-                    ),
+                    // StateToggleRow(
+                    //   width: stateRowWidth,
+                    //   height: fontSize * 1.6,
+                    //   title: '학생 PC',
+                    //   onChanged: () {},
+                    // ),
                   ],
                 ),
               ],

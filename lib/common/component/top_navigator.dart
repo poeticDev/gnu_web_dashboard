@@ -32,7 +32,7 @@ class TopNavigator extends ConsumerWidget implements PreferredSizeWidget {
       backgroundColor: BG_COLOR,
       centerTitle: true,
       automaticallyImplyLeading: false,
-      elevation: 8,
+      elevation: 2,
       toolbarHeight: height,
       titleSpacing: 0,
       title:
@@ -49,41 +49,30 @@ class TopNavigator extends ConsumerWidget implements PreferredSizeWidget {
     final stateNotifier = ref.read(stateManagerProvider.notifier);
 
     const double upperPadding = 12;
-    return Container(
-      decoration: BoxDecoration(
-        color: BG_COLOR,
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.grey,
-            offset: Offset(2, 2),
-            blurRadius: 8,
-            spreadRadius: 2,
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          SizedBox(height: upperPadding),
-          SizedBox(
-            height: (height - upperPadding),
-            child: Scrollbar(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        SizedBox(height: upperPadding),
+        SizedBox(
+          height: (height - upperPadding),
+          child: Scrollbar(
+            controller: _scrollController,
+            child: SingleChildScrollView(
               controller: _scrollController,
-              child: SingleChildScrollView(
-                controller: _scrollController,
-                scrollDirection: Axis.horizontal,
-                child: _buildRoomButtons(roomList: initialRooms),
-              ),
+              scrollDirection: Axis.horizontal,
+              child: _buildRoomButtons(roomList: initialRooms),
             ),
           ),
+        ),
 
-        ],
-      ),
+      ],
     );
   }
 
   Widget _buildRoomButtons({required List<Room> roomList}) {
     /// 주어진 너비가 충분하지 않으면 햄버거 버튼으로 바꾸기
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         ...roomList.map((room) => RoomTab(roomData: room, height: height - 20)),

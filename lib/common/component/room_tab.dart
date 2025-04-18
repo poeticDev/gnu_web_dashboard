@@ -24,6 +24,7 @@ class RoomTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
     final List<String> selectedRoomList = ref.watch(roomSelectorProvider);
+    bool isSelected = selectedRoomList.contains(roomData.roomId);
 
     return GestureDetector(
       onTap: () {
@@ -35,7 +36,7 @@ class RoomTab extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Container(
           decoration: BoxDecoration(
-            color: PRIMARY_CONTAINER_COLOR,
+            color: isSelected ? PRIMARY_CONTAINER_COLOR : SECONDARY_CONTAINER_COLOR,
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(borderRadius),
               topLeft: Radius.circular(borderRadius),
@@ -73,7 +74,7 @@ class RoomTab extends ConsumerWidget {
                   Text(
                     roomData.roomName,
                     style: TextStyle(
-                      color: colors.onSurfaceVariant,
+                      color: isSelected ?colors.onSurface : colors.onSecondaryContainer,
                       fontSize: fontSize,
                     ),
                   ),

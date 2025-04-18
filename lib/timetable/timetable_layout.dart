@@ -133,9 +133,6 @@ class _TimetableLayoutState extends State<TimetableLayout> {
         final rowLength = weekendRowLengths[widget.weekendOption]!;
 
         if (!isInitialized || !gSheet.isLoaded) {
-          iLog('isInitialized: $isInitialized');
-          iLog('gSheet.isLoaded: ${gSheet.isLoaded}');
-
           Future.delayed(Duration(seconds: 2), () {
             setState(() {});
           });
