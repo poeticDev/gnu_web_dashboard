@@ -3,9 +3,11 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:gnu_web_dashboard/state/util/room_selector.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:gnu_web_dashboard/common/util/network/http_manager.dart';
 import 'package:gnu_web_dashboard/common/util/network/ws_manager.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/room_model.dart';
 
@@ -20,7 +22,7 @@ class StateManager extends _$StateManager {
   // final List<String> selectedRoom = [initialRooms.first.roomId];
 
   Map<String, dynamic> initialState = {
-    'selectedRoom': [initialRooms.first.roomId],
+    // 'selectedRoom': [initialRooms.first.roomId],
     // 'roomId' : {
     //   'temperature': null,
     //   'humidity': null,
@@ -31,7 +33,6 @@ class StateManager extends _$StateManager {
     //   'airConditioner': null,
     // }
     'lastUpdated': null,
-
   };
 
   static Map<String, dynamic> _periodDataMap = {
@@ -55,7 +56,7 @@ class StateManager extends _$StateManager {
     _timer = Timer.periodic(Duration(minutes: 15), (timer) async {
       await getPeriodData();
 
-      List<String> selectedRoomList = state["selectedRoom"];
+      List<String> selectedRoomList = ref.read(roomSelectorProvider);
 
       for (String roomId in selectedRoomList) {
         Map<String, List<FlSpot>> spotMap = _getSpotFromState(roomId);
@@ -70,7 +71,7 @@ class StateManager extends _$StateManager {
   Future<void> updatePeriodSpotMap() async {
     await getPeriodData();
 
-    List<String> selectedRoomList = state["selectedRoom"];
+    List<String> selectedRoomList = ref.read(roomSelectorProvider);
 
     for (String roomId in selectedRoomList) {
       Map<String, List<FlSpot>> spotMap = _getSpotFromState(roomId);
@@ -79,28 +80,28 @@ class StateManager extends _$StateManager {
     }
   }
 
-  void replaceRoomId(String roomId) {
-    _announceRoomList([roomId]);
-    state = {
-      ...state,
-      'selectedRoom': [roomId],
-    };
-  }
-
-  void registerRoomId(String roomId) {
-    final List<String> selectedRoomList = state['selectedRoom'];
-    selectedRoomList.add(roomId);
-
-    _announceRoomList(selectedRoomList);
-    state = {...state, 'selectedRoom': selectedRoomList};
-  }
-
-  void deleteRoomId(String roomId) {
-    final List<String> selectedRoomList = state['selectedRoom'];
-    selectedRoomList.remove(roomId);
-    _announceRoomList(selectedRoomList);
-    state = {...state, 'selectedRoom': selectedRoomList};
-  }
+  // void replaceRoomId(String roomId) {
+  //   _announceRoomList([roomId]);
+  //   state = {
+  //     ...state,
+  //     'selectedRoom': [roomId],
+  //   };
+  // }
+  //
+  // void registerRoomId(String roomId) {
+  //   final List<String> selectedRoomList = state['selectedRoom'];
+  //   selectedRoomList.add(roomId);
+  //
+  //   _announceRoomList(selectedRoomList);
+  //   state = {...state, 'selectedRoom': selectedRoomList};
+  // }
+  //
+  // void deleteRoomId(String roomId) {
+  //   final List<String> selectedRoomList = state['selectedRoom'];
+  //   selectedRoomList.remove(roomId);
+  //   _announceRoomList(selectedRoomList);
+  //   state = {...state, 'selectedRoom': selectedRoomList};
+  // }
 
   /// Post:
   Future toggleState(String stateName) async {
@@ -111,10 +112,12 @@ class StateManager extends _$StateManager {
   }
 
   Future<void> getPeriodData() async {
+    List<String> selectedRoomList = ref.read(roomSelectorProvider);
+
     final Response? response = await _http.post(
       path: '$serverHttpApiIp/read',
       queryParameters: {'type': 'sensorData'},
-      data: {'selectedRoom': state['selectedRoom']},
+      data: {'selectedRoom': selectedRoomList},
     );
 
     dLog('getPeriodData res code: ${response?.statusCode}');
@@ -174,11 +177,11 @@ class StateManager extends _$StateManager {
   Map<String, Map<String, List<FlSpot>>> getPeriodSpotMap() => _periodSpotMap;
 
   /// WS
-  Future<void> _announceRoomList(List<String> roomIdList) async {
-    final map = {'selectedRoom': roomIdList};
-    final message = jsonEncode(map);
-    ws.sendStringMessage(message);
-  }
+  // Future<void> _announceRoomList(List<String> roomIdList) async {
+  //   final map = {'selectedRoom': roomIdList};
+  //   final message = jsonEncode(map);
+  //   ws.sendStringMessage(message);
+  // }
 
   // ws데이터 수신 시, roomId를 키로 stateData 등록
   void stateDataHandler(dynamic data) {

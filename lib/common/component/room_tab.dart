@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/room_model.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
+import 'package:gnu_web_dashboard/state/util/room_selector.dart';
 import 'package:gnu_web_dashboard/state/util/state_manager.dart';
 
 class RoomTab extends ConsumerWidget {
@@ -22,10 +23,11 @@ class RoomTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
+    final List<String> selectedRoomList = ref.watch(roomSelectorProvider);
 
     return GestureDetector(
       onTap: () {
-        ref.read(stateManagerProvider.notifier).replaceRoomId(roomData.roomId);
+        ref.read(roomSelectorProvider.notifier).replaceRoomId(roomData.roomId);
         ref.read(stateManagerProvider.notifier).updatePeriodSpotMap();
         // context.go('/fixedName');
       },

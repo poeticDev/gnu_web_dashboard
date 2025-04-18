@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
+import 'package:gnu_web_dashboard/common/util/data/model/room_model.dart';
 import 'package:gnu_web_dashboard/common/util/network/ws_manager.dart';
 import 'package:gnu_web_dashboard/media/media_add_dialog.dart';
 import 'package:gnu_web_dashboard/media/media_grid.dart';
@@ -40,6 +41,7 @@ class _StateViewState extends ConsumerState<StateView> {
   @override
   Widget build(BuildContext context) {
     final stateNotifier = ref.read(stateManagerProvider.notifier);
+    final roomName = initialRooms.firstWhere((e)=> e.roomId == widget.roomId).roomName;
 
     if (currentDevice != Device.DESKTOP) {
       fontSize = 16;
@@ -76,7 +78,7 @@ class _StateViewState extends ConsumerState<StateView> {
               decoration: BoxDecoration(color: PRIMARY_CONTAINER_COLOR),
               child: Center(
                 child: Text(
-                  '(아이콘?) (강의실명) | {시작 시간} ~ {종료시간} {강의명} {교수명}님 수업 중입니다.',
+                  '(아이콘?) $roomName | {시작 시간} ~ {종료시간} {강의명} {교수명}님 수업 중입니다.',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: WHITE_TEXT_COLOR, fontSize: fontSize),
                 ),
