@@ -48,16 +48,12 @@ class _StateBoxState extends ConsumerState<StateBox> {
     String temperature = '-';
     String humidity = '-';
 
-    final infoState = ref.watch(stateManagerProvider);
-
-    iLog('infoState: $infoState');
-
-    dLog('state: $state');
-
     if (state != null) {
       temperature = state['온도'].toString() ?? '-';
       humidity = state['습도'].toString() ?? '-';
     }
+
+    iLog('state: $state');
 
     // final Map<String, List<FlSpot>> periodSpotList =
     //     notifier.getPeriodSpotMap()[roomId] ?? {};

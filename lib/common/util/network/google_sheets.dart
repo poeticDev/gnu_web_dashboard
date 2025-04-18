@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 import 'package:gsheets/gsheets.dart';
 
 import 'package:gnu_web_dashboard/common/util/data/model/lecture.dart';
@@ -39,13 +40,35 @@ class GoogleSheets {
   late final GSheets _sheet; // 스프레드시트
   static Worksheet? _worksheet; // 스프레드시트 중 작업 대상 시트
 
+  bool isLoaded = true;
+
   Future<void> initialize() async {
-    _credentials = await loadCredentials();
-    _sheet = GSheets(_credentials);
+    try {
+      _credentials = await loadCredentials();
+
+      iLog('구글 시트 이니셜라이즈 성공');
+    } catch (e) {
+      eLog('Google Sheets inializing fail :$e');
+      return;
+    } finally {
+      _sheet = GSheets(_credentials);
+    }
+    // _worksheet = await _getWorksheet(
+    //   await _sheet.spreadsheet(_spreadSheetId),
+    //   title: sheetName.toString(),
+    // );
+  }
+
+  Future<void> loadSheets() async {
+    isLoaded = false;
+
     _worksheet = await _getWorksheet(
       await _sheet.spreadsheet(_spreadSheetId),
       title: sheetName.toString(),
     );
+
+    iLog('시간표 로드 성공');
+    isLoaded = true;
   }
 
   Future<void> reInitialize() async {
@@ -56,7 +79,7 @@ class GoogleSheets {
   }
 
   /// 먼저 시트를 생성하고, 이미 있을 경우는 해당 시트를 가져온다.
-  static Future<Worksheet> _getWorksheet(
+  Future<Worksheet> _getWorksheet(
     Spreadsheet spreadsheet, {
     required String title,
   }) async {
@@ -97,7 +120,7 @@ class GoogleSheets {
     await _worksheet!.values.map.insertRowByKey(
       lecture.id,
       lecture.toGsheets(),
-      overwrite: true
+      overwrite: true,
     );
   }
 

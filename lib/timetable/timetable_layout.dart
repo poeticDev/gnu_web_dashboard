@@ -8,6 +8,7 @@ import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 import 'package:gnu_web_dashboard/common/util/network/google_sheets.dart';
 import 'package:gnu_web_dashboard/timetable/component/lecture_box.dart';
 import 'package:gnu_web_dashboard/timetable/component/lecture_dialog.dart';
+import 'package:gsheets/gsheets.dart';
 
 List<String> weekdays = ['월', '화', '수', '목', '금', '토', '일'];
 
@@ -38,25 +39,31 @@ class TimetableLayout extends StatefulWidget {
 }
 
 class _TimetableLayoutState extends State<TimetableLayout> {
-  late final gSheet;
+  late GoogleSheets gSheet;
   bool isInitialized = false;
   int idInteger = 0;
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     initGSheet();
+    super.initState();
+
   }
 
   Future<void> initGSheet() async {
     gSheet = GoogleSheets(sheetName: widget.roomId);
     await gSheet.initialize();
     isInitialized = true;
+    await gSheet.loadSheets();
   }
 
   @override
   Widget build(BuildContext context) {
+    if(gSheet.sheetName != widget.roomId) {
+      isInitialized = false;
+      initGSheet();
+    }
+
     return Container(
       constraints: BoxConstraints(minWidth: widget.minWidth),
       width: widget.width,
@@ -125,7 +132,10 @@ class _TimetableLayoutState extends State<TimetableLayout> {
         final double boxHeight = (mHeight - headerHeight) / widget.columnLength;
         final rowLength = weekendRowLengths[widget.weekendOption]!;
 
-        if (!isInitialized) {
+        if (!isInitialized || !gSheet.isLoaded) {
+          iLog('isInitialized: $isInitialized');
+          iLog('gSheet.isLoaded: ${gSheet.isLoaded}');
+
           Future.delayed(Duration(seconds: 2), () {
             setState(() {});
           });
