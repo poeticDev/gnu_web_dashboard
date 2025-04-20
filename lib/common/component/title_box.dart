@@ -24,10 +24,10 @@ class TitleBox extends ConsumerWidget {
       final startAt = lecture.startAt;
       final endAt = lecture.endAt;
       final instructorName = lecture.instructorName;
-      final lectureName = lecture.lectureName;
+      final String lectureName = lecture.lectureName;
 
       string =
-          '${startAt.hour}:${startAt.minute.toString().padLeft(2, '0')} ~ ${endAt.hour}:${endAt.minute.toString().padLeft(2, '0')} $instructorName $lectureName 수업 중입니다';
+          '${startAt.hour}:${startAt.minute.toString().padLeft(2, '0')} ~ ${endAt.hour}:${endAt.minute.toString().padLeft(2, '0')} $instructorName ${lectureName} 수업 중입니다';
     }
 
     return Container(
@@ -39,6 +39,7 @@ class TitleBox extends ConsumerWidget {
           scrollDirection: Axis.horizontal,
           child: Text(
             '$roomName | $string',
+            maxLines: 1,
             textAlign: TextAlign.center,
             style: TextStyle(color: WHITE_TEXT_COLOR, fontSize: fontSize),
           ),

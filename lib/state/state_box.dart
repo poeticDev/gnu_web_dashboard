@@ -47,13 +47,15 @@ class _StateBoxState extends ConsumerState<StateBox> {
     final Room roomData = initialRooms.firstWhere(
       (e) => e.roomId == widget.roomId,
     );
-    final equipMap =
-        roomData.equipMap..removeWhere(
+    final equipMap = Map<String, dynamic>.from(roomData.equipMap);
+
+    final editedList =
+        equipMap..removeWhere(
           (key, value) =>
               key == 'wall_hub' || key == 'class_hub' || value == false,
         );
 
-    final List<String> equipNameList = equipMap.keys.toList();
+    final List<String> equipNameList = editedList.keys.toList();
 
     final state = ref.watch(stateManagerProvider)[widget.roomId];
     final notifier = ref.read(stateManagerProvider.notifier);

@@ -10,7 +10,6 @@ import 'package:gnu_web_dashboard/common/const/device.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/room_model.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
-import 'package:gnu_web_dashboard/common/util/network/ws_manager.dart';
 import 'package:gnu_web_dashboard/media/media_add_dialog.dart';
 import 'package:gnu_web_dashboard/media/media_grid.dart';
 import 'package:gnu_web_dashboard/message/message_add_dialog.dart';
@@ -18,7 +17,6 @@ import 'package:gnu_web_dashboard/message/message_grid.dart';
 import 'package:gnu_web_dashboard/state/component/state_toggle_row.dart';
 import 'package:gnu_web_dashboard/state/state_box.dart';
 import 'package:gnu_web_dashboard/state/util/state_manager.dart';
-import 'package:gnu_web_dashboard/test/test_widget.dart';
 import 'package:gnu_web_dashboard/timetable/timetable_layout.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
@@ -48,8 +46,11 @@ class _StateViewState extends ConsumerState<StateView> {
 
     final String roomName = roomData.roomName;
 
-    // iLog('roomData.equipMap["wall_hub"]: ${roomData.equipMap["wall_hub"]}');
+    iLog('equipMap: ${roomData.equipMap}');
+
+    iLog('roomData.equipMap["wall_hub"]: ${roomData.equipMap["wall_hub"]}');
     final bool hasKiosk = roomData.equipMap["wall_hub"] == true;
+    iLog('hasKiosk: $hasKiosk');
 
     if (currentDevice != Device.DESKTOP) {
       fontSize = 16;
@@ -130,8 +131,6 @@ class _StateViewState extends ConsumerState<StateView> {
                             ),
                           ],
                         ),
-
-                      TestWidget(),
                     ],
                   ),
                 ),
