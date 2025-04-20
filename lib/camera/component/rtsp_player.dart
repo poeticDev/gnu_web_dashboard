@@ -31,24 +31,24 @@ class _RtspPlayerState extends State<RtspPlayer> {
   bool isPlaying = false;
   Timer? _timer;
 
-  final Player player = Player();
-  late final VideoController controller;
+  Player? player = Player();
+  VideoController? controller;
 
   final CctvManager cctv = CctvManager(serverIp: 'http://117.16.154.97:8083');
 
-
   @override
   void initState() {
-    controller = VideoController(player);
     super.initState();
   }
 
-
   void startRtsp(String roomId) {
     final address = cctv.getHlsAddress(roomId);
+    player = Player();
+    controller = VideoController(player!);
 
     isPlaying = true;
-    player.open(Media(address), play: true);
+    player!.open(Media(address), play: true);
+
     _timer = Timer(Duration(seconds: 32), () {
       setState(() {
         stopRtsp();
@@ -57,7 +57,8 @@ class _RtspPlayerState extends State<RtspPlayer> {
   }
 
   void stopRtsp() {
-    player.stop();
+    player?.stop();
+    player?.dispose();
     _timer?.cancel();
     isPlaying = false;
   }
@@ -94,7 +95,7 @@ class _RtspPlayerState extends State<RtspPlayer> {
                   ? ClipRRect(
                     borderRadius: BorderRadius.circular(16.0),
                     child: IgnorePointer(
-                      child: Video(controller: controller, fit: BoxFit.cover),
+                      child: Video(controller: controller!, fit: BoxFit.cover),
                     ),
                   )
                   : Center(
