@@ -98,6 +98,7 @@ class _StateViewState extends ConsumerState<StateView> {
                     runSpacing: betweenPadding,
                     children: [
                       RtspPlayer(
+                        roomId: widget.roomId,
                         width: cameraBoxWidth,
                         minWidth: cameraBoxMinWidth,
                         fontSize: fontSize,

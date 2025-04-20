@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 
@@ -88,6 +90,19 @@ class HttpManager {
       return response;
     } catch (e) {
       eLog('POST 요청 실패 : $e');
+    }
+    return null;
+  }
+
+  Map<String, dynamic>? parseMapData(dynamic data) {
+    try {
+      if (data is Map) {
+        return Map<String, dynamic>.from(data);
+      } else if (data is String) {
+        return jsonDecode(data) as Map<String, dynamic>;
+      }
+    } catch (e) {
+      print('🧨 Map 파싱 실패: $e');
     }
     return null;
   }

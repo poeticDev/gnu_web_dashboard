@@ -2,34 +2,40 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gnu_web_dashboard/camera/util/cctv_manager.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/const/style.dart';
 
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
-class RtspPlayer extends ConsumerStatefulWidget {
+class RtspPlayer extends StatefulWidget {
   final double width;
   final double minWidth;
   final double fontSize;
+  final String roomId;
 
   RtspPlayer({
     super.key,
+    required this.roomId,
     required this.width,
     required this.minWidth,
     this.fontSize = 16,
   });
 
   @override
-  ConsumerState<RtspPlayer> createState() => _RtspPlayerState();
+  State<RtspPlayer> createState() => _RtspPlayerState();
 }
 
-class _RtspPlayerState extends ConsumerState<RtspPlayer> {
+class _RtspPlayerState extends State<RtspPlayer> {
   bool isPlaying = false;
   Timer? _timer;
 
   final Player player = Player();
   late final VideoController controller;
+
+  final CctvManager cctv = CctvManager(serverIp: 'http://117.16.154.97:8083');
+
 
   @override
   void initState() {
@@ -38,10 +44,11 @@ class _RtspPlayerState extends ConsumerState<RtspPlayer> {
   }
 
 
+  void startRtsp(String roomId) {
+    final address = cctv.getHlsAddress(roomId);
 
-  void startRtsp() {
     isPlaying = true;
-    player.open(Media('blob:https://192.168.11.87/1b2d5f24-3be2-4ff8-b9bd-9f83aabb7ef4'), play: true);
+    player.open(Media(address), play: true);
     _timer = Timer(Duration(seconds: 32), () {
       setState(() {
         stopRtsp();
@@ -69,7 +76,7 @@ class _RtspPlayerState extends ConsumerState<RtspPlayer> {
           if (isPlaying) {
             stopRtsp();
           } else {
-            startRtsp();
+            startRtsp(widget.roomId);
           }
         });
       },

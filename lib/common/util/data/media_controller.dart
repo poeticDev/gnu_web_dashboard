@@ -12,7 +12,7 @@ part 'media_controller.g.dart';
 
 @Riverpod(keepAlive: true)
 class MediaController extends _$MediaController {
-  static String _serverHttpApiIp = 'https://192.168.219.137/api/v1/';
+  static String _serverHttpApiIp = 'https://117.16.154.97/api/v1/';
   final HttpManager _http = HttpManager();
 
   Map<String, MediaItem> get _initialState => {};
