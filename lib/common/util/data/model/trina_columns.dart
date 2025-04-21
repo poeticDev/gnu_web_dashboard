@@ -101,8 +101,9 @@ final List<TrinaColumn> messageColumns = [
   TrinaColumn(
     title: '표출기간(-까지)',
     field: 'until',
-    type: TrinaColumnType.dateTime(format: 'yy.MM.dd  hh시 mm분'),
+    type: TrinaColumnType.dateTime(),
     width: 180,
+    readOnly: false
   ),
   TrinaColumn(
     title: '메세지 타입',
@@ -115,7 +116,7 @@ final List<TrinaColumn> messageColumns = [
   TrinaColumn(
     title: '최종 수정일',
     field: 'lastUpdated',
-    type: TrinaColumnType.date(format: 'yy.MM.dd  hh시 mm분'),
+    type: TrinaColumnType.date(format: 'yy.MM.dd  HH시 mm분'),
     width: 150,
     enableEditingMode: false,
     readOnly: true,
@@ -123,7 +124,12 @@ final List<TrinaColumn> messageColumns = [
 ];
 
 final List<TrinaColumn> lectureColumns = [
-  TrinaColumn(title: 'id', field: 'id', type: TrinaColumnType.number(format: '###.#'), hide: false),
+  TrinaColumn(
+    title: 'id',
+    field: 'id',
+    type: TrinaColumnType.number(format: '###.#'),
+    hide: false,
+  ),
   TrinaColumn(
     title: '요일',
     field: 'weekday',

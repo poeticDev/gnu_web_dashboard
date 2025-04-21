@@ -4,6 +4,7 @@ import 'package:gnu_web_dashboard/common/component/splash_circle.dart';
 import 'package:gnu_web_dashboard/common/const/color.dart';
 import 'package:gnu_web_dashboard/common/util/data/message_controller.dart';
 import 'package:gnu_web_dashboard/common/util/data/model/trina_columns.dart';
+import 'package:gnu_web_dashboard/common/util/log_helper.dart';
 import 'package:trina_grid/trina_grid.dart';
 import 'package:gnu_web_dashboard/common/util/data/grid_manager.dart';
 import 'package:uuid/v4.dart';
@@ -42,8 +43,9 @@ class _MessageGridState extends ConsumerState<MessageGrid> {
         Key gridKey = ValueKey(UuidV4());
 
         return TrinaGrid(
-            key: gridKey,
-            columns: messageColumns, rows: messageItemRows,
+          key: gridKey,
+          columns: messageColumns,
+          rows: messageItemRows,
           onLoaded: (event) {
             stateManager = event.stateManager;
           },
@@ -59,9 +61,13 @@ class _MessageGridState extends ConsumerState<MessageGrid> {
             scrollbar: TrinaGridScrollbarConfig(isAlwaysShown: true),
           ),
           onChanged: (event) async {
+            iLog('something changed!');
             final key = event.row.cells['key']!.value;
+            iLog('message key: $key');
             final field = event.column.field;
+            iLog('message field: $field');
             final value = event.value;
+            iLog('message value: $value');
 
             await messageNotifier.handleFieldChange(
               key: key,
@@ -69,6 +75,24 @@ class _MessageGridState extends ConsumerState<MessageGrid> {
               value: value,
             );
           },
+
+          // onActiveCellChanged: (event) async {
+          //   iLog('something changed!');
+          //
+          //
+          //   final key = event.cell!.key.toString();
+          //   iLog('message key: $key');
+          //   final field = event.cell!.column.field;
+          //   iLog('message field: $field');
+          //   final value = event.cell!.value;
+          //   iLog('message value: $value');
+          //
+          //   await messageNotifier.handleFieldChange(
+          //     key: key,
+          //     field: field,
+          //     value: value,
+          //   );
+          // },
         );
       },
     );
