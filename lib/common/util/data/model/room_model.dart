@@ -81,7 +81,7 @@ final initialRooms = [
       "All": true,
       "교수PC": true,
       "조명": true,
-      "냉난방기": true,
+      "냉난방기": false,
       "PBL 디스플레이": false,
       "학생PC": false,
       "재실": true,

@@ -103,7 +103,7 @@ final List<TrinaColumn> messageColumns = [
     field: 'until',
     type: TrinaColumnType.dateTime(),
     width: 180,
-    readOnly: false
+    readOnly: false,
   ),
   TrinaColumn(
     title: '메세지 타입',

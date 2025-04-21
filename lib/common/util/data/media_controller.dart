@@ -87,7 +87,7 @@ class MediaController extends _$MediaController {
     Response? response;
     late final String jsonData;
 
-    final mediaItemMap = mediaItem.getMediaItemMap();
+    final mediaItemMap = {...mediaItem.getMediaItemMap(), "target": ['wall_hub']};
     final dataMap = {"mediaData": [mediaItemMap]};
 
     try {
